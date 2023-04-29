@@ -20,14 +20,14 @@ Compile the code using Lazarus 2.2.0 or higher, all plattforms where you can run
 
 ## How to use ?
 
-1. Start the program clicl "Edit" -> "Project settings"
+1. Start the program click "Edit" -> "Project settings"
 2. Fill in the Name in page "General"
-3. Select a .lpi file (second "select" button from top)
+3. Select a .lpi file (second "select" button from top) in Page "Files"
 4. click ok
 
 ## Editing the dependency graph
 
-Simple click and drag nodes, use left mouse to create a rectangle for selecting multiple nodes. Holding "shift" while clicking on nodes will add them to a selected colection.
+Simple click and drag nodes, use left mouse to create a rectangle for selecting multiple nodes. Holding "shift" while clicking on nodes will add them to a selected collection.
 
 
 ## How do i get to the calculated values
