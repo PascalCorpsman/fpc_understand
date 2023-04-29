@@ -1,0 +1,71 @@
+object Form6: TForm6
+  Left = 424
+  Height = 556
+  Top = 573
+  Width = 771
+  Caption = 'Form6'
+  ClientHeight = 556
+  ClientWidth = 771
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object Button1: TButton
+    Left = 96
+    Height = 25
+    Top = 512
+    Width = 75
+    Caption = 'OK'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object StringGrid1: TStringGrid
+    Left = 16
+    Height = 352
+    Top = 8
+    Width = 456
+    ColCount = 7
+    Columns = <    
+      item
+        Title.Caption = 'Filename'
+      end    
+      item
+        Title.Caption = 'Code lines'
+      end    
+      item
+        Title.Caption = 'Total lines'
+      end    
+      item
+        Title.Caption = 'Classes count'
+      end    
+      item
+        Title.Caption = 'Methods count'
+      end    
+      item
+        Title.Caption = 'Average CC'
+      end    
+      item
+        Title.Caption = 'max CC'
+      end>
+    FixedCols = 0
+    Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect, goSmoothScroll]
+    PopupMenu = PopupMenu1
+    TabOrder = 1
+    OnCompareCells = StringGrid1CompareCells
+    OnHeaderClick = StringGrid1HeaderClick
+    OnPrepareCanvas = StringGrid1PrepareCanvas
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 134
+    Top = 139
+    object MenuItem1: TMenuItem
+      Caption = 'Export as csv'
+      OnClick = MenuItem1Click
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '.csv'
+    Filter = 'CSV-File|*.csv|All|*.*'
+    Left = 228
+    Top = 204
+  end
+end

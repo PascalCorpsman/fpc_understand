@@ -1,0 +1,45 @@
+object Form4: TForm4
+  Left = 347
+  Height = 404
+  Top = 111
+  Width = 350
+  Caption = 'Form4'
+  ClientHeight = 404
+  ClientWidth = 350
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object Memo1: TMemo
+    Left = 16
+    Height = 178
+    Top = 24
+    Width = 200
+    Font.Name = 'Courier New'
+    Lines.Strings = (
+      'Memo1'
+    )
+    ParentFont = False
+    ReadOnly = True
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+    WordWrap = False
+  end
+  object Button1: TButton
+    Left = 16
+    Height = 25
+    Top = 368
+    Width = 75
+    Caption = 'OK'
+    OnClick = Button1Click
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 16
+    Height = 25
+    Top = 312
+    Width = 75
+    Caption = 'Details'
+    OnClick = Button2Click
+    TabOrder = 2
+  end
+end

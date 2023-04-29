@@ -1,0 +1,76 @@
+object Form7: TForm7
+  Left = 347
+  Height = 461
+  Top = 109
+  Width = 418
+  Caption = 'Form7'
+  ClientHeight = 461
+  ClientWidth = 418
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object Label1: TLabel
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 34
+    Caption = 'Label1'
+  end
+  object Button1: TButton
+    Left = 333
+    Height = 25
+    Top = 427
+    Width = 75
+    Anchors = [akRight, akBottom]
+    Caption = 'OK'
+    OnClick = Button1Click
+    TabOrder = 0
+  end
+  object Button2: TButton
+    Left = 245
+    Height = 25
+    Top = 427
+    Width = 75
+    Anchors = [akRight, akBottom]
+    Caption = 'Cancel'
+    ModalResult = 2
+    TabOrder = 1
+  end
+  object Button3: TButton
+    Left = 8
+    Height = 25
+    Top = 399
+    Width = 232
+    Anchors = [akLeft, akBottom]
+    Caption = 'Remove selected from file project'
+    OnClick = Button3Click
+    TabOrder = 2
+  end
+  object Button4: TButton
+    Left = 8
+    Height = 25
+    Top = 427
+    Width = 232
+    Anchors = [akLeft, akBottom]
+    Caption = 'Add file to project'
+    OnClick = Button4Click
+    TabOrder = 3
+  end
+  object CheckListBox1: TCheckListBox
+    Left = 8
+    Height = 359
+    Top = 32
+    Width = 400
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ItemHeight = 0
+    TabOrder = 4
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.pas;.lfm'
+    Filter = 'Pascal File|*.pas; *.lfm|All|*.*'
+    Options = [ofAllowMultiSelect, ofEnableSizing, ofViewDetail]
+    Left = 144
+    Top = 304
+  end
+end

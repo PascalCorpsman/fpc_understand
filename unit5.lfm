@@ -1,0 +1,117 @@
+object Form5: TForm5
+  Left = 347
+  Height = 645
+  Top = 107
+  Width = 943
+  Caption = 'Form5'
+  ClientHeight = 645
+  ClientWidth = 943
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object Panel1: TPanel
+    Left = 0
+    Height = 600
+    Top = 0
+    Width = 943
+    Align = alClient
+    Caption = 'Panel1'
+    ClientHeight = 600
+    ClientWidth = 943
+    TabOrder = 0
+    object ListBox1: TListBox
+      Left = 1
+      Height = 598
+      Top = 1
+      Width = 216
+      Align = alLeft
+      ItemHeight = 0
+      OnClick = ListBox1Click
+      TabOrder = 0
+      TopIndex = -1
+    end
+    object StringGrid1: TStringGrid
+      Left = 222
+      Height = 598
+      Top = 1
+      Width = 720
+      Align = alClient
+      ColCount = 7
+      Columns = <      
+        item
+          Title.Caption = 'Filename'
+          Visible = False
+        end      
+        item
+          Title.Caption = 'Kind'
+        end      
+        item
+          Title.Caption = 'Class'
+        end      
+        item
+          Title.Caption = 'Name'
+        end      
+        item
+          Title.Caption = 'Complexity'
+        end      
+        item
+          Title.Caption = 'CaseComplexity'
+        end      
+        item
+          Title.Caption = 'Line'
+        end>
+      FixedCols = 0
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect, goSmoothScroll]
+      PopupMenu = PopupMenu1
+      TabOrder = 1
+      OnCompareCells = StringGrid1CompareCells
+      OnHeaderClick = StringGrid1HeaderClick
+      OnPrepareCanvas = StringGrid1PrepareCanvas
+    end
+    object Splitter1: TSplitter
+      Left = 217
+      Height = 598
+      Top = 1
+      Width = 5
+    end
+  end
+  object Panel2: TPanel
+    Left = 0
+    Height = 45
+    Top = 600
+    Width = 943
+    Align = alBottom
+    Caption = 'Panel2'
+    ClientHeight = 45
+    ClientWidth = 943
+    TabOrder = 1
+    object Button1: TButton
+      Left = 8
+      Height = 25
+      Top = 8
+      Width = 926
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      Caption = 'Close'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 522
+    Top = 263
+    object MenuItem1: TMenuItem
+      Caption = 'Export as csv'
+      OnClick = MenuItem1Click
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Export all as csv'
+      OnClick = MenuItem2Click
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '.csv'
+    Filter = 'CSV-File|*.csv|All|*.*'
+    Left = 256
+    Top = 232
+  end
+end

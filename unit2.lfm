@@ -1,0 +1,310 @@
+object Form2: TForm2
+  Left = 347
+  Height = 711
+  Top = 107
+  Width = 815
+  Caption = 'Form2'
+  ClientHeight = 711
+  ClientWidth = 815
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object TreeView1: TTreeView
+    Left = 0
+    Height = 665
+    Top = 0
+    Width = 177
+    Align = alLeft
+    ReadOnly = True
+    ShowSeparators = False
+    TabOrder = 0
+    OnClick = TreeView1Click
+    Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+    Items.Data = {
+      F9FFFFFF020002000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000
+      0000000700000047656E6572616CFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000
+      000000000000000500000046696C6573
+    }
+  end
+  object PageControl1: TPageControl
+    Left = 177
+    Height = 665
+    Top = 0
+    Width = 638
+    ActivePage = TabSheet2
+    Align = alClient
+    TabIndex = 1
+    TabOrder = 1
+    object TabSheet1: TTabSheet
+      Caption = 'General'
+      ClientHeight = 631
+      ClientWidth = 632
+      object Label1: TLabel
+        Left = 8
+        Height = 16
+        Top = 16
+        Width = 35
+        Caption = 'Name'
+      end
+      object Edit1: TEdit
+        Left = 56
+        Height = 26
+        Top = 8
+        Width = 568
+        TabOrder = 0
+        Text = 'Edit1'
+      end
+      object Label7: TLabel
+        Left = 8
+        Height = 16
+        Top = 56
+        Width = 105
+        Caption = 'Level CC good <='
+      end
+      object Edit2: TEdit
+        Left = 144
+        Height = 26
+        Top = 48
+        Width = 80
+        TabOrder = 1
+        Text = 'Edit2'
+      end
+      object Shape1: TShape
+        Left = 248
+        Height = 25
+        Top = 46
+        Width = 40
+        OnChangeBounds = Shape1ChangeBounds
+      end
+      object Label8: TLabel
+        Left = 8
+        Height = 16
+        Top = 90
+        Width = 131
+        Caption = 'Level CC moderate <='
+      end
+      object Edit3: TEdit
+        Left = 144
+        Height = 26
+        Top = 79
+        Width = 80
+        TabOrder = 2
+        Text = 'Edit3'
+      end
+      object Shape2: TShape
+        Left = 248
+        Height = 25
+        Top = 80
+        Width = 40
+      end
+      object Label9: TLabel
+        Left = 8
+        Height = 16
+        Top = 122
+        Width = 124
+        Caption = 'Level CC complex <='
+      end
+      object Edit4: TEdit
+        Left = 144
+        Height = 26
+        Top = 136
+        Width = 80
+        TabOrder = 3
+        Text = 'Edit4'
+      end
+      object Shape3: TShape
+        Left = 248
+        Height = 25
+        Top = 112
+        Width = 40
+      end
+      object Label10: TLabel
+        Left = 8
+        Height = 16
+        Top = 154
+        Width = 119
+        Caption = 'Level CC Unstable >'
+      end
+      object Shape4: TShape
+        Left = 248
+        Height = 25
+        Top = 144
+        Width = 40
+        OnChangeBounds = Shape1ChangeBounds
+      end
+    end
+    object TabSheet2: TTabSheet
+      Caption = 'Files'
+      ClientHeight = 631
+      ClientWidth = 632
+      object Label2: TLabel
+        Left = 160
+        Height = 16
+        Top = 50
+        Width = 41
+        Caption = 'Label2'
+      end
+      object Button2: TButton
+        Left = 386
+        Height = 25
+        Top = 41
+        Width = 75
+        Anchors = [akTop, akRight]
+        Caption = 'select'
+        OnClick = Button2Click
+        TabOrder = 0
+      end
+      object Label3: TLabel
+        Left = 8
+        Height = 16
+        Top = 72
+        Width = 39
+        Caption = 'Filelist'
+      end
+      object Button3: TButton
+        Left = 546
+        Height = 25
+        Top = 88
+        Width = 75
+        Anchors = [akTop, akRight]
+        Caption = 'add files'
+        OnClick = Button3Click
+        TabOrder = 1
+      end
+      object Button4: TButton
+        Left = 546
+        Height = 25
+        Top = 561
+        Width = 75
+        Anchors = [akRight, akBottom]
+        Caption = 'remove file'
+        OnClick = Button4Click
+        TabOrder = 2
+      end
+      object Label4: TLabel
+        Left = 8
+        Height = 16
+        Top = 50
+        Width = 148
+        Caption = 'Take filelist from .lpi file:'
+      end
+      object Label5: TLabel
+        Left = 8
+        Height = 16
+        Top = 16
+        Width = 114
+        Caption = 'Project root folder:'
+      end
+      object Label6: TLabel
+        Left = 160
+        Height = 16
+        Top = 16
+        Width = 41
+        Caption = 'Label6'
+      end
+      object Button5: TButton
+        Left = 546
+        Height = 25
+        Top = 6
+        Width = 75
+        Anchors = [akTop, akRight]
+        Caption = 'select'
+        OnClick = Button5Click
+        TabOrder = 3
+      end
+      object CheckListBox1: TCheckListBox
+        Left = 8
+        Height = 498
+        Top = 88
+        Width = 530
+        Anchors = [akTop, akLeft, akRight, akBottom]
+        ItemHeight = 0
+        TabOrder = 4
+        TopIndex = -1
+      end
+      object Button6: TButton
+        Left = 465
+        Height = 25
+        Top = 41
+        Width = 75
+        Anchors = [akTop, akRight]
+        Caption = 'clear'
+        OnClick = Button6Click
+        TabOrder = 5
+      end
+      object Button7: TButton
+        Left = 544
+        Height = 25
+        Top = 41
+        Width = 75
+        Caption = 'edit .lpi'
+        OnClick = Button7Click
+        TabOrder = 6
+      end
+    end
+  end
+  object GroupBox1: TGroupBox
+    Left = 0
+    Height = 46
+    Top = 665
+    Width = 815
+    Align = alBottom
+    ClientHeight = 44
+    ClientWidth = 813
+    TabOrder = 2
+    object Button1: TButton
+      Left = 8
+      Height = 25
+      Top = 0
+      Width = 797
+      Anchors = [akTop, akLeft, akRight]
+      Caption = 'OK'
+      OnClick = Button1Click
+      TabOrder = 0
+    end
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.lpi'
+    Filter = 'Lazarus Project File|*.lpi|All|*.*'
+    Left = 276
+    Top = 180
+  end
+  object SelectDirectoryDialog1: TSelectDirectoryDialog
+    Left = 276
+    Top = 128
+  end
+  object OpenDialog2: TOpenDialog
+    DefaultExt = '.pas;.lpr;.pp'
+    Filter = 'Source files|*.pas;*.lpr;*.pp|All|*.*'
+    Options = [ofAllowMultiSelect, ofEnableSizing, ofViewDetail]
+    Left = 268
+    Top = 276
+  end
+  object ColorDialog1: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    Left = 272
+    Top = 228
+  end
+end

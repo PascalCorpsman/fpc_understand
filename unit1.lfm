@@ -1,0 +1,243 @@
+object Form1: TForm1
+  Left = 334
+  Height = 837
+  Top = 115
+  Width = 946
+  Caption = 'Form1'
+  Menu = MainMenu1
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object MainMenu1: TMainMenu
+    Left = 40
+    Top = 16
+    object MenuItem1: TMenuItem
+      Caption = 'File'
+      object MenuItem2: TMenuItem
+        Caption = 'New Project'
+        OnClick = MenuItem2Click
+      end
+      object MenuItem3: TMenuItem
+        Caption = 'Load Project'
+        OnClick = MenuItem3Click
+      end
+      object MenuItem4: TMenuItem
+        Caption = 'Save Project'
+        OnClick = MenuItem4Click
+      end
+      object MenuItem5: TMenuItem
+        Caption = 'Save Project as'
+        OnClick = MenuItem5Click
+      end
+      object MenuItem43: TMenuItem
+        Caption = 'Export as image'
+        OnClick = MenuItem43Click
+      end
+      object MenuItem6: TMenuItem
+        Caption = 'Close'
+        OnClick = MenuItem6Click
+      end
+    end
+    object MenuItem7: TMenuItem
+      Caption = 'Edit'
+      object MenuItem8: TMenuItem
+        Caption = 'Projekt settings'
+        OnClick = MenuItem8Click
+      end
+      object MenuItem16: TMenuItem
+        Caption = 'Reload dependencies'
+        OnClick = MenuItem16Click
+      end
+      object MenuItem15: TMenuItem
+        AutoCheck = True
+        Caption = 'Grid'
+        OnClick = MenuItem15Click
+      end
+      object Separator2: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem13: TMenuItem
+        Caption = 'Show statistiks'
+        OnClick = MenuItem13Click
+      end
+      object MenuItem14: TMenuItem
+        Caption = 'Show classes'
+        OnClick = MenuItem14Click
+      end
+      object MenuItem25: TMenuItem
+        Caption = 'Show cyclomatic complexity'
+        OnClick = MenuItem25Click
+      end
+      object Separator3: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem17: TMenuItem
+        Caption = 'Mark cycles'
+        OnClick = MenuItem17Click
+      end
+      object MenuItem19: TMenuItem
+        Caption = 'Mark all childs'
+        OnClick = MenuItem19Click
+      end
+      object MenuItem20: TMenuItem
+        Caption = 'Mark all childs recursive'
+        OnClick = MenuItem20Click
+      end
+      object MenuItem21: TMenuItem
+        Caption = 'Mark all parents'
+        OnClick = MenuItem21Click
+      end
+      object MenuItem22: TMenuItem
+        Caption = 'Mark all parents recursive'
+        OnClick = MenuItem22Click
+      end
+      object MenuItem23: TMenuItem
+        Caption = 'Mark nodes with no parents'
+        OnClick = MenuItem23Click
+      end
+      object MenuItem24: TMenuItem
+        Caption = 'Mark nodes with no childs'
+        OnClick = MenuItem24Click
+      end
+      object Separator4: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem18: TMenuItem
+        Caption = 'Clear marks'
+        OnClick = MenuItem18Click
+      end
+    end
+  end
+  object IniPropStorage1: TIniPropStorage
+    StoredValues = <>
+    Left = 144
+    Top = 16
+  end
+  object OpenDialog1: TOpenDialog
+    DefaultExt = '.fpu'
+    Filter = 'FPC-Understand file|*.fpu|All|*.*'
+    Left = 240
+    Top = 16
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '.fpu'
+    Filter = 'FPC-Understand file|*.fpu|All|*.*'
+    Left = 312
+    Top = 16
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 40
+    Top = 88
+    object MenuItem9: TMenuItem
+      Caption = 'Center out of range nodes'
+      OnClick = MenuItem9Click
+    end
+    object MenuItem10: TMenuItem
+      Caption = 'Oder all nodes as circle'
+      OnClick = MenuItem10Click
+    end
+    object Separator1: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem33: TMenuItem
+      Caption = 'Marks'
+      object MenuItem34: TMenuItem
+        Caption = 'Mark cycles'
+        OnClick = MenuItem17Click
+      end
+      object MenuItem35: TMenuItem
+        Caption = 'Mark alk childs'
+        OnClick = MenuItem19Click
+      end
+      object MenuItem36: TMenuItem
+        Caption = 'Mark all childs recursive'
+        OnClick = MenuItem20Click
+      end
+      object MenuItem37: TMenuItem
+        Caption = 'Mark all parents'
+        OnClick = MenuItem21Click
+      end
+      object MenuItem38: TMenuItem
+        Caption = 'Mark all parents recursive'
+        OnClick = MenuItem22Click
+      end
+      object MenuItem39: TMenuItem
+        Caption = 'Mark nodes with no parents'
+      end
+      object MenuItem40: TMenuItem
+        Caption = 'Mark nodes with no childs'
+        OnClick = MenuItem24Click
+      end
+      object Separator6: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem41: TMenuItem
+        Caption = 'Clear marks'
+        OnClick = MenuItem18Click
+      end
+    end
+    object MenuItem11: TMenuItem
+      Caption = 'Hide externals'
+      OnClick = MenuItem11Click
+    end
+    object MenuItem27: TMenuItem
+      Caption = 'Hide selected'
+      OnClick = MenuItem27Click
+    end
+    object MenuItem28: TMenuItem
+      Caption = 'Show selected'
+      OnClick = MenuItem28Click
+    end
+    object MenuItem12: TMenuItem
+      Caption = 'Show all'
+      OnClick = MenuItem12Click
+    end
+    object Separator5: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem31: TMenuItem
+      Caption = 'Open selected node folder'
+      OnClick = MenuItem31Click
+    end
+    object Separator7: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem32: TMenuItem
+      Caption = 'Add Selected node to .lpi file'
+      OnClick = MenuItem32Click
+    end
+    object MenuItem42: TMenuItem
+      Caption = 'Remove selected from file project .lpi'
+      OnClick = MenuItem42Click
+    end
+  end
+  object PopupMenu2: TPopupMenu
+    Left = 40
+    Top = 160
+    object MenuItem26: TMenuItem
+      Caption = 'Show statistic'
+      OnClick = MenuItem13Click
+    end
+    object MenuItem29: TMenuItem
+      Caption = 'Show classes'
+      OnClick = MenuItem14Click
+    end
+    object MenuItem30: TMenuItem
+      Caption = 'Show cyclomatic complexity'
+      OnClick = MenuItem25Click
+    end
+  end
+  object OpenDialog2: TOpenDialog
+    DefaultExt = '.pas;.pp;.lpr'
+    Filter = 'Pascal File|*.pas; *.pp; *.lpr|All|*.*'
+    Left = 304
+    Top = 160
+  end
+  object SaveDialog2: TSaveDialog
+    DefaultExt = '.png'
+    Filter = 'Portable network graphic|*.png|All|*.*'
+    Left = 40
+    Top = 224
+  end
+end
