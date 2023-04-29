@@ -1,3 +1,42 @@
+(******************************************************************************)
+(* FPC Understand                                                  30.03.2023 *)
+(*                                                                            *)
+(* Version     : 0.02                                                         *)
+(*                                                                            *)
+(* Author      : Uwe Schächterle (Corpsman)                                   *)
+(*                                                                            *)
+(* Support     : www.Corpsman.de                                              *)
+(*                                                                            *)
+(* Description : Simple statical code analysis tool                           *)
+(*                                                                            *)
+(* License     : See the file license.md, located under:                      *)
+(*  https://github.com/PascalCorpsman/Software_Licenses/blob/main/license.md  *)
+(*  for details about the license.                                            *)
+(*                                                                            *)
+(*               It is not allowed to change or remove this text from any     *)
+(*               source file of the project.                                  *)
+(*                                                                            *)
+(* Warranty    : There is no warranty, neither in correctness of the          *)
+(*               implementation, nor anything other that could happen         *)
+(*               or go wrong, use at your own risk.                           *)
+(*                                                                            *)
+(* Known Issues: none                                                         *)
+(*                                                                            *)
+(* History     : 0.01 - Initialversion (dependency graph, Klass Analysis,     *)
+(*                      Statistik)                                            *)
+(*               0.02 - Counter ersetzt durch FPCParser                       *)
+(*                      Details bei den Statistiken                           *)
+(*                      Editieren von .lpi Files                              *)
+(*                      Beim Doppelclick eine Auswahl was angezeigt werden    *)
+(*                        soll                                                *)
+(*                      Submenüs deutlich überarbeitet und verbessert         *)
+(*                        => Code Refactoring arbeiten mit .lpi Dateien       *)
+(*                      Automatisches Center der Knoten nach erst Erstellung  *)
+(*                                                                            *)
+(* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
+(*                   über Units ..)                                           *)
+(*                                                                            *)
+(******************************************************************************)
 Unit Unit1;
 {$MODE objfpc}{$H+}
 
@@ -149,19 +188,6 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  (*
-   * Historie: 0.01 = Initialversion (dependency graph, Klass Analysis, Statistik)
-   *           0.02 = Counter ersetzt durch FPCParser
-   *                  Details bei den Statistiken
-   *                  Editieren von .lpi Files
-   *                  Beim Doppelclick eine Auswahl was angezeigt werden soll
-   *                  Submenüs deutlich überarbeitet und verbessert => Code Refactoring arbeiten mit .lpi Dateien
-   *                  Automatisches Center der Knoten nach erst Erstellung
-   *
-   * OPL: - Callgraphen (über Klassen, über Echte Methoden, über Units ..)
-   *
-   * Known Bugs:
-   *)
   fdefcaption := 'FPC Understand ver. 0.02 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
