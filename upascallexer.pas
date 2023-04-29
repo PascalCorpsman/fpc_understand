@@ -514,7 +514,9 @@ Begin
           If c = '*' Then Begin
             inc(CommentDetphCounter);
           End;
-          State := sBraceStarComment;
+          If c <> '(' Then Begin // if we have a case like (* .. ((((((* **) we need to stay in this case ;)
+            State := sBraceStarComment;
+          End;
         End;
       sFirstStar: Begin
           aToken := aToken + c;
