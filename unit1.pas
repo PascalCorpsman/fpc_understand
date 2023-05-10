@@ -32,6 +32,7 @@
 (*                      Submenüs deutlich überarbeitet und verbessert         *)
 (*                        => Code Refactoring arbeiten mit .lpi Dateien       *)
 (*                      Automatisches Center der Knoten nach erst Erstellung  *)
+(*               0.03 - Keywort suche mittels binärer Suche -> Speedup        *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -188,7 +189,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.02 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.03 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
