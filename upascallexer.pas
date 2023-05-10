@@ -80,6 +80,7 @@ Type
   End;
 
 Function TokenKindToString(Const Kind: TTokenKind): String;
+Function IsKeyWord(Value: String): Boolean;
 
 Implementation
 
@@ -93,7 +94,7 @@ Const
 {$ENDIF}
 
   (*
-   * Perfectly sorted list of FPC-Keywords
+   * Perfectly sorted list of FPC-Keywords, otherwise IsKeyWord will fail !
    *)
   KeyWords: Array[0..87] Of String =
   (
@@ -192,20 +193,29 @@ Begin
 
 End;
 
-// TODO: Implement a more "Clever" way, eg. a binary search!
-
 Function IsKeyWord(Value: String): Boolean;
 Var
-  i: Integer;
+  lborder, uborder: Integer;
+  index: SizeInt;
 Begin
+  // Binary Search
   result := false;
   value := lowercase(Value);
-  For i := 0 To high(KeyWords) Do Begin
-    If Value = KeyWords[i] Then Begin
-      result := true;
-      break;
+  lborder := 0;
+  index := 1; // Egal hauptsache <> lborder;
+  uborder := high(KeyWords);
+  While lborder <> uborder Do Begin
+    index := (lborder + uborder) Div 2;
+    If KeyWords[index] = Value Then exit(True);
+    If CompareStr(value, KeyWords[index]) > 0 Then Begin
+      lborder := index + 1;
+    End
+    Else Begin
+      uborder := index;
     End;
   End;
+  // if lborder = uborder, then we need to test this last keyword !
+  result := KeyWords[lborder] = Value;
 End;
 
 Function TokenKindToString(Const Kind: TTokenKind): String;

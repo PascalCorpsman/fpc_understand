@@ -897,16 +897,15 @@ Var
   i: Integer;
   FPCParser: TFPCParser;
   f: TProjectFileInfo;
+  t: Int64;
 Begin
+  t := GetTickCount64;
   fFiles := Nil;
   FileList := GetFileList(fProject.RootFolder, fProject.LPISource, RelativeFileListToAbsoluteFileList(fProject.RootFolder, fProject.Files));
   FPCParser := TFPCParser.Create;
   For i := 0 To high(FileList) Do Begin
     If FileList[i].Enabled Then Begin
       f.Filename := ExtractRelativePath(fProject.RootFolder, FileList[i].FileName);
-      If pos('usimulator.pas', FileList[i].FileName) <> 0 Then Begin
-        nop();
-      End;
       If FPCParser.ParseFile(FileList[i].FileName) Then Begin
         f.FileInfo := FPCParser.FileInfo;
         f.Methods := FPCParser.ProcInfos;
@@ -921,6 +920,12 @@ Begin
   FPCParser.free;
   UpdateFileDependencies;
   MenuItem11Click(Nil); // Hide Externals via default
+  t := GetTickCount64 - t;
+  //t := t Div 1000;
+  //If t > 2 Then Begin
+  //ShowMessage(inttostr(t));
+  //End;
+  caption := fdefcaption + ': ' + fProject.Name + ', loaded in ' + inttostr(t) + 'ms';
 End;
 
 Procedure TForm1.LoadProject(aFilename: String);
