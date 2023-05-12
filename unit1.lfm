@@ -1,5 +1,5 @@
 object Form1: TForm1
-  Left = 334
+  Left = 333
   Height = 837
   Top = 115
   Width = 946
@@ -68,6 +68,10 @@ object Form1: TForm1
       object MenuItem25: TMenuItem
         Caption = 'Show cyclomatic complexity'
         OnClick = MenuItem25Click
+      end
+      object MenuItem44: TMenuItem
+        Caption = 'Show Callgraph'
+        OnClick = MenuItem44Click
       end
       object Separator3: TMenuItem
         Caption = '-'
@@ -227,12 +231,16 @@ object Form1: TForm1
       Caption = 'Show cyclomatic complexity'
       OnClick = MenuItem25Click
     end
+    object MenuItem45: TMenuItem
+      Caption = 'Show Callgraph'
+      OnClick = MenuItem44Click
+    end
   end
   object OpenDialog2: TOpenDialog
     DefaultExt = '.pas;.pp;.lpr'
     Filter = 'Pascal File|*.pas; *.pp; *.lpr|All|*.*'
-    Left = 304
-    Top = 160
+    Left = 240
+    Top = 88
   end
   object SaveDialog2: TSaveDialog
     DefaultExt = '.png'

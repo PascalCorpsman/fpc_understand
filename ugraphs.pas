@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* Ugraphs                                                         23.11.2022 *)
 (*                                                                            *)
-(* Version     : 0.02                                                         *)
+(* Version     : 0.03                                                         *)
 (*                                                                            *)
 (* Autor       : Corpsman                                                     *)
 (*                                                                            *)
@@ -19,6 +19,7 @@
 (*                                                                            *)
 (* History     : 0.01 - Initial version merge from old ugraphs versions       *)
 (*               0.02 - Node Color                                            *)
+(*               0.03 - use Caption instead of Name for Dimension calculation *)
 (*                                                                            *)
 (* Known Bugs  : none                                                         *)
 (*                                                                            *)
@@ -550,7 +551,7 @@ Begin
           End;
           If drawIt Then Begin
             If i = Fnodes[i].Edges[j].EndIndex Then Begin
-              w := round((canvas.TextWidth(Fnodes[i].name) * 0.5 + 2 * DefaultTextborderX));
+              w := round((canvas.TextWidth(Fnodes[i].Caption) * 0.5 + 2 * DefaultTextborderX));
               // Die von der LCL unterstützte Bezier Routine kann nur mit 4*I Punktwolken umgehen !!
               //Warum geht das net ?
               setlength(a, 8);
@@ -607,7 +608,7 @@ Begin
               // Eine Kante die auf sich selbst zeigt und eine Caption hat
               x := (fnodes[i].Position.x);
               y := (fnodes[i].Position.Y);
-              w := round((canvas.TextWidth(Fnodes[i].name) * 0.5 + 2 * DefaultTextborderX));
+              w := round((canvas.TextWidth(Fnodes[i].Caption) * 0.5 + 2 * DefaultTextborderX));
               x := x + w;
               y := y - Canvas.TextHeight(Fnodes[i].Edges[j].EdgeCaption) Div 2;
             End
@@ -834,7 +835,7 @@ Var
 Begin
   result := -1;
   For i := 0 To high(Fnodes) Do Begin
-    s := Fnodes[i].name;
+    s := Fnodes[i].Caption;
     w := canvas.TextWidth(s) + 2 * DefaultTextborderX;
     h := canvas.TextHeight(s) + 2 * DefaultTextborderY;
     xx := Fnodes[i].Position.x;
@@ -1372,7 +1373,7 @@ Var
   s: String;
 Begin
   For i := 0 To high(Fnodes) Do Begin
-    s := Fnodes[i].name;
+    s := Fnodes[i].Caption;
     w := canvas.TextWidth(s) + 2 * DefaultTextborderX;
     h := canvas.TextHeight(s) + 2 * DefaultTextborderY;
     xx := Fnodes[i].Position.x;

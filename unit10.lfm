@@ -1,0 +1,58 @@
+object Form10: TForm10
+  Left = 335
+  Height = 370
+  Top = 116
+  Width = 274
+  Caption = 'Form10'
+  ClientHeight = 370
+  ClientWidth = 274
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object Label1: TLabel
+    Left = 8
+    Height = 15
+    Top = 8
+    Width = 66
+    Caption = 'Please select'
+  end
+  object CheckListBox1: TCheckListBox
+    Left = 8
+    Height = 272
+    Top = 32
+    Width = 256
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ItemHeight = 0
+    TabOrder = 0
+  end
+  object Button1: TButton
+    Left = 8
+    Height = 25
+    Top = 336
+    Width = 256
+    Anchors = [akLeft, akRight, akBottom]
+    Caption = 'OK'
+    ModalResult = 1
+    TabOrder = 1
+  end
+  object Button2: TButton
+    Left = 8
+    Height = 25
+    Top = 304
+    Width = 75
+    Anchors = [akLeft, akBottom]
+    Caption = 'all'
+    OnClick = Button2Click
+    TabOrder = 2
+  end
+  object Button3: TButton
+    Left = 189
+    Height = 25
+    Top = 304
+    Width = 75
+    Anchors = [akRight, akBottom]
+    Caption = 'none'
+    OnClick = Button3Click
+    TabOrder = 3
+  end
+end

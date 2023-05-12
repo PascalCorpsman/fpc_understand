@@ -1,0 +1,151 @@
+object Form8: TForm8
+  Left = 334
+  Height = 668
+  Top = 115
+  Width = 836
+  Caption = 'Form8'
+  Menu = MainMenu1
+  OnCloseQuery = FormCloseQuery
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object MainMenu1: TMainMenu
+    Left = 32
+    Top = 16
+    object MenuItem1: TMenuItem
+      Caption = 'File'
+      object MenuItem6: TMenuItem
+        Caption = 'Export as CSV'
+        OnClick = MenuItem6Click
+      end
+      object MenuItem9: TMenuItem
+        Caption = 'Export marks as CSV'
+        OnClick = MenuItem9Click
+      end
+      object MenuItem5: TMenuItem
+        Caption = 'Close'
+        OnClick = MenuItem5Click
+      end
+    end
+    object MenuItem2: TMenuItem
+      Caption = 'Edit'
+      object MenuItem3: TMenuItem
+        AutoCheck = True
+        Caption = 'Grid'
+        Checked = True
+        OnClick = MenuItem3Click
+      end
+      object MenuItem7: TMenuItem
+        Caption = 'Marking'
+        object MenuItem8: TMenuItem
+          Caption = 'Clear all marks'
+          OnClick = MenuItem8Click
+        end
+        object MenuItem13: TMenuItem
+          Caption = 'Unmark by selection'
+          OnClick = MenuItem13Click
+        end
+        object Separator1: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem10: TMenuItem
+          Caption = 'Mark by unit'
+          OnClick = MenuItem10Click
+        end
+        object MenuItem11: TMenuItem
+          Caption = 'Mark by class'
+          OnClick = MenuItem11Click
+        end
+        object MenuItem12: TMenuItem
+          Caption = 'Mark by selection'
+          OnClick = MenuItem12Click
+        end
+        object Separator4: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem27: TMenuItem
+          Caption = 'Mark cycles'
+          OnClick = MenuItem27Click
+        end
+        object MenuItem25: TMenuItem
+          Caption = 'Mark all childs'
+          OnClick = MenuItem25Click
+        end
+        object MenuItem26: TMenuItem
+          Caption = 'Mark all childs recursive'
+          OnClick = MenuItem26Click
+        end
+        object MenuItem23: TMenuItem
+          Caption = 'Mark all parents'
+          OnClick = MenuItem23Click
+        end
+        object MenuItem24: TMenuItem
+          Caption = 'Mark all parents recursive'
+          OnClick = MenuItem24Click
+        end
+      end
+      object MenuItem14: TMenuItem
+        Caption = 'Visibility'
+        object MenuItem15: TMenuItem
+          Caption = 'Show all'
+        end
+        object Separator2: TMenuItem
+          Caption = '-'
+        end
+        object MenuItem16: TMenuItem
+          Caption = 'Hide selected'
+        end
+        object MenuItem17: TMenuItem
+          Caption = 'Hide marked'
+        end
+      end
+    end
+    object MenuItem18: TMenuItem
+      Caption = 'Details'
+      object MenuItem19: TMenuItem
+        AutoCheck = True
+        Caption = 'Methods'
+        Checked = True
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = MenuItem19Click
+      end
+      object MenuItem20: TMenuItem
+        AutoCheck = True
+        Caption = 'Classes'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = MenuItem20Click
+      end
+      object MenuItem21: TMenuItem
+        AutoCheck = True
+        Caption = 'Units'
+        GroupIndex = 1
+        RadioItem = True
+        OnClick = MenuItem21Click
+      end
+      object Separator3: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem22: TMenuItem
+        AutoCheck = True
+        Caption = 'Ignore self reverencing'
+        OnClick = MenuItem22Click
+      end
+    end
+  end
+  object PopupMenu1: TPopupMenu
+    Left = 32
+    Top = 72
+    object MenuItem4: TMenuItem
+      Caption = 'Center out of range nodes'
+      OnClick = MenuItem4Click
+    end
+  end
+  object SaveDialog1: TSaveDialog
+    DefaultExt = '.csv'
+    Filter = 'CSV-File|*.csv|All|*.*'
+    Left = 32
+    Top = 136
+  end
+end

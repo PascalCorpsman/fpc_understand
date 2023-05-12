@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.02                                                         *)
+(* Version     : 0.04                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -33,6 +33,7 @@
 (*                        => Code Refactoring arbeiten mit .lpi Dateien       *)
 (*                      Automatisches Center der Knoten nach erst Erstellung  *)
 (*               0.03 - Keywort suche mittels binärer Suche -> Speedup        *)
+(*               0.04 - Start with Callgraph Evaluation                       *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -93,6 +94,8 @@ Type
     MenuItem41: TMenuItem;
     MenuItem42: TMenuItem;
     MenuItem43: TMenuItem;
+    MenuItem44: TMenuItem;
+    MenuItem45: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
@@ -137,6 +140,7 @@ Type
     Procedure MenuItem3Click(Sender: TObject);
     Procedure MenuItem42Click(Sender: TObject);
     Procedure MenuItem43Click(Sender: TObject);
+    Procedure MenuItem44Click(Sender: TObject);
     Procedure MenuItem4Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
@@ -177,6 +181,7 @@ Uses LCLIntf, LCLType, IniFiles, Math, LazFileUtils
   , unit3 // Klassen Ansicht
   , unit4 // Code Counter
   , unit5 // CC
+  , unit8 // Callgraph
   ;
 
 Const
@@ -189,7 +194,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.03 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.04 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
@@ -444,6 +449,13 @@ Begin
   Else Begin
     showmessage('Error, nothing to load.');
   End;
+End;
+
+Procedure TForm1.MenuItem44Click(Sender: TObject);
+Begin
+  // Show Callgraph
+  form8.CreateCallerList(GetSelectedFileList(), fProject.FileName);
+  form8.ShowModal;
 End;
 
 Procedure TForm1.MenuItem27Click(Sender: TObject);
@@ -789,16 +801,33 @@ Begin
   mDownPos := point(x, y);
   mMovePos := point(x, y);
   (*
-   * Nur abwählen, wenn nicht gerade einer ausgewählt wird...
+   * Anwahl: - Click auf nicht selectierte Node (dadurch abwahl aller anderen)
+   *         - STRG + Click auf Node (alle anderen bleiben angewählt)
+   *
+   * Abwahl: - Click ins Freie --> Alle Abwählen
+   *         - STRG + Click auf Selected --> nur eine abwählen
    *)
+
   If (Not (ssShift In shift)) Then Begin
     index := GraphBox1.Graph.GetNodeIndex(x, y, GraphBox1.Canvas);
-    If (index = -1) Or (Not GraphBox1.Graph.Node[index].Selected) Then Begin
-      GraphBox1.Graph.DeSelectAll();
+    If (ssCtrl In Shift) And (index <> -1) Then Begin
+      If GraphBox1.Graph.Node[index].Selected Then Begin
+        GraphBox1.Graph.DeSelect(index);
+        GraphBox1.Invalidate;
+        exit; // Sonst würde der unten gleich wieder angewählt, das wollen wir hier aber nicht..
+      End
+      Else Begin
+        GraphBox1.Graph.Select(index);
+      End;
+    End
+    Else Begin
+      If (index = -1) Or (Not GraphBox1.Graph.Node[index].Selected) Then Begin
+        GraphBox1.Graph.DeSelectAll();
+      End;
     End;
   End;
   GraphBox1.Graph.Select(GraphBox1.Graph.GetNodeIndex(x, y, GraphBox1.canvas));
-  Invalidate;
+  GraphBox1.Invalidate;
 End;
 
 Procedure TForm1.GraphboxMouseUp(Sender: TObject; Button: TMouseButton;

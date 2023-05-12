@@ -36,6 +36,8 @@ Type
     BeginLineInFile: Integer; // Die Zeile in der der Quellcode tatsächlich begint
     Filename: String; // Die Quelldatei in der die Funktion steht
     // Da könnte man auch noch verwursten, welche anderen Methoden diese Methode so aufruft..
+    IdentifierList: Array Of String;
+    IdentifierListCnt: integer;
   End;
 
   TProcInfos = Array Of TProcInfo;
@@ -95,6 +97,7 @@ Type
     Filename: String;
     ParseInternal: Integer;
     InCaseCounter: integer;
+    ParseFunctionBody: Boolean; // True, wenn wir in einer Funktion "Parsen", egal ob genestet oder nicht ...
     Procedure OnHandleToken(Sender: TObject; Const Token: TToken);
     Procedure AddClassToClassList(Const aToken: TToken);
 
@@ -134,6 +137,13 @@ Begin
   End;
   (* filter everything irrelevant out ;) *)
   If (Token.Kind = tkComment) Or (Token.Kind = tkString) Or (Token.Kind = tkCompilerDirective) Then Exit;
+  If (token.Kind = tkIdentifier) And (ParseFunctionBody) Then Begin
+    aProcInfo.IdentifierList[aProcInfo.IdentifierListCnt] := Token.Value;
+    inc(aProcInfo.IdentifierListCnt);
+    If aProcInfo.IdentifierListCnt > high(aProcInfo.IdentifierList) Then Begin
+      setlength(aProcInfo.IdentifierList, high(aProcInfo.IdentifierList) + 1025);
+    End;
+  End;
   (*
    * Strategie:
    * 1. Suchen nach Schlüsselwort "Procedur" / "Funktion", dabei wissen ob wir gerade in einer Klassendeklaration sind und über oder unter "implementation"
@@ -186,6 +196,8 @@ Begin
             aProcInfo.Name := '';
             aProcInfo.Filename := Filename;
             aProcInfo.Method := Token.Value;
+            aProcInfo.IdentifierListCnt := 0;
+            setlength(aProcInfo.IdentifierList, 1024);
             InCaseCounter := 0;
           End;
         End;
@@ -294,7 +306,7 @@ Begin
            Procedure Blub;
            Procedure TForm.Blub;
            Procedure Blub();
-           function Blub:;
+           function Blub:<identifier>;
          *)
         Case Token.Value Of
           '.': aProcInfo.ClassName := aProcInfo.Name;
@@ -316,6 +328,7 @@ Begin
         (*
          * alles was sein eigenes "End" hat muss den Counter natürlich erhöhen ;)
          *)
+        ParseFunctionBody := true; // TODO: ggf. ist es besser den erst beim Begin zu setzten, dann gibt es weniger Fals Positives ..
         If (Last(0).Value = '=') And (lowercase(token.Value) = 'record') Then Begin
           inc(ParseInternal);
           inc(Counter);
@@ -362,6 +375,7 @@ Begin
               setlength(Infos, high(Infos) + 2);
               Infos[high(Infos)] := aProcInfo;
               State := sIdle;
+              ParseFunctionBody := false;
             End;
             dec(ParseInternal);
           End;
