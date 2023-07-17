@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.04                                                         *)
+(* Version     : 0.05                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -34,6 +34,7 @@
 (*                      Automatisches Center der Knoten nach erst Erstellung  *)
 (*               0.03 - Keywort suche mittels binärer Suche -> Speedup        *)
 (*               0.04 - Start with Callgraph Evaluation                       *)
+(*               0.05 - Add Visible menues in Callgraph Evaluation Screen     *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -194,7 +195,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.04 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.05 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);

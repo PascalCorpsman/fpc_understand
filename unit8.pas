@@ -84,6 +84,9 @@ Type
     Procedure MenuItem11Click(Sender: TObject);
     Procedure MenuItem12Click(Sender: TObject);
     Procedure MenuItem13Click(Sender: TObject);
+    Procedure MenuItem15Click(Sender: TObject);
+    Procedure MenuItem16Click(Sender: TObject);
+    Procedure MenuItem17Click(Sender: TObject);
     Procedure MenuItem19Click(Sender: TObject);
     Procedure MenuItem20Click(Sender: TObject);
     Procedure MenuItem21Click(Sender: TObject);
@@ -274,6 +277,45 @@ Begin
     If GraphBox1.Graph.Node[i].Selected Then Begin
       n := GraphBox1.Graph.Node[i];
       n.Marked := false;
+      GraphBox1.Graph.Node[i] := n;
+    End;
+  End;
+  GraphBox1.Invalidate;
+End;
+
+Procedure TForm8.MenuItem15Click(Sender: TObject);
+Begin
+  // Show all
+  GraphBox1.Graph.ShowAllNodes();
+  GraphBox1.Invalidate;
+End;
+
+Procedure TForm8.MenuItem16Click(Sender: TObject);
+Var
+  i: Integer;
+  n: TNode;
+Begin
+  // Hide Selected
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
+    If GraphBox1.Graph.Node[i].Selected Then Begin
+      n := GraphBox1.Graph.Node[i];
+      n.Visible := false;
+      GraphBox1.Graph.Node[i] := n;
+    End;
+  End;
+  GraphBox1.Invalidate;
+End;
+
+Procedure TForm8.MenuItem17Click(Sender: TObject);
+Var
+  i: Integer;
+  n: TNode;
+Begin
+  // Hide Marked
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
+    If GraphBox1.Graph.Node[i].Marked Then Begin
+      n := GraphBox1.Graph.Node[i];
+      n.Visible := false;
       GraphBox1.Graph.Node[i] := n;
     End;
   End;

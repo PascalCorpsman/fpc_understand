@@ -88,15 +88,18 @@ object Form8: TForm8
         Caption = 'Visibility'
         object MenuItem15: TMenuItem
           Caption = 'Show all'
+          OnClick = MenuItem15Click
         end
         object Separator2: TMenuItem
           Caption = '-'
         end
         object MenuItem16: TMenuItem
           Caption = 'Hide selected'
+          OnClick = MenuItem16Click
         end
         object MenuItem17: TMenuItem
           Caption = 'Hide marked'
+          OnClick = MenuItem17Click
         end
       end
     end
