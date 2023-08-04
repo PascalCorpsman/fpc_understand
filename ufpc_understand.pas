@@ -26,7 +26,7 @@ Type
   TRemoveResult = (rrRemoved, rrdeactivated, rrError);
 
   TProjectFileInfo = Record
-    Filename: String;
+    Filename: String; // Absoluter Dateiname
     FileInfo: TFileInfo;
     Methods: TProcInfos;
   End;
@@ -40,7 +40,7 @@ Type
   TProjectFile = Record
     FromLPI: Boolean;
     Enabled: Boolean;
-    FileName: String;
+    FileName: String; // Absoluter Dateiname
   End;
 
   TFileList = Array Of TProjectFile;

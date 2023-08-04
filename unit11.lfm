@@ -1,0 +1,126 @@
+object Form11: TForm11
+  Left = 353
+  Height = 502
+  Top = 124
+  Width = 855
+  Caption = 'Form11'
+  ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+  ChildSizing.EnlargeVertical = crsHomogenousChildResize
+  ChildSizing.Layout = cclLeftToRightThenTopToBottom
+  ChildSizing.ControlsPerLine = 2
+  ClientHeight = 502
+  ClientWidth = 855
+  OnCreate = FormCreate
+  Position = poScreenCenter
+  LCLVersion = '2.3.0.0'
+  object GroupBox1: TGroupBox
+    Left = 0
+    Height = 502
+    Top = 0
+    Width = 435
+    ClientHeight = 482
+    ClientWidth = 431
+    TabOrder = 0
+    object Label1: TLabel
+      Left = 0
+      Height = 30
+      Top = 0
+      Width = 431
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Line breakdown'
+      Font.Height = -21
+      ParentFont = False
+    end
+    object Shape1: TShape
+      Left = 8
+      Height = 20
+      Top = 40
+      Width = 50
+      Brush.Color = 16744448
+    end
+    object Shape2: TShape
+      Left = 8
+      Height = 20
+      Top = 64
+      Width = 50
+      Brush.Color = clGreen
+    end
+    object Shape3: TShape
+      Left = 8
+      Height = 20
+      Top = 88
+      Width = 50
+      Brush.Color = clMaroon
+    end
+    object Label3: TLabel
+      Left = 72
+      Height = 15
+      Top = 45
+      Width = 28
+      Caption = 'Code'
+    end
+    object Label4: TLabel
+      Left = 72
+      Height = 15
+      Top = 69
+      Width = 54
+      Caption = 'Comment'
+    end
+    object Label5: TLabel
+      Left = 72
+      Height = 15
+      Top = 93
+      Width = 29
+      Caption = 'Blank'
+    end
+    object Label6: TLabel
+      Left = 152
+      Height = 15
+      Top = 45
+      Width = 34
+      Caption = 'Label6'
+    end
+    object Label7: TLabel
+      Left = 152
+      Height = 15
+      Top = 69
+      Width = 34
+      Caption = 'Label7'
+    end
+    object Label8: TLabel
+      Left = 152
+      Height = 15
+      Top = 93
+      Width = 34
+      Caption = 'Label8'
+    end
+  end
+  object GroupBox2: TGroupBox
+    Left = 435
+    Height = 502
+    Top = 0
+    Width = 420
+    ClientHeight = 482
+    ClientWidth = 416
+    TabOrder = 1
+    object Label2: TLabel
+      Left = 0
+      Height = 30
+      Top = 0
+      Width = 416
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Directory structure'
+      Font.Height = -21
+      ParentFont = False
+    end
+    object Label9: TLabel
+      Left = 16
+      Height = 15
+      Top = 45
+      Width = 155
+      Caption = 'Segment size by lines of code'
+    end
+  end
+end

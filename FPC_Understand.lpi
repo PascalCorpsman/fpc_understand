@@ -143,6 +143,22 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit10"/>
       </Unit>
+      <Unit>
+        <Filename Value="unit11.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form11"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit11"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\Sample\Graphik\usunburstchart.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\Sample\DatenSteuerung\ufifo.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

@@ -70,8 +70,15 @@ object Form1: TForm1
         OnClick = MenuItem25Click
       end
       object MenuItem44: TMenuItem
-        Caption = 'Show Callgraph'
+        Caption = 'Show callgraph'
         OnClick = MenuItem44Click
+      end
+      object Separator9: TMenuItem
+        Caption = '-'
+      end
+      object MenuItem47: TMenuItem
+        Caption = 'Show chart statistics'
+        OnClick = MenuItem46Click
       end
       object Separator3: TMenuItem
         Caption = '-'
@@ -232,8 +239,15 @@ object Form1: TForm1
       OnClick = MenuItem25Click
     end
     object MenuItem45: TMenuItem
-      Caption = 'Show Callgraph'
+      Caption = 'Show callgraph'
       OnClick = MenuItem44Click
+    end
+    object Separator8: TMenuItem
+      Caption = '-'
+    end
+    object MenuItem46: TMenuItem
+      Caption = 'Show chart statistics'
+      OnClick = MenuItem46Click
     end
   end
   object OpenDialog2: TOpenDialog

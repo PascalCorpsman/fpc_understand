@@ -35,6 +35,7 @@
 (*               0.03 - Keywort suche mittels binärer Suche -> Speedup        *)
 (*               0.04 - Start with Callgraph Evaluation                       *)
 (*               0.05 - Add Visible menues in Callgraph Evaluation Screen     *)
+(*               0.06 - Add chart statistics                                  *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -97,6 +98,8 @@ Type
     MenuItem43: TMenuItem;
     MenuItem44: TMenuItem;
     MenuItem45: TMenuItem;
+    MenuItem46: TMenuItem;
+    MenuItem47: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
@@ -115,6 +118,8 @@ Type
     Separator5: TMenuItem;
     Separator6: TMenuItem;
     Separator7: TMenuItem;
+    Separator8: TMenuItem;
+    Separator9: TMenuItem;
     Procedure FormCloseQuery(Sender: TObject; Var CanClose: Boolean);
     Procedure FormCreate(Sender: TObject);
     Procedure MenuItem10Click(Sender: TObject);
@@ -142,6 +147,7 @@ Type
     Procedure MenuItem42Click(Sender: TObject);
     Procedure MenuItem43Click(Sender: TObject);
     Procedure MenuItem44Click(Sender: TObject);
+    Procedure MenuItem46Click(Sender: TObject);
     Procedure MenuItem4Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
@@ -183,6 +189,7 @@ Uses LCLIntf, LCLType, IniFiles, Math, LazFileUtils
   , unit4 // Code Counter
   , unit5 // CC
   , unit8 // Callgraph
+  , Unit11 // Chart Statistics
   ;
 
 Const
@@ -195,7 +202,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.05 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.06 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
@@ -457,6 +464,13 @@ Begin
   // Show Callgraph
   form8.CreateCallerList(GetSelectedFileList(), fProject.FileName);
   form8.ShowModal;
+End;
+
+Procedure TForm1.MenuItem46Click(Sender: TObject);
+Begin
+  // Show Chart Statistics
+  form11.InitCharts(GetSelectedFileList(), fProject);
+  form11.ShowModal;
 End;
 
 Procedure TForm1.MenuItem27Click(Sender: TObject);
