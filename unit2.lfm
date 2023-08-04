@@ -18,7 +18,7 @@ object Form2: TForm2
     ReadOnly = True
     TabOrder = 0
     OnClick = TreeView1Click
-    Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
+    Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoShowSeparators, tvoToolTips, tvoThemedDraw]
     Items.Data = {
       F9FFFFFF020002000000FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF000000000000
       0000000700000047656E6572616CFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF0000
