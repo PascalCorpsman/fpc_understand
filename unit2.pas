@@ -101,9 +101,10 @@ Begin
   Shape2.OnClick := @ShapeClick;
   Shape3.OnClick := @ShapeClick;
   Shape4.OnClick := @ShapeClick;
-  showmessage(inttostr(lcl_fullversion));
 {$IF lcl_fullversion >= 2030000}
   TreeView1.ShowSeparators := false;
+{$ELSE}
+  TreeView1.Options := TreeView1.Options - [tvoShowSeparators];
 {$ENDIF}
 End;
 
