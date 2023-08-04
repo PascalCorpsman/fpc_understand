@@ -16,7 +16,6 @@ object Form2: TForm2
     Width = 177
     Align = alLeft
     ReadOnly = True
-//    ShowSeparators = False
     TabOrder = 0
     OnClick = TreeView1Click
     Options = [tvoAutoItemHeight, tvoHideSelection, tvoKeepCollapsedNodes, tvoReadOnly, tvoShowButtons, tvoShowLines, tvoShowRoot, tvoToolTips, tvoThemedDraw]
