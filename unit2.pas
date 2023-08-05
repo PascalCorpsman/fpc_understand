@@ -175,13 +175,32 @@ Begin
 End;
 
 Procedure TForm2.Button4Click(Sender: TObject);
+var
+  i: Integer;
 Begin
   // Remove file
-  showmessage('Todo.');
+  If CheckListBox1.ItemIndex = -1 Then Begin
+    showmessage('Error, nothing selected.');
+    exit;
+  End;
   (*
    * Ist die Datei aus dem .lpi File -> Warnung kann nur deaktiviert werden
    * sonst raus damit
    *)
+  If fList[CheckListBox1.ItemIndex].FromLPI Then Begin
+    showmessage('The selected file is loaded through the .lpi file, it can only be disabled.' + LineEnding +
+      'To remove the file use the "edit.lpi" button.');
+    CheckListBox1.Checked[CheckListBox1.ItemIndex] := false;
+    fList[CheckListBox1.ItemIndex].Enabled := false;
+  End
+  Else Begin
+    // Eine Händisch hinzu gefügte Datei kann einfach gelöscht werden
+    For i := CheckListBox1.ItemIndex To CheckListBox1.Count - 2 Do Begin
+      fList[i] := fList[i + 1];
+    End;
+    setlength(fList, high(fList));
+    CheckListBox1.Items.Delete(CheckListBox1.ItemIndex);
+  End;
 End;
 
 Procedure TForm2.Button1Click(Sender: TObject);
@@ -243,7 +262,7 @@ Begin
   label6.Caption := ExcludeTrailingPathDelimiter(aProject.RootFolder);
   label2.Caption := aProject.LPISource;
   fList := aProject.Files;
-  // Relativ zo intern "Absolut"
+  // Relativ zu intern "Absolut"
   fList := RelativeFileListToAbsoluteFileList(fProject.RootFolder, fProject.Files);
   UpdateCheckListbox();
 End;
