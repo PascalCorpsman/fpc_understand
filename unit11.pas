@@ -112,10 +112,8 @@ Procedure TForm11.InitCharts(aList: TProjectFilesInfo; Const aProject: TProject
   );
 Var
   t, Root: PSunBurstChartElement;
-  sum, i, NumberOfCodeLines, NumberofCommentLines, EmptyLines,
-    TotalLines: Integer;
+  sum, i, NumberOfCodeLines, NumberofCommentLines, EmptyLines, TotalLines: Integer;
   p: PDirInfo;
-  s: String;
 Begin
   // Line Breakdown
   LinebreakChart1.Clear;
@@ -184,8 +182,7 @@ Begin
   root^.UserData := p;
   root^.Value := 0;
   For i := 0 To high(aList) Do Begin
-    s := ExtractRelativePath(aProject.RootFolder, aList[i].Filename);
-    InsertFileInfo(Root, s, aList[i]);
+    InsertFileInfo(Root, aList[i].Filename, aList[i]);
     root^.Value := root^.Value + aList[i].FileInfo.NumberOfCodeLines;
   End;
   DirectoryChart1.DeselectAll;

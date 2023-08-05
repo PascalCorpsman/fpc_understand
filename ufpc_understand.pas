@@ -26,7 +26,7 @@ Type
   TRemoveResult = (rrRemoved, rrdeactivated, rrError);
 
   TProjectFileInfo = Record
-    Filename: String; // Absoluter Dateiname
+    Filename: String; // Relativer Dateiname
     FileInfo: TFileInfo;
     Methods: TProcInfos;
   End;
@@ -40,7 +40,7 @@ Type
   TProjectFile = Record
     FromLPI: Boolean;
     Enabled: Boolean;
-    FileName: String; // Absoluter Dateiname
+    FileName: String; // Relativer Dateiname
   End;
 
   TFileList = Array Of TProjectFile;
@@ -175,6 +175,20 @@ Uses IniFiles, Dialogs, LazFileUtils, LCLType, forms;
 Procedure Nop;
 Begin
 
+End;
+
+Function GetOSIdentiferString(): String;
+Begin
+  Result := '';
+{$IFDEF Linux}
+  Result := 'Linux';
+{$ENDIF}
+{$IFDEF darwin}
+  Result := 'Darwin';
+{$ENDIF}
+{$IFDEF Windows}
+  Result := 'Windows';
+{$ENDIF}
 End;
 
 Function SearchFileInSearchPaths(Const SearchPaths: TStringArray;
@@ -744,6 +758,7 @@ Function TProject.LoadFromFile(aFilename: String): boolean;
 Var
   ini: TIniFile;
   cnt, i: Integer;
+  OSstring: String;
 Begin
   result := false;
   Clear;
@@ -763,7 +778,12 @@ Begin
   fCCColors.ColorUnstable := StringToColor(ini.ReadString('General', 'CCColorUnstable', ColorToString(clRed)));
 
   // Files
-  fFiles.RootFolder := ini.ReadString('Files', 'RootFolder', '');
+  OSstring := GetOSIdentiferString();
+  fFiles.RootFolder := ini.ReadString('Files', 'RootFolder' + OSstring, '');
+  If fFiles.RootFolder = '' Then Begin
+    // Retry with "old" Style..
+    fFiles.RootFolder := ini.ReadString('Files', 'RootFolder', '');
+  End;
   fFiles.LPISource := ini.ReadString('Files', 'LPISource', '');
   cnt := ini.readInteger('Files', 'Count', 0);
   setlength(fFiles.Files, cnt);
@@ -785,6 +805,7 @@ Procedure TProject.SaveToFile(aFilename: String);
 Var
   ini: TIniFile;
   cnt, i: integer;
+  RootLinux, RootWindows, RootDarwin: String;
 Begin
   ini := TIniFile.Create(aFilename);
   ini.CacheUpdates := true;
@@ -799,8 +820,16 @@ Begin
   ini.WriteString('General', 'CCColorComplex', ColorToString(fCCColors.ColorComplex));
   ini.WriteString('General', 'CCColorUnstable', ColorToString(fCCColors.ColorUnstable));
   // Files
+  // Retten der OS-Root folders
+  RootLinux := ini.ReadString('Files', 'RootFolderLinux', '');
+  RootWindows := ini.ReadString('Files', 'RootFolderWindows', '');
+  RootDarwin := ini.ReadString('Files', 'RootFolderDarwin', '');
   ini.EraseSection('Files'); // Sonst überleben die "Obsoleten" Teile
-  ini.WriteString('Files', 'RootFolder', fFiles.RootFolder);
+  // Wieder herstellen der OS-Root folders
+  If RootLinux <> '' Then ini.WriteString('Files', 'RootFolderLinux', RootLinux);
+  If RootWindows <> '' Then ini.WriteString('Files', 'RootFolderWindows', RootWindows);
+  If RootDarwin <> '' Then ini.WriteString('Files', 'RootFolderDarwin', RootDarwin);
+  ini.WriteString('Files', 'RootFolder' + GetOSIdentiferString(), fFiles.RootFolder);
   ini.WriteString('Files', 'LPISource', fFiles.LPISource);
   cnt := 0;
   For i := 0 To high(fFiles.Files) Do Begin
