@@ -1,14 +1,14 @@
 object Form1: TForm1
-  Left = 333
+  Left = 1705
   Height = 837
-  Top = 115
+  Top = 214
   Width = 946
   Caption = 'Form1'
   Menu = MainMenu1
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '2.3.0.0'
+  LCLVersion = '2.2.6.0'
   object MainMenu1: TMainMenu
     Left = 40
     Top = 16
@@ -58,7 +58,7 @@ object Form1: TForm1
         Caption = '-'
       end
       object MenuItem13: TMenuItem
-        Caption = 'Show statistiks'
+        Caption = 'Show statistics'
         OnClick = MenuItem13Click
       end
       object MenuItem14: TMenuItem
@@ -145,7 +145,7 @@ object Form1: TForm1
       OnClick = MenuItem9Click
     end
     object MenuItem10: TMenuItem
-      Caption = 'Oder all nodes as circle'
+      Caption = 'Arrange all nodes as circle'
       OnClick = MenuItem10Click
     end
     object Separator1: TMenuItem
@@ -158,7 +158,7 @@ object Form1: TForm1
         OnClick = MenuItem17Click
       end
       object MenuItem35: TMenuItem
-        Caption = 'Mark alk childs'
+        Caption = 'Mark all childs'
         OnClick = MenuItem19Click
       end
       object MenuItem36: TMenuItem
