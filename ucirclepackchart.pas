@@ -698,7 +698,7 @@ Procedure TPackedCircleChart.Paint;
       s := StringReplace(s, #10, '', [rfReplaceAll]);
       lines := s.Split([#13]);
 {$ELSE}
-      lines := aElement^.Caption.Split([LineEnding]);
+      lines := aText.Split([LineEnding]);
 {$ENDIF}
       t := p.y - (canvas.TextHeight('8') * length(Lines)) Div 2;
       // TODO: This implements a "center" layout, in theory you could provide left and right as well..
