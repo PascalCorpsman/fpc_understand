@@ -25,6 +25,9 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="TAChartLazarusPkg"/>
+      </Item>
+      <Item>
         <PackageName Value="laz.virtualtreeview_package"/>
       </Item>
       <Item>
@@ -157,6 +160,10 @@
       </Unit>
       <Unit>
         <Filename Value="..\Sample\DatenSteuerung\ufifo.pas"/>
+        <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="..\Sample\Graphik\ucirclepackchart.pas"/>
         <IsPartOfProject Value="True"/>
       </Unit>
     </Units>

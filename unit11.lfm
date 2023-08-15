@@ -1,31 +1,31 @@
 object Form11: TForm11
   Left = 353
-  Height = 502
+  Height = 782
   Top = 124
-  Width = 855
+  Width = 1129
   Caption = 'Form11'
   ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
   ChildSizing.EnlargeVertical = crsHomogenousChildResize
   ChildSizing.Layout = cclLeftToRightThenTopToBottom
-  ChildSizing.ControlsPerLine = 2
-  ClientHeight = 502
-  ClientWidth = 855
+  ChildSizing.ControlsPerLine = 3
+  ClientHeight = 782
+  ClientWidth = 1129
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '2.3.0.0'
   object GroupBox1: TGroupBox
     Left = 0
-    Height = 502
+    Height = 415
     Top = 0
-    Width = 435
-    ClientHeight = 482
-    ClientWidth = 431
+    Width = 329
+    ClientHeight = 395
+    ClientWidth = 325
     TabOrder = 0
     object Label1: TLabel
       Left = 0
       Height = 30
       Top = 0
-      Width = 431
+      Width = 325
       Align = alTop
       Alignment = taCenter
       Caption = 'Line breakdown'
@@ -95,20 +95,29 @@ object Form11: TForm11
       Width = 34
       Caption = 'Label8'
     end
+    object ToggleBox1: TToggleBox
+      Left = 8
+      Height = 35
+      Top = -8
+      Width = 35
+      Caption = '<->'
+      OnClick = ToggleBox1Click
+      TabOrder = 0
+    end
   end
   object GroupBox2: TGroupBox
-    Left = 435
-    Height = 502
+    Left = 329
+    Height = 415
     Top = 0
-    Width = 420
-    ClientHeight = 482
-    ClientWidth = 416
+    Width = 401
+    ClientHeight = 395
+    ClientWidth = 397
     TabOrder = 1
     object Label2: TLabel
       Left = 0
       Height = 30
       Top = 0
-      Width = 416
+      Width = 397
       Align = alTop
       Alignment = taCenter
       Caption = 'Directory structure'
@@ -121,6 +130,237 @@ object Form11: TForm11
       Top = 45
       Width = 155
       Caption = 'Segment size by lines of code'
+    end
+    object ToggleBox2: TToggleBox
+      Left = 8
+      Height = 35
+      Top = -8
+      Width = 35
+      Caption = '<->'
+      OnClick = ToggleBox2Click
+      TabOrder = 0
+    end
+  end
+  object GroupBox3: TGroupBox
+    Left = 730
+    Height = 415
+    Top = 0
+    Width = 399
+    ClientHeight = 395
+    ClientWidth = 395
+    TabOrder = 2
+    object Label10: TLabel
+      Left = 0
+      Height = 30
+      Top = 0
+      Width = 395
+      Align = alTop
+      Alignment = taCenter
+      Caption = ' Most complex functions'
+      Font.Height = -21
+      ParentFont = False
+    end
+    object ToggleBox3: TToggleBox
+      Left = 8
+      Height = 35
+      Top = -8
+      Width = 35
+      Caption = '<->'
+      OnClick = ToggleBox3Click
+      TabOrder = 0
+    end
+    object Label11: TLabel
+      Left = 16
+      Height = 15
+      Top = 45
+      Width = 242
+      Caption = 'Complexity by the McCabe cyclomatic Metric'
+    end
+  end
+  object GroupBox4: TGroupBox
+    Left = 0
+    Height = 367
+    Top = 415
+    Width = 329
+    ClientHeight = 347
+    ClientWidth = 325
+    TabOrder = 3
+    object Label12: TLabel
+      Left = 0
+      Height = 30
+      Top = 0
+      Width = 325
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Largest functions'
+      Font.Height = -21
+      ParentFont = False
+    end
+    object ToggleBox4: TToggleBox
+      Left = 8
+      Height = 35
+      Top = -8
+      Width = 35
+      Caption = '<->'
+      OnChange = ToggleBox4Change
+      TabOrder = 0
+    end
+    object Label15: TLabel
+      Left = 16
+      Height = 15
+      Top = 45
+      Width = 106
+      Caption = 'Height by total lines'
+    end
+    object Chart1: TChart
+      Left = 0
+      Height = 278
+      Top = 69
+      Width = 325
+      AxisList = <      
+        item
+          Marks.LabelBrush.Style = bsClear
+          Minors = <>
+          Title.LabelFont.Orientation = 900
+          Title.LabelBrush.Style = bsClear
+        end      
+        item
+          Visible = False
+          Alignment = calBottom
+          Marks.LabelBrush.Style = bsClear
+          Minors = <>
+          Title.LabelBrush.Style = bsClear
+        end>
+      Title.Text.Strings = (
+        'TAChart'
+      )
+      Toolset = ChartToolset1
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      ParentShowHint = False
+      ShowHint = True
+      object Chart1BarSeries1: TBarSeries
+        BarBrush.Color = clRed
+      end
+    end
+  end
+  object GroupBox5: TGroupBox
+    Left = 329
+    Height = 367
+    Top = 415
+    Width = 401
+    ClientHeight = 347
+    ClientWidth = 397
+    TabOrder = 4
+    object Label13: TLabel
+      Left = 0
+      Height = 30
+      Top = 0
+      Width = 397
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Most complex files'
+      Font.Height = -21
+      ParentFont = False
+    end
+    object ToggleBox5: TToggleBox
+      Left = 8
+      Height = 35
+      Top = -8
+      Width = 35
+      Caption = '<->'
+      OnChange = ToggleBox5Change
+      TabOrder = 0
+    end
+    object Label16: TLabel
+      Left = 16
+      Height = 1
+      Top = 45
+      Width = 1
+    end
+    object Label18: TLabel
+      Left = 16
+      Height = 15
+      Top = 45
+      Width = 242
+      Caption = 'Complexity by the McCabe cyclomatic Metric'
+    end
+  end
+  object GroupBox6: TGroupBox
+    Left = 730
+    Height = 367
+    Top = 415
+    Width = 399
+    ClientHeight = 347
+    ClientWidth = 395
+    TabOrder = 5
+    object Label14: TLabel
+      Left = 0
+      Height = 30
+      Top = 0
+      Width = 395
+      Align = alTop
+      Alignment = taCenter
+      Caption = 'Largest files'
+      Font.Height = -21
+      ParentFont = False
+    end
+    object ToggleBox6: TToggleBox
+      Left = 8
+      Height = 35
+      Top = -8
+      Width = 35
+      Caption = '<->'
+      OnChange = ToggleBox6Change
+      TabOrder = 0
+    end
+    object Label17: TLabel
+      Left = 16
+      Height = 15
+      Top = 45
+      Width = 106
+      Caption = 'Height by total lines'
+    end
+    object Chart2: TChart
+      Left = 0
+      Height = 278
+      Top = 69
+      Width = 395
+      AxisList = <      
+        item
+          Marks.LabelBrush.Style = bsClear
+          Minors = <>
+          Title.LabelFont.Orientation = 900
+          Title.LabelBrush.Style = bsClear
+        end      
+        item
+          Visible = False
+          Alignment = calBottom
+          Marks.LabelBrush.Style = bsClear
+          Minors = <>
+          Title.LabelBrush.Style = bsClear
+        end>
+      Title.Text.Strings = (
+        'TAChart'
+      )
+      Toolset = ChartToolset2
+      Anchors = [akTop, akLeft, akRight, akBottom]
+      object Chart2BarSeries1: TBarSeries
+        BarBrush.Color = clRed
+      end
+    end
+  end
+  object ChartToolset1: TChartToolset
+    Left = 88
+    Top = 536
+    object ChartToolset1DataPointHintTool1: TDataPointHintTool
+      OnHint = ChartToolset1DataPointHintTool1Hint
+    end
+  end
+  object ChartToolset2: TChartToolset
+    Left = 824
+    Top = 528
+    object ChartToolset1DataPointHintTool2: TDataPointHintTool
+      OnHint = ChartToolset1DataPointHintTool2Hint
     end
   end
 end

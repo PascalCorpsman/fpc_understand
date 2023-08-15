@@ -34,6 +34,7 @@ Type
     CaseCC: integer; // Die Zyklomatische Komplexität der jeweiligen Function / Procedur nur durch "Switch" Cases
     LineInFile: Integer; // Die Zeile in der das Schlüsselwort "Procedure" / "Funktion" Steht
     BeginLineInFile: Integer; // Die Zeile in der der Quellcode tatsächlich begint
+    EndLineInFile: integer; // Die Zeile in der das schließende End der Funktion Steht.
     Filename: String; // Die Quelldatei in der die Funktion steht
     // Da könnte man auch noch verwursten, welche anderen Methoden diese Methode so aufruft..
     IdentifierList: Array Of String;
@@ -372,6 +373,7 @@ Begin
           If (Counter = 0) Then Begin
             If (ParseInternal = 0) Then Begin
               // Geschafft speichern der Ergebnisse ;)
+              aProcInfo.EndLineInFile := Token.Line;
               setlength(Infos, high(Infos) + 2);
               Infos[high(Infos)] := aProcInfo;
               State := sIdle;

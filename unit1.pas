@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.07                                                         *)
+(* Version     : 0.08                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -38,6 +38,8 @@
 (*               0.06 - Add chart statistics                                  *)
 (*               0.07 - Merg typo fixes from H.Elsner                         *)
 (*                      support different root folders for different OS       *)
+(*               0.08 - Add Circle graphs to chart statistics                 *)
+(*                      Add Barcharts to chart statistics                     *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -204,7 +206,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.06 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.08 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
