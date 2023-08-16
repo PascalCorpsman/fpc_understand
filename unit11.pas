@@ -662,8 +662,8 @@ Begin
     For j := 0 To high(aList[i].Methods) Do Begin
       If aList[i].Methods[j].CC > aProject.CCColors.LevelGood Then Begin
         c := DefaultCircle();
-        c.Value := aList[i].Methods[j].CC;
-        c.Caption := inttostr(c.value);
+        c.Value := sqrt(aList[i].Methods[j].CC / pi);
+        c.Caption := inttostr(aList[i].Methods[j].CC);
         c.Color.BrushColor := MostComplexFunctionColors[random(length(MostComplexFunctionColors))];
         c.Color.PenColor := c.Color.BrushColor;
         c.Color.FontColor := clWhite;
@@ -704,8 +704,8 @@ Begin
     // TODO: Was ist hier ein "Ordentliches" Maß ?
     If sum Div cnt > 1 Then Begin
       c := DefaultCircle();
-      c.Value := sum Div cnt;
-      c.Caption := inttostr(c.value);
+      c.Value := sqrt(sum / (cnt * pi));
+      c.Caption := inttostr(sum Div cnt);
       c.Color.BrushColor := MostComplexFunctionColors[random(length(MostComplexFunctionColors))];
       c.Color.PenColor := c.Color.BrushColor;
       c.Color.FontColor := clWhite;

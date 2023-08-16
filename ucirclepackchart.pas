@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* uCirclePackChart                                                08.08.2023 *)
 (*                                                                            *)
-(* Version     : 0.02                                                         *)
+(* Version     : 0.03                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -27,6 +27,7 @@
 (* History     : 0.01 - Initial version                                       *)
 (*               0.02 - Add: NeedReEvaluation                                 *)
 (*                      FIX: OnAfterPaint missing, Memleak                    *)
+(*               0.03 - switch value from integer to single                   *)
 (*                                                                            *)
 (******************************************************************************)
 Unit ucirclepackchart;
@@ -61,7 +62,7 @@ Type
     Caption: String;
     Color: TColorSet;
     SelectedColor: TColorSet;
-    Value: Integer; // The Value that determines the Diameter of the circle
+    Value: Single; // The Value that determines the Diameter of the circle
     UserData: Pointer;
     Selected: Boolean; // If True, then Selected Brush / Selected will be used (will not be stored!)
 
