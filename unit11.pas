@@ -660,7 +660,8 @@ Begin
   fmcfuCursorElement := Nil;
   For i := 0 To high(aList) Do Begin
     For j := 0 To high(aList[i].Methods) Do Begin
-      If aList[i].Methods[j].CC > aProject.CCColors.LevelGood Then Begin
+      // TODO: die schwelle einstellbar machen
+      If aList[i].Methods[j].CC > aProject.ChartStatisticSettings.BoarderForMostComplexFunction Then Begin
         c := DefaultCircle();
         c.Value := sqrt(aList[i].Methods[j].CC / pi);
         c.Caption := inttostr(aList[i].Methods[j].CC);
@@ -682,6 +683,15 @@ Begin
       End;
     End;
   End;
+  // Es gibt keine "Komplexesten" funktionen
+  If MostComplexFunctions1.CircleCount = 0 Then Begin
+    c := DefaultCircle();
+    c.Caption := 'none';
+    c.Color.BrushColor := clWhite;
+    c.Color.PenColor := clWhite;
+    c.Color.FontColor := clBlack;
+    c.SelectedColor := c.Color;
+  End;
   MostComplexFunctions1.Invalidate;
 End;
 
@@ -701,11 +711,10 @@ Begin
     For j := 0 To high(aList[i].Methods) Do Begin
       sum := sum + aList[i].Methods[j].CC;
     End;
-    // TODO: Was ist hier ein "Ordentliches" Maß ?
-    If sum Div cnt > 1 Then Begin
+    If sum Div cnt > aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles Then Begin
       c := DefaultCircle();
       c.Value := sqrt(sum / (cnt * pi));
-      c.Caption := inttostr(sum Div cnt);
+      c.Caption := format('%0.1f', [sum / cnt]); //inttostr(sum Div cnt);
       c.Color.BrushColor := MostComplexFunctionColors[random(length(MostComplexFunctionColors))];
       c.Color.PenColor := c.Color.BrushColor;
       c.Color.FontColor := clWhite;
@@ -729,8 +738,7 @@ Begin
   For i := 0 To high(aList) Do Begin
     For j := 0 To high(aList[i].Methods) Do Begin
       len := aList[i].Methods[j].EndLineInFile - aList[i].Methods[j].BeginLineInFile;
-      // TODO: die 100 muss noch einstellbar werden !
-      If len > 100 Then Begin
+      If len > aProject.ChartStatisticSettings.BoarderForLargestFunction Then Begin
         If aList[i].Methods[j].ClassName = '' Then Begin
           s := aList[i].Filename + '.' + aList[i].Methods[j].Name;
         End
@@ -755,8 +763,7 @@ Begin
   c := 0;
   For i := 0 To high(aList) Do Begin
     len := aList[i].FileInfo.NumberOfCodeLines;
-    // TODO: die 500 muss noch einstellbar werden !
-    If len > 500 Then Begin
+    If len > aProject.ChartStatisticSettings.BoarderForLargestFiles Then Begin
       s := aList[i].Filename;
       Chart2BarSeries1.AddXY(c, len, s, MostComplexFunctionColors[c Mod length(MostComplexFunctionColors)]);
       inc(c);

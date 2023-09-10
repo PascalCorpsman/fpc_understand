@@ -40,6 +40,8 @@
 (*                      support different root folders for different OS       *)
 (*               0.08 - Add Circle graphs to chart statistics                 *)
 (*                      Add Barcharts to chart statistics                     *)
+(*               0.09 - remove treeview in settings                           *)
+(*                      Add chart statistic options                           *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)

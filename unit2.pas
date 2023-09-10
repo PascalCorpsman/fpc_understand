@@ -40,9 +40,17 @@ Type
     Edit2: TEdit;
     Edit3: TEdit;
     Edit4: TEdit;
+    Edit5: TEdit;
+    Edit6: TEdit;
+    Edit7: TEdit;
+    Edit8: TEdit;
     GroupBox1: TGroupBox;
     Label1: TLabel;
     Label10: TLabel;
+    Label11: TLabel;
+    Label12: TLabel;
+    Label13: TLabel;
+    Label14: TLabel;
     Label2: TLabel;
     Label3: TLabel;
     Label4: TLabel;
@@ -61,7 +69,7 @@ Type
     Shape4: TShape;
     TabSheet1: TTabSheet;
     TabSheet2: TTabSheet;
-    TreeView1: TTreeView;
+    TabSheet3: TTabSheet;
     Procedure Button1Click(Sender: TObject);
     Procedure Button2Click(Sender: TObject);
     Procedure Button3Click(Sender: TObject);
@@ -71,7 +79,6 @@ Type
     Procedure Button7Click(Sender: TObject);
     Procedure FormCreate(Sender: TObject);
     Procedure Shape1ChangeBounds(Sender: TObject);
-    Procedure TreeView1Click(Sender: TObject);
     Procedure ShapeClick(Sender: TObject);
   private
     fProject: TProject;
@@ -96,16 +103,10 @@ Uses unit7, LCLVersion;
 Procedure TForm2.FormCreate(Sender: TObject);
 Begin
   Caption := 'Project Settings';
-  PageControl1.ShowTabs := false;
   Shape1.OnClick := @ShapeClick;
   Shape2.OnClick := @ShapeClick;
   Shape3.OnClick := @ShapeClick;
   Shape4.OnClick := @ShapeClick;
-{$IF lcl_fullversion >= 2030000}
-  TreeView1.ShowSeparators := false;
-{$ELSE}
-  TreeView1.Options := TreeView1.Options - [tvoShowSeparators];
-{$ENDIF}
 End;
 
 Procedure TForm2.Button5Click(Sender: TObject);
@@ -175,7 +176,7 @@ Begin
 End;
 
 Procedure TForm2.Button4Click(Sender: TObject);
-var
+Var
   i: Integer;
 Begin
   // Remove file
@@ -208,15 +209,6 @@ Begin
   ModalResult := mrOK;
 End;
 
-Procedure TForm2.TreeView1Click(Sender: TObject);
-Begin
-  If Not assigned(TreeView1.Selected) Then exit;
-  Case TreeView1.Selected.Text Of
-    'General': PageControl1.ActivePageIndex := 0;
-    'Files': PageControl1.ActivePageIndex := 1;
-  End;
-End;
-
 Procedure TForm2.ShapeClick(Sender: TObject);
 Begin
   ColorDialog1.Color := TShape(sender).Brush.Color;
@@ -247,7 +239,6 @@ End;
 Procedure TForm2.LoadProjectToLCL(Const aProject: TProject);
 Begin
   PageControl1.ActivePageIndex := 0; // Immer Reset auf die Generellen Einstellungen
-  TreeView1.Selected := TreeView1.Items[0];
   fProject := aProject;
   // General
   edit1.text := aProject.Name;
@@ -262,6 +253,12 @@ Begin
   label6.Caption := ExcludeTrailingPathDelimiter(aProject.RootFolder);
   label2.Caption := aProject.LPISource;
   fList := aProject.Files;
+  // Chart statistics
+  edit5.Text := inttostr(aProject.ChartStatisticSettings.BoarderForLargestFunction);
+  edit6.Text := inttostr(aProject.ChartStatisticSettings.BoarderForLargestFiles);
+  edit7.Text := inttostr(aProject.ChartStatisticSettings.BoarderForMostComplexFunction);
+  edit8.Text := inttostr(aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles);
+
   // Relativ zu intern "Absolut"
   fList := RelativeFileListToAbsoluteFileList(fProject.RootFolder, fProject.Files);
   UpdateCheckListbox();
@@ -278,10 +275,18 @@ Begin
   c.ColorModerate := Shape2.Brush.Color;
   c.ColorComplex := Shape3.Brush.Color;
   c.ColorUnstable := Shape4.Brush.Color;
+  // TODO: Alle Integer "default" werte hier müssen in Constanten damit sie aus ufpc_understand.pas geladen werden und zu TProject.clear Synchron gehalten werden können !
   c.LevelGood := strtointdef(Edit2.Text, 10);
   c.LevelModerate := strtointdef(Edit3.Text, 20);
   c.LevelComplex := strtointdef(Edit4.Text, 50);
   aProject.CCColors := c;
+
+  // Chart statistics
+  aProject.ChartStatisticSettings.BoarderForMostComplexFunction := strtointdef(edit7.Text, 10);
+  aProject.ChartStatisticSettings.BoarderForLargestFunction := strtointdef(edit5.Text, 100);
+  aProject.ChartStatisticSettings.BoarderForLargestFiles := strtointdef(edit6.Text, 500);
+  aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles := strtointdef(edit8.Text, 1);
+
   // Files
   aProject.RootFolder := IncludeTrailingPathDelimiter(label6.Caption);
   aProject.LPISource := label2.Caption;

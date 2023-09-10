@@ -62,6 +62,13 @@ Type
     ColorUnstable: TColor; // > 50 Untestable code, very high risk
   End;
 
+  TChartStatisticSettings = Record
+    BoarderForMostComplexFunction: integer; // Eine Funktion muss eine größere CC als X haben um in die Statistik mit aufgenommen zu werden
+    BoarderForLargestFunction: Integer; // Eine Funktion muss mehr als X Zeilen haben um in die Statistik mit aufgenommen zu werden
+    BoarderForLargestFiles: integer; // Eine Datei muss mehr als X Zeilen haben um in die Statistik mit aufgenommen zu werden
+    BoarderForAverageMostComplexFiles: integer; // Der Durchschnitt aller Methoden in einer Datei muss größer diesem Wert liegen um Berücksichtigt zu werden
+  End;
+
   { TProject }
 
   TProject = Class
@@ -80,6 +87,7 @@ Type
     Procedure SetName(AValue: String);
     Procedure SetRootFolder(AValue: String);
   public
+    ChartStatisticSettings: TChartStatisticSettings;
     Property CCColors: TCCColors read fCCColors write SetCCColors;
     (*
      * General
@@ -696,6 +704,10 @@ Begin
   fCCColors.LevelComplex := 50;
   fCCColors.ColorComplex := clMaroon;
   fCCColors.ColorUnstable := clRed;
+  ChartStatisticSettings.BoarderForLargestFunction := 100;
+  ChartStatisticSettings.BoarderForLargestFiles := 500;
+  ChartStatisticSettings.BoarderForMostComplexFunction := fCCColors.LevelGood;
+  ChartStatisticSettings.BoarderForAverageMostComplexFiles := 1;
 End;
 
 Procedure TProject.SetName(AValue: String);
@@ -769,13 +781,17 @@ Begin
   // General
   fGeneral.ProjectName := ini.ReadString('General', 'Name', '');
 
-  fCCColors.LevelGood := ini.ReadInteger('General', 'CCLevelGood', 10);
-  fCCColors.LevelModerate := ini.ReadInteger('General', 'CCLevelModerate', 20);
-  fCCColors.LevelComplex := ini.ReadInteger('General', 'CCLevelComplex', 50);
-  fCCColors.ColorGood := StringToColor(ini.ReadString('General', 'CCColorGood', ColorToString(clgreen)));
-  fCCColors.ColorModerate := StringToColor(ini.ReadString('General', 'CCColorModerate', ColorToString(clYellow)));
-  fCCColors.ColorComplex := StringToColor(ini.ReadString('General', 'CCColorComplex', ColorToString(clMaroon)));
-  fCCColors.ColorUnstable := StringToColor(ini.ReadString('General', 'CCColorUnstable', ColorToString(clRed)));
+  fCCColors.LevelGood := ini.ReadInteger('General', 'CCLevelGood', fCCColors.LevelGood);
+  fCCColors.LevelModerate := ini.ReadInteger('General', 'CCLevelModerate', fCCColors.LevelModerate);
+  fCCColors.LevelComplex := ini.ReadInteger('General', 'CCLevelComplex', fCCColors.LevelComplex);
+  fCCColors.ColorGood := StringToColor(ini.ReadString('General', 'CCColorGood', ColorToString(fCCColors.ColorGood)));
+  fCCColors.ColorModerate := StringToColor(ini.ReadString('General', 'CCColorModerate', ColorToString(fCCColors.ColorModerate)));
+  fCCColors.ColorComplex := StringToColor(ini.ReadString('General', 'CCColorComplex', ColorToString(fCCColors.ColorComplex)));
+  fCCColors.ColorUnstable := StringToColor(ini.ReadString('General', 'CCColorUnstable', ColorToString(fCCColors.ColorUnstable)));
+  ChartStatisticSettings.BoarderForLargestFunction := ini.ReadInteger('ChartStatistiks', 'BoarderForLargestFunction', ChartStatisticSettings.BoarderForLargestFunction);
+  ChartStatisticSettings.BoarderForLargestFiles := ini.ReadInteger('ChartStatistiks', 'BoarderForLargestFiles', ChartStatisticSettings.BoarderForLargestFiles);
+  ChartStatisticSettings.BoarderForMostComplexFunction := ini.ReadInteger('ChartStatistiks', 'BoarderForMostComplexFunction', ChartStatisticSettings.BoarderForMostComplexFunction);
+  ChartStatisticSettings.BoarderForAverageMostComplexFiles := ini.ReadInteger('ChartStatistiks', 'BoarderForAverageMostComplexFiles', ChartStatisticSettings.BoarderForAverageMostComplexFiles);
 
   // Files
   OSstring := GetOSIdentiferString();
@@ -819,6 +835,10 @@ Begin
   ini.WriteString('General', 'CCColorModerate', ColorToString(fCCColors.ColorModerate));
   ini.WriteString('General', 'CCColorComplex', ColorToString(fCCColors.ColorComplex));
   ini.WriteString('General', 'CCColorUnstable', ColorToString(fCCColors.ColorUnstable));
+  ini.WriteInteger('ChartStatistiks', 'BoarderForLargestFunction', ChartStatisticSettings.BoarderForLargestFunction);
+  ini.WriteInteger('ChartStatistiks', 'BoarderForLargestFiles', ChartStatisticSettings.BoarderForLargestFiles);
+  ini.WriteInteger('ChartStatistiks', 'BoarderForMostComplexFunction', ChartStatisticSettings.BoarderForMostComplexFunction);
+  ini.WriteInteger('ChartStatistiks', 'BoarderForAverageMostComplexFiles', ChartStatisticSettings.BoarderForAverageMostComplexFiles);
   // Files
   // Retten der OS-Root folders
   RootLinux := ini.ReadString('Files', 'RootFolderLinux', '');
