@@ -725,6 +725,15 @@ Begin
       MostComplexFiles1.AddCircle(c);
     End;
   End;
+  If MostComplexFiles1.CircleCount = 0 Then Begin
+    c := DefaultCircle();
+    c.Caption := 'none';
+    c.Color.BrushColor := clWhite;
+    c.Color.PenColor := clWhite;
+    c.Color.FontColor := clBlack;
+    c.SelectedColor := c.Color;
+    MostComplexFiles1.AddCircle(c);
+  End;
   MostComplexFiles1.Invalidate;
 End;
 
@@ -746,6 +755,7 @@ Begin
         Else Begin
           s := aList[i].Filename + '.' + aList[i].Methods[j].ClassName + '.' + aList[i].Methods[j].Name;
         End;
+        s := s + ' [ ' + inttostr(len) + ']';
         Chart1BarSeries1.AddXY(c, len, s, MostComplexFunctionColors[c Mod length(MostComplexFunctionColors)]);
         inc(c);
       End;
@@ -765,7 +775,7 @@ Begin
   For i := 0 To high(aList) Do Begin
     len := aList[i].FileInfo.NumberOfCodeLines;
     If len > aProject.ChartStatisticSettings.BoarderForLargestFiles Then Begin
-      s := aList[i].Filename;
+      s := aList[i].Filename + ' [ ' + inttostr(len) + ']';
       Chart2BarSeries1.AddXY(c, len, s, MostComplexFunctionColors[c Mod length(MostComplexFunctionColors)]);
       inc(c);
     End;
