@@ -691,6 +691,7 @@ Begin
     c.Color.PenColor := clWhite;
     c.Color.FontColor := clBlack;
     c.SelectedColor := c.Color;
+    MostComplexFunctions1.AddCircle(c);
   End;
   MostComplexFunctions1.Invalidate;
 End;
