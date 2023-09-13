@@ -102,6 +102,9 @@ Uses unit7, LCLVersion;
 
 Procedure TForm2.FormCreate(Sender: TObject);
 Begin
+{$IFDEF Windows}
+  PageControl1.TabPosition := tpTop;
+{$ENDIF}
   Caption := 'Project Settings';
   Shape1.OnClick := @ShapeClick;
   Shape2.OnClick := @ShapeClick;
@@ -219,7 +222,7 @@ End;
 
 Procedure TForm2.Shape1ChangeBounds(Sender: TObject);
 Begin
-  // Nichts, das ist nur dass man schneller zum "Klick" kommt  und der steht direct drüber ;)
+  // Nichts, das ist nur dass man schneller zum "Klick" kommt und der steht direct drüber ;)
 End;
 
 Procedure TForm2.UpdateCheckListbox;
@@ -275,17 +278,16 @@ Begin
   c.ColorModerate := Shape2.Brush.Color;
   c.ColorComplex := Shape3.Brush.Color;
   c.ColorUnstable := Shape4.Brush.Color;
-  // TODO: Alle Integer "default" werte hier müssen in Constanten damit sie aus ufpc_understand.pas geladen werden und zu TProject.clear Synchron gehalten werden können !
-  c.LevelGood := strtointdef(Edit2.Text, 10);
-  c.LevelModerate := strtointdef(Edit3.Text, 20);
-  c.LevelComplex := strtointdef(Edit4.Text, 50);
+  c.LevelGood := strtointdef(Edit2.Text, Default_CCLevelGood);
+  c.LevelModerate := strtointdef(Edit3.Text, Default_CCLevelModerate);
+  c.LevelComplex := strtointdef(Edit4.Text, Default_CCLevelComplex);
   aProject.CCColors := c;
 
   // Chart statistics
-  aProject.ChartStatisticSettings.BoarderForMostComplexFunction := strtointdef(edit7.Text, 10);
-  aProject.ChartStatisticSettings.BoarderForLargestFunction := strtointdef(edit5.Text, 100);
-  aProject.ChartStatisticSettings.BoarderForLargestFiles := strtointdef(edit6.Text, 500);
-  aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles := strtointdef(edit8.Text, 1);
+  aProject.ChartStatisticSettings.BoarderForMostComplexFunction := strtointdef(edit7.Text, Default_CCLevelGood);
+  aProject.ChartStatisticSettings.BoarderForLargestFunction := strtointdef(edit5.Text, Default_BoarderForLargestFunction);
+  aProject.ChartStatisticSettings.BoarderForLargestFiles := strtointdef(edit6.Text, Default_BoarderForLargestFiles);
+  aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles := strtointdef(edit8.Text, Default_BoarderForAverageMostComplexFiles);
 
   // Files
   aProject.RootFolder := IncludeTrailingPathDelimiter(label6.Caption);

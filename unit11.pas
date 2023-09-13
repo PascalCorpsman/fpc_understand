@@ -660,7 +660,6 @@ Begin
   fmcfuCursorElement := Nil;
   For i := 0 To high(aList) Do Begin
     For j := 0 To high(aList[i].Methods) Do Begin
-      // TODO: die schwelle einstellbar machen
       If aList[i].Methods[j].CC > aProject.ChartStatisticSettings.BoarderForMostComplexFunction Then Begin
         c := DefaultCircle();
         c.Value := sqrt(aList[i].Methods[j].CC / pi);

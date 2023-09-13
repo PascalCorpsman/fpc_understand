@@ -21,6 +21,18 @@ Interface
 Uses
   Classes, SysUtils, Graphics, uDOMXML, ufpcparser;
 
+Const
+  Default_CCLevelGood = 10;
+  Default_CCLevelGoodColor = clGreen;
+  Default_CCLevelModerate = 20;
+  Default_CCLevelModerateColor = clYellow;
+  Default_CCLevelComplex = 50;
+  Default_CCLevelComplexColor = clMaroon;
+  Default_CCLevelUnstableColor = clred;
+  Default_BoarderForLargestFunction = 100;
+  Default_BoarderForLargestFiles = 500;
+  Default_BoarderForAverageMostComplexFiles = 1;
+
 Type
 
   TRemoveResult = (rrRemoved, rrdeactivated, rrError);
@@ -697,17 +709,17 @@ Begin
   fFiles.LPISource := '';
   fFiles.RootFolder := '';
   fFiles.Files := Nil;
-  fCCColors.LevelGood := 10;
-  fCCColors.ColorGood := clGreen;
-  fCCColors.LevelModerate := 20;
-  fCCColors.ColorModerate := clYellow;
-  fCCColors.LevelComplex := 50;
-  fCCColors.ColorComplex := clMaroon;
-  fCCColors.ColorUnstable := clRed;
-  ChartStatisticSettings.BoarderForLargestFunction := 100;
-  ChartStatisticSettings.BoarderForLargestFiles := 500;
+  fCCColors.LevelGood := Default_CCLevelGood;
+  fCCColors.ColorGood := Default_CCLevelGoodColor;
+  fCCColors.LevelModerate := Default_CCLevelModerate;
+  fCCColors.ColorModerate := Default_CCLevelModerateColor;
+  fCCColors.LevelComplex := Default_CCLevelComplex;
+  fCCColors.ColorComplex := Default_CCLevelComplexColor;
+  fCCColors.ColorUnstable := Default_CCLevelUnstableColor;
+  ChartStatisticSettings.BoarderForLargestFunction := Default_BoarderForLargestFunction;
+  ChartStatisticSettings.BoarderForLargestFiles := Default_BoarderForLargestFiles;
   ChartStatisticSettings.BoarderForMostComplexFunction := fCCColors.LevelGood;
-  ChartStatisticSettings.BoarderForAverageMostComplexFiles := 1;
+  ChartStatisticSettings.BoarderForAverageMostComplexFiles := Default_BoarderForAverageMostComplexFiles;
 End;
 
 Procedure TProject.SetName(AValue: String);

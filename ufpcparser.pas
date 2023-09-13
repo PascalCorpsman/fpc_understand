@@ -96,9 +96,9 @@ Type
     BelowImplementation: Boolean;
     InClassDefinition: Boolean;
     Filename: String;
-    ParseInternal: Integer;
+    ParseInternal: Integer; // Zähler der innerhalb einer Funktion / Procedure mitzählt ob wir eine genestete Funktion und oder einen Datentyp haben
     InCaseCounter: integer;
-    ParseFunctionBody: Boolean; // True, wenn wir in einer Funktion "Parsen", egal ob genestet oder nicht ...
+    ParseFunctionBody: Boolean; // True, wenn wir in einer Funktion "Parsen", genestete funktionen werden übersprungen
     Procedure OnHandleToken(Sender: TObject; Const Token: TToken);
     Procedure AddClassToClassList(Const aToken: TToken);
 
@@ -329,7 +329,6 @@ Begin
         (*
          * alles was sein eigenes "End" hat muss den Counter natürlich erhöhen ;)
          *)
-        ParseFunctionBody := true; // TODO: ggf. ist es besser den erst beim Begin zu setzten, dann gibt es weniger Fals Positives ..
         If (Last(0).Value = '=') And (lowercase(token.Value) = 'record') Then Begin
           inc(ParseInternal);
           inc(Counter);
@@ -340,6 +339,7 @@ Begin
         End;
         If lowercase(Token.Value) = 'begin' Then Begin
           If (counter = 0) And (ParseInternal = 0) Then Begin
+            ParseFunctionBody := true;
             aProcInfo.BeginLineInFile := Token.Line;
           End;
           inc(Counter);
