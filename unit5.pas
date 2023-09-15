@@ -71,6 +71,7 @@ Const
   IndexCC = 4;
   IndexCaseCC = 5;
   IndexLine = 6;
+  IndexLength = 7;
 
   { TForm5 }
 
@@ -95,6 +96,7 @@ Begin
     StringGrid1.Columns[IndexCC].Title.Caption := 'Complexity';
     StringGrid1.Columns[IndexCaseCC].Title.Caption := 'Case Complexity';
     StringGrid1.Columns[IndexLine].Title.Caption := 'Line';
+    StringGrid1.Columns[IndexLength].Title.Caption := 'Length';
     StringGrid1.RowCount := length(fFileInfos[ListBox1.ItemIndex]) + 1;
     fStringGridSortDirection := false;
     For i := 0 To high(fFileInfos[ListBox1.ItemIndex]) Do Begin
@@ -105,6 +107,7 @@ Begin
       StringGrid1.Cells[IndexCC, i + 1] := inttostr(fFileInfos[ListBox1.ItemIndex][i].CC);
       StringGrid1.Cells[IndexCaseCC, i + 1] := inttostr(fFileInfos[ListBox1.ItemIndex][i].CaseCC);
       StringGrid1.Cells[IndexLine, i + 1] := inttostr(fFileInfos[ListBox1.ItemIndex][i].BeginLineInFile);
+      StringGrid1.Cells[IndexLength, i + 1] := inttostr(fFileInfos[ListBox1.ItemIndex][i].EndLineInFile - fFileInfos[ListBox1.ItemIndex][i].BeginLineInFile + 1);
     End;
     StringGrid1.SortColRow(true, IndexCC);
     StringGrid1.AutoSizeColumns;
@@ -146,7 +149,7 @@ Begin
   If acol <> bCol Then Begin
     Raise Exception.Create('TForm2.StringGrid1CompareCells, falsche Sortierung!');
   End;
-  If acol In [IndexCC, IndexLine, IndexCaseCC] Then Begin
+  If acol In [IndexCC, IndexLine, IndexCaseCC, IndexLength] Then Begin
     result := strtointdef(StringGrid1.Cells[ACol, ARow], 0) - strtointdef(StringGrid1.Cells[BCol, BRow], 0);
   End
   Else Begin

@@ -28,7 +28,6 @@ object Form5: TForm5
       ItemHeight = 0
       OnClick = ListBox1Click
       TabOrder = 0
-      TopIndex = -1
     end
     object StringGrid1: TStringGrid
       Left = 222
@@ -36,7 +35,7 @@ object Form5: TForm5
       Top = 1
       Width = 720
       Align = alClient
-      ColCount = 7
+      ColCount = 8
       Columns = <      
         item
           Title.Caption = 'Filename'
@@ -59,6 +58,9 @@ object Form5: TForm5
         end      
         item
           Title.Caption = 'Line'
+        end      
+        item
+          Title.Caption = 'Length'
         end>
       FixedCols = 0
       Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRangeSelect, goRowSelect, goSmoothScroll]
