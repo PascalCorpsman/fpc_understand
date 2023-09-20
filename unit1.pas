@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.10                                                         *)
+(* Version     : 0.11                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -43,6 +43,8 @@
 (*               0.09 - remove treeview in settings                           *)
 (*                      Add chart statistic options                           *)
 (*               0.10 - show method length in "show cyclomatic complexity"    *)
+(*               0.11 - improve color selection funktion in chart statistics  *)
+(*                      Better support for porting project files.             *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -209,7 +211,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.10 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.11 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);

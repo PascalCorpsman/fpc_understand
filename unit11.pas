@@ -664,10 +664,9 @@ Begin
         c := DefaultCircle();
         c.Value := sqrt(aList[i].Methods[j].CC / pi);
         c.Caption := inttostr(aList[i].Methods[j].CC);
-        c.Color.BrushColor := MostComplexFunctionColors[random(length(MostComplexFunctionColors))];
+        c.Color.BrushColor := MostComplexFunctionColors[MostComplexFunctions1.CircleCount Mod length(MostComplexFunctionColors)];
         c.Color.PenColor := c.Color.BrushColor;
         c.Color.FontColor := clWhite;
-
         If aList[i].Methods[j].ClassName = '' Then Begin
           s := aList[i].Filename + '.' + aList[i].Methods[j].Name;
         End
@@ -711,11 +710,11 @@ Begin
     For j := 0 To high(aList[i].Methods) Do Begin
       sum := sum + aList[i].Methods[j].CC;
     End;
-    If sum Div cnt > aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles Then Begin
+    If sum / cnt > aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles Then Begin
       c := DefaultCircle();
       c.Value := sqrt(sum / (cnt * pi));
       c.Caption := format('%0.1f', [sum / cnt]); //inttostr(sum Div cnt);
-      c.Color.BrushColor := MostComplexFunctionColors[random(length(MostComplexFunctionColors))];
+      c.Color.BrushColor := MostComplexFunctionColors[MostComplexFiles1.CircleCount Mod length(MostComplexFunctionColors)];
       c.Color.PenColor := c.Color.BrushColor;
       c.Color.FontColor := clWhite;
       new(p);

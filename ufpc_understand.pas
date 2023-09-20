@@ -814,6 +814,20 @@ Begin
   End;
   fFiles.LPISource := ini.ReadString('Files', 'LPISource', '');
   cnt := ini.readInteger('Files', 'Count', 0);
+
+  (*
+   * Check if Files exist, but Rootfolder is invalid
+   *)
+  fChanged := false;
+  If cnt <> 0 Then Begin
+    If (fFiles.RootFolder = '') Or ((fFiles.RootFolder <> '') And Not DirectoryExistsUTF8(fFiles.RootFolder)) Then Begin
+      ShowMessage('Your project root folder seems to be invalid (old value was: "' + fFiles.RootFolder + '"), please select a correct one for: ' + fGeneral.ProjectName);
+      fFiles.RootFolder := '';
+      If SelectDirectory('Root folder for: ' + fGeneral.ProjectName, '', fFiles.RootFolder) Then
+        fChanged := true;
+    End;
+  End;
+
   setlength(fFiles.Files, cnt);
   For i := 0 To high(fFiles.Files) Do Begin
     ffiles.Files[i].FileName := FixPathDelims(ini.ReadString('Files', 'File' + inttostr(i), ''));
@@ -825,7 +839,7 @@ Begin
 
   fFilename := aFilename;
   ini.Free;
-  fChanged := false;
+
   result := true;
 End;
 
