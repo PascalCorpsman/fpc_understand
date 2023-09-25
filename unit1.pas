@@ -57,7 +57,7 @@ Interface
 
 Uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, IniPropStorage,
-  ugraphs, ufpc_understand, ufpcparser;
+  ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl;
 
 Type
 
@@ -109,6 +109,7 @@ Type
     MenuItem45: TMenuItem;
     MenuItem46: TMenuItem;
     MenuItem47: TMenuItem;
+    MenuItem48: TMenuItem;
     MenuItem5: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
@@ -157,6 +158,7 @@ Type
     Procedure MenuItem43Click(Sender: TObject);
     Procedure MenuItem44Click(Sender: TObject);
     Procedure MenuItem46Click(Sender: TObject);
+    procedure MenuItem48Click(Sender: TObject);
     Procedure MenuItem4Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
@@ -481,6 +483,63 @@ Begin
   form11.InitCharts(GetSelectedFileList(), fProject);
   form11.ShowModal;
 End;
+
+procedure TForm1.MenuItem48Click(Sender: TObject);
+Var
+  i, j, LvlIdx, LvlCnt, l, cnt, xCnt, yCnt, h, w: integer;
+  f: Double;
+  LvlGrph: TLvlGraph;
+  LvlNode: TLvlGraphNode;
+  node: TNode;
+begin
+  // Order All Nodes with LvlGraph
+  cnt := GraphBox1.Graph.NodeCount;
+  xCnt := GraphBox1.Width Div (DefaultDistanceX);
+  yCnt := GraphBox1.Height Div (DefaultDistanceY);
+  f := cnt / (xCnt * yCnt) * 1.5;
+  xCnt := round(xCnt * f);
+
+  LvlGrph := TLvlGraph.create;
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do
+    LvlGrph.GetNode(GraphBox1.Graph.Node[i].Caption, True);
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do
+    For j := 0 To high(GraphBox1.Graph.Node[i].Edges) Do
+      LvlGrph.GetEdge(
+        GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Caption,
+        GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Caption,
+        True
+      );
+
+  LvlGrph.FindIndependentGraphs;
+  LvlGrph.CreateTopologicalLevels(False, True);
+  LvlGrph.MarkBackEdges;
+  LvlGrph.MinimizeEdgeLens(False);
+  LvlGrph.LimitLevelHeights(10, 0);
+  // lgesSeparate slower with bigger unit counts
+  LvlGrph.SplitLongEdges(lgesSeparate);
+  //LvlGrph.SplitLongEdges(lgesMergeTarget);
+  LvlGrph.MinimizeCrossings;
+
+  h := GraphBox1.Height Div (LvlGrph.LevelCount);
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do begin
+    LvlNode := LvlGrph.GetNode(GraphBox1.Graph.Node[i].Caption, False);
+    if LvlNode = nil then continue;
+    LvlIdx := 0;
+    LvlCnt := 0;
+    for l := 0 to LvlNode.Level.Count-1 do begin
+      if not LvlNode.Level.Nodes[l].Visible then continue;
+      inc(LvlCnt);
+      if l < LvlNode.IndexInLevel then inc(LvlIdx);
+    end;
+    w := GraphBox1.Width Div (LvlCnt);
+    node := GraphBox1.Graph.Node[i];
+    node.Position.x := (w div 2) + LvlIdx * w;
+    node.Position.y := (h div 2) + LvlNode.Level.Index * h;
+    GraphBox1.Graph.Node[i] := node;
+  end;
+  LvlGrph.Free;
+  GraphBox1.Invalidate;
+end;
 
 Procedure TForm1.MenuItem27Click(Sender: TObject);
 Var
