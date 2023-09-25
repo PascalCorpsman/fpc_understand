@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.11                                                         *)
+(* Version     : 0.12                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -45,6 +45,7 @@
 (*               0.10 - show method length in "show cyclomatic complexity"    *)
 (*               0.11 - improve color selection funktion in chart statistics  *)
 (*                      Better support for porting project files.             *)
+(*               0.12 - Support project as start param                        *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -211,7 +212,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.11 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.12 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
@@ -228,6 +229,12 @@ Begin
   fProject := TProject.Create();
   lp := IniPropStorage1.ReadString('LastProject', '');
   MenuItem15.Checked := IniPropStorage1.ReadBoolean('Grid', true);
+  // Overrule last Project with a project that is passed as param.
+  If ParamCount >= 1 Then Begin
+    If FileExists(ParamStr(1)) Then Begin
+      lp := ParamStr(1);
+    End;
+  End;
   If FileExists(lp) And (lp <> '') Then Begin
     LoadProject(lp);
   End;

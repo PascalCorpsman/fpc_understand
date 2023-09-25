@@ -819,7 +819,7 @@ Begin
    * Check if Files exist, but Rootfolder is invalid
    *)
   fChanged := false;
-  If cnt <> 0 Then Begin
+  If (cnt <> 0) or (fFiles.LPISource <> '') Then Begin
     If (fFiles.RootFolder = '') Or ((fFiles.RootFolder <> '') And Not DirectoryExistsUTF8(fFiles.RootFolder)) Then Begin
       ShowMessage('Your project root folder seems to be invalid (old value was: "' + fFiles.RootFolder + '"), please select a correct one for: ' + fGeneral.ProjectName);
       fFiles.RootFolder := '';
