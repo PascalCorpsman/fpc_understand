@@ -48,6 +48,9 @@
 (*               0.12 - Support project as start param                        *)
 (*               0.13 - Merge pull request "Arrange all visible nodes"        *)
 (*                                                                            *)
+(* Known Bugs  : - if a project holds 2 units with the same name              *)
+(*                 the dependency graph will merge them to one                *)
+(*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
 (*                                                                            *)
@@ -524,6 +527,7 @@ Begin
   xCnt := round(xCnt * f);
 
   LvlGrph := TLvlGraph.create;
+  // TODO: This will fail if 2 nodes have the same caption
   For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
     If GraphBox1.Graph.Node[i].Visible Then Begin
       LvlGrph.GetNode(GraphBox1.Graph.Node[i].Caption, True);
@@ -532,8 +536,7 @@ Begin
   For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
     For j := 0 To high(GraphBox1.Graph.Node[i].Edges) Do Begin
       If GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Visible And
-        GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Visible
-        Then Begin
+        GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Visible Then Begin
         LvlGrph.GetEdge(
           GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Caption,
           GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Caption,
@@ -556,11 +559,9 @@ Begin
   h := GraphBox1.Height Div (LvlGrph.LevelCount);
   For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
     node := GraphBox1.Graph.Node[i];
-    If Not node.Visible Then
-      Continue;
+    If Not node.Visible Then Continue;
     LvlNode := LvlGrph.GetNode(node.Caption, False);
-    If LvlNode = Nil Then
-      Continue;
+    If LvlNode = Nil Then Continue;
     LvlIdx := IndexInLevel(LvlNode, LvlCnt);
     w := GraphBox1.Width Div (LvlCnt);
     node.Position.x := (w Div 2) + LvlIdx * w;
@@ -877,6 +878,7 @@ Begin
   GraphBox1.Graph.MarkAllNodesAsNotAdded;
   // 2. Alle Beziehungen eintragen
   For i := 0 To high(fFiles) Do Begin
+    // TODO: Start here with Fixing, the known Bug!
     si := GraphBox1.Graph.AddNode(ExtractFileNameOnly(fFiles[i].Filename), ExtractFileNameOnly(fFiles[i].filename)); // Die Datei ist teil des Projektes, also muss sie auch eine Node bekommen !
     For j := 0 To high(fFiles[i].FileInfo.aUses) Do Begin
       ei := GraphBox1.Graph.AddNode(fFiles[i].FileInfo.aUses[j], fFiles[i].FileInfo.aUses[j]);
