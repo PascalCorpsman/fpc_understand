@@ -149,7 +149,7 @@ object Form1: TForm1
       OnClick = MenuItem10Click
     end
     object MenuItem48: TMenuItem
-      Caption = 'Arrange all nodes by dependency'
+      Caption = 'Arrange all visible nodes by dependency'
       OnClick = MenuItem48Click
     end
     object Separator1: TMenuItem
