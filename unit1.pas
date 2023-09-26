@@ -484,14 +484,30 @@ Begin
   form11.ShowModal;
 End;
 
-procedure TForm1.MenuItem48Click(Sender: TObject);
+Procedure TForm1.MenuItem48Click(Sender: TObject);
+
+  Function IndexInLevel(ALvlNode: TLvlGraphNode; out ACount: Integer): Integer;
+  var
+    l: Integer;
+  Begin
+    Result := 0;
+    ACount := 0;
+    For l := 0 to ALvlNode.Level.Count-1 Do Begin
+      If not ALvlNode.Level.Nodes[l].Visible Then
+        Continue;
+      Inc(ACount);
+      If l < ALvlNode.IndexInLevel Then
+        Inc(Result);
+    End;
+  End;
+
 Var
-  i, j, LvlIdx, LvlCnt, l, cnt, xCnt, yCnt, h, w: integer;
+  i, j, LvlIdx, LvlCnt, cnt, xCnt, yCnt, h, w: Integer;
   f: Double;
   LvlGrph: TLvlGraph;
   LvlNode: TLvlGraphNode;
   node: TNode;
-begin
+Begin
   // Order All Nodes with LvlGraph
   cnt := GraphBox1.Graph.NodeCount;
   xCnt := GraphBox1.Width Div (DefaultDistanceX);
@@ -500,15 +516,24 @@ begin
   xCnt := round(xCnt * f);
 
   LvlGrph := TLvlGraph.create;
-  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do
-    LvlGrph.GetNode(GraphBox1.Graph.Node[i].Caption, True);
-  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do
-    For j := 0 To high(GraphBox1.Graph.Node[i].Edges) Do
-      LvlGrph.GetEdge(
-        GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Caption,
-        GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Caption,
-        True
-      );
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
+    if GraphBox1.Graph.Node[i].Visible Then Begin
+      LvlGrph.GetNode(GraphBox1.Graph.Node[i].Caption, True);
+    End;
+  End;
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
+    For j := 0 To high(GraphBox1.Graph.Node[i].Edges) Do Begin
+      If GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Visible And
+         GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Visible
+      Then Begin
+        LvlGrph.GetEdge(
+          GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Caption,
+          GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Caption,
+          True
+        );
+      End;
+    End;
+  End;
 
   LvlGrph.FindIndependentGraphs;
   LvlGrph.CreateTopologicalLevels(False, True);
@@ -521,25 +546,22 @@ begin
   LvlGrph.MinimizeCrossings;
 
   h := GraphBox1.Height Div (LvlGrph.LevelCount);
-  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do begin
-    LvlNode := LvlGrph.GetNode(GraphBox1.Graph.Node[i].Caption, False);
-    if LvlNode = nil then continue;
-    LvlIdx := 0;
-    LvlCnt := 0;
-    for l := 0 to LvlNode.Level.Count-1 do begin
-      if not LvlNode.Level.Nodes[l].Visible then continue;
-      inc(LvlCnt);
-      if l < LvlNode.IndexInLevel then inc(LvlIdx);
-    end;
-    w := GraphBox1.Width Div (LvlCnt);
+  For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
     node := GraphBox1.Graph.Node[i];
+    If Not node.Visible Then
+      Continue;
+    LvlNode := LvlGrph.GetNode(node.Caption, False);
+    If LvlNode = Nil Then
+      Continue;
+    LvlIdx := IndexInLevel(LvlNode, LvlCnt);
+    w := GraphBox1.Width Div (LvlCnt);
     node.Position.x := (w div 2) + LvlIdx * w;
     node.Position.y := (h div 2) + LvlNode.Level.Index * h;
     GraphBox1.Graph.Node[i] := node;
-  end;
+  End;
   LvlGrph.Free;
   GraphBox1.Invalidate;
-end;
+End;
 
 Procedure TForm1.MenuItem27Click(Sender: TObject);
 Var
