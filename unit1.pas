@@ -46,6 +46,7 @@
 (*               0.11 - improve color selection funktion in chart statistics  *)
 (*                      Better support for porting project files.             *)
 (*               0.12 - Support project as start param                        *)
+(*               0.13 - Merge pull request "Arrange all visible nodes"        *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -159,7 +160,7 @@ Type
     Procedure MenuItem43Click(Sender: TObject);
     Procedure MenuItem44Click(Sender: TObject);
     Procedure MenuItem46Click(Sender: TObject);
-    procedure MenuItem48Click(Sender: TObject);
+    Procedure MenuItem48Click(Sender: TObject);
     Procedure MenuItem4Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
@@ -214,7 +215,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.12 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.13 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
@@ -493,14 +494,14 @@ End;
 
 Procedure TForm1.MenuItem48Click(Sender: TObject);
 
-  Function IndexInLevel(ALvlNode: TLvlGraphNode; out ACount: Integer): Integer;
-  var
+  Function IndexInLevel(ALvlNode: TLvlGraphNode; Out ACount: Integer): Integer;
+  Var
     l: Integer;
   Begin
     Result := 0;
     ACount := 0;
-    For l := 0 to ALvlNode.Level.Count-1 Do Begin
-      If not ALvlNode.Level.Nodes[l].Visible Then
+    For l := 0 To ALvlNode.Level.Count - 1 Do Begin
+      If Not ALvlNode.Level.Nodes[l].Visible Then
         Continue;
       Inc(ACount);
       If l < ALvlNode.IndexInLevel Then
@@ -524,20 +525,20 @@ Begin
 
   LvlGrph := TLvlGraph.create;
   For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
-    if GraphBox1.Graph.Node[i].Visible Then Begin
+    If GraphBox1.Graph.Node[i].Visible Then Begin
       LvlGrph.GetNode(GraphBox1.Graph.Node[i].Caption, True);
     End;
   End;
   For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
     For j := 0 To high(GraphBox1.Graph.Node[i].Edges) Do Begin
       If GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Visible And
-         GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Visible
-      Then Begin
+        GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Visible
+        Then Begin
         LvlGrph.GetEdge(
           GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].StartIndex].Caption,
           GraphBox1.Graph.Node[GraphBox1.Graph.Node[i].Edges[j].EndIndex].Caption,
           True
-        );
+          );
       End;
     End;
   End;
@@ -562,11 +563,12 @@ Begin
       Continue;
     LvlIdx := IndexInLevel(LvlNode, LvlCnt);
     w := GraphBox1.Width Div (LvlCnt);
-    node.Position.x := (w div 2) + LvlIdx * w;
-    node.Position.y := (h div 2) + LvlNode.Level.Index * h;
+    node.Position.x := (w Div 2) + LvlIdx * w;
+    node.Position.y := (h Div 2) + LvlNode.Level.Index * h;
     GraphBox1.Graph.Node[i] := node;
   End;
   LvlGrph.Free;
+  fProject.Change();
   GraphBox1.Invalidate;
 End;
 
