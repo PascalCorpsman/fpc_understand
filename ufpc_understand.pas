@@ -57,6 +57,13 @@ Type
 
   TFileList = Array Of TProjectFile;
 
+  TProjectSearchPath = Record
+    FromLPI: Boolean;
+    Path: String;
+  End;
+
+  TPathList = Array Of TProjectSearchPath;
+
   TFiles = Record
     LPISource: String;
     RootFolder: String;
@@ -87,6 +94,7 @@ Type
   private
     fGeneral: TGeneral;
     fFiles: TFiles;
+    FSearchPaths: TPathList;
     (*
      * Wird nicht gespeichert.
      *)
@@ -105,12 +113,14 @@ Type
      * General
      *)
     Property Name: String read fGeneral.ProjectName write SetName;
+
     (*
      * Files
      *)
     Property RootFolder: String read fFiles.RootFolder write SetRootFolder;
     Property LPISource: String read fFiles.LPISource write SetLPISource;
     Property Files: TFileList read fFiles.Files write SetFiles;
+    Property SearchPaths: TPathList read FSearchPaths write FSearchPaths; // relativ zu Rootfolder
 
     (*
      * For Internal Use
@@ -137,9 +147,21 @@ Type
    *    Absolute" Dateliste
    *)
 Function GetFileList(RootFolder, LPIFile: String; FileList: TFileList): TFileList;
+
+(*
+ * In:
+ *    RootFolder:
+ *    LPIFile   :
+ *    PathList  : Absolute Pfadliste
+ * Out:
+ *    Absolute" Pfadliste
+ *)
+Function GetSearchPathList(RootFolder, LPIFile: String; PathList: TPathList): TPathList;
+
 Function ConcatRelativePath(Const BaseName: String; Const RelativeName: String): String; // Gegenteil zu ExtractRelativePath
 
 Function RelativeFileListToAbsoluteFileList(RootFolder: String; FileList: TFileList): TFileList;
+Function RelativePathListToAbsolutePathList(RootFolder: String; PathList: TPathList): TPathList;
 
 Function NameInList(Const List: TProjectFilesInfo; aName: String): integer; // Wenn nicht enthalten = -1, sonst der Index ni List
 
@@ -152,14 +174,9 @@ Procedure Nop();
  *
  * Hat Filename keine Dateiendung werden die typischen FPC Dateieendungen "probiert"
  *)
-Function SearchFileInSearchPaths(Const SearchPaths: TStringArray; Filename: String): String;
+Function SearchFileInSearchPaths(Const SearchPaths: TPathList; Filename: String): String;
 
 // ----- Routinen zum Auslesen / verarbeiten einer Lazarus .lpi Datei ----------
-
-(*
- * Gibt die Suchpfade des .lpi files zurück, bereits passend zum OS convertiert, aber immer noch Relativ zum Dateinamen
- *)
-Function GetSearchPathsFromLPIFile(Const LPIFileName: String): TStringArray;
 
 (*
  * Repariert in einem Alten .lpi File die Durchnummerierung der "Units"
@@ -211,7 +228,7 @@ Begin
 {$ENDIF}
 End;
 
-Function SearchFileInSearchPaths(Const SearchPaths: TStringArray;
+Function SearchFileInSearchPaths(Const SearchPaths: TPathList;
   Filename: String): String;
 Var
   i, j: Integer;
@@ -234,7 +251,7 @@ Begin
   End;
   For i := 0 To high(SearchPaths) Do Begin
     For j := 0 To high(exts) Do Begin
-      fn := IncludeTrailingPathDelimiter(SearchPaths[i]) + Filename + exts[j];
+      fn := IncludeTrailingPathDelimiter(SearchPaths[i].Path) + Filename + exts[j];
       If FileExists(fn) Then Begin
         result := fn;
         exit;
@@ -415,7 +432,7 @@ Begin
   If Not assigned(units) Then Begin
     Raise exception.create('Not a .lpi file.');
   End;
-  // Prüfen ob die Datei schon teil des Projectes ist, dann nicht einfügen, sondern nur "Freischalten"
+  // Prüfen ob die Datei schon Teil des Projectes ist, dann nicht einfügen, sondern nur "Freischalten"
   unitfile := units.FirstChild;
   While assigned(unitfile) Do Begin
     If unitfile.FindNode('Filename').AttributeValue['Value'] = Filename Then Begin
@@ -535,16 +552,6 @@ Begin
   End;
 End;
 
-(*
- Example:
-   var
-     rootf, df, relf: String;
-   Begin
-     relf := ExtractRelativePath(rootf, df);
-     assert(ConcatRelativePath(rootf, relf) = df, 'Error, invert did not match);
-   end;
- *)
-
 Function ConcatRelativePath(Const BaseName: String; Const RelativeName: String
   ): String;
 Var
@@ -585,6 +592,19 @@ Begin
   For i := 0 To high(FileList) Do Begin
     result[i] := FileList[i];
     result[i].FileName := ConcatRelativePath(RootFolder, result[i].FileName);
+  End;
+End;
+
+Function RelativePathListToAbsolutePathList(RootFolder: String;
+  PathList: TPathList): TPathList;
+Var
+  i: Integer;
+Begin
+  result := Nil;
+  setlength(result, length(PathList));
+  For i := 0 To high(PathList) Do Begin
+    result[i] := PathList[i];
+    result[i].Path := ConcatRelativePath(RootFolder, IncludeTrailingPathDelimiter(result[i].Path));
   End;
 End;
 
@@ -686,6 +706,34 @@ Begin
   Quick(0, high(result));
 End;
 
+Function GetSearchPathList(RootFolder, LPIFile: String; PathList: TPathList
+  ): TPathList;
+Var
+  sa: TStringArray;
+  i, cnt: Integer;
+  nf: String;
+Begin
+  // 1. die Händischen Übernehmen
+  result := Nil;
+  For i := 0 To high(PathList) Do Begin
+    If Not PathList[i].FromLPI Then Begin
+      setlength(result, length(result) + 1);
+      result[i].FromLPI := false;
+      result[i].Path := PathList[i].Path;
+    End;
+  End;
+  // 2. die aus dem Projekt übernehmen
+  nf := ConcatRelativePath(RootFolder, LPIFile);
+  If Not FileExists(nf) Then exit;
+  sa := GetSearchPathsFromLPIFile(nf);
+  cnt := length(result);
+  setlength(result, cnt + length(sa));
+  For i := 0 To high(sa) Do Begin
+    result[cnt + i].FromLPI := true;
+    result[cnt + i].Path := ConcatRelativePath(RootFolder, IncludeTrailingPathDelimiter(sa[i]));
+  End;
+End;
+
 { TProject }
 
 Constructor TProject.Create;
@@ -720,6 +768,7 @@ Begin
   ChartStatisticSettings.BoarderForLargestFiles := Default_BoarderForLargestFiles;
   ChartStatisticSettings.BoarderForMostComplexFunction := fCCColors.LevelGood;
   ChartStatisticSettings.BoarderForAverageMostComplexFiles := Default_BoarderForAverageMostComplexFiles;
+  FSearchPaths := Nil;
 End;
 
 Procedure TProject.SetName(AValue: String);
@@ -819,7 +868,7 @@ Begin
    * Check if Files exist, but Rootfolder is invalid
    *)
   fChanged := false;
-  If (cnt <> 0) or (fFiles.LPISource <> '') Then Begin
+  If (cnt <> 0) Or (fFiles.LPISource <> '') Then Begin
     If (fFiles.RootFolder = '') Or ((fFiles.RootFolder <> '') And Not DirectoryExistsUTF8(fFiles.RootFolder)) Then Begin
       ShowMessage('Your project root folder seems to be invalid (old value was: "' + fFiles.RootFolder + '"), please select a correct one for: ' + fGeneral.ProjectName);
       fFiles.RootFolder := '';
@@ -833,6 +882,13 @@ Begin
     ffiles.Files[i].FileName := FixPathDelims(ini.ReadString('Files', 'File' + inttostr(i), ''));
     ffiles.Files[i].Enabled := ini.ReadBool('Files', 'Enabled' + inttostr(i), false);
     ffiles.Files[i].FromLPI := ini.ReadBool('Files', 'FromLPI' + inttostr(i), false);
+  End;
+
+  cnt := ini.readInteger('Files', 'SearchpathCount', 0);
+  setlength(FSearchPaths, cnt);
+  For i := 0 To high(FSearchPaths) Do Begin
+    FSearchPaths[i].Path := FixPathDelims(ini.ReadString('Files', 'SearchPath' + inttostr(i), ''));
+    FSearchPaths[i].FromLPI := false;
   End;
 
   // Weiter
@@ -888,8 +944,16 @@ Begin
     End;
   End;
   ini.WriteInteger('Files', 'Count', cnt);
+  cnt := 0;
+  For i := 0 To high(FSearchPaths) Do Begin
+    If Not FSearchPaths[i].FromLPI Then Begin
+      ini.WriteString('Files', 'SearchPath' + inttostr(cnt), FSearchPaths[i].Path);
+      inc(cnt);
+    End;
+  End;
+  ini.WriteInteger('Files', 'SearchpathCount', cnt);
 
-  // Weiter
+  // weiter
 
   ini.UpdateFile;
   ini.Free;

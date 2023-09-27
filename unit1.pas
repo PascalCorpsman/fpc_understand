@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.12                                                         *)
+(* Version     : 0.14                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -47,6 +47,7 @@
 (*                      Better support for porting project files.             *)
 (*               0.12 - Support project as start param                        *)
 (*               0.13 - Merge pull request "Arrange all visible nodes"        *)
+(*               0.14 - give access to searchpaths                            *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -206,6 +207,7 @@ Uses LCLIntf, LCLType, IniFiles, Math, LazFileUtils
   , unit5 // CC
   , unit8 // Callgraph
   , Unit11 // Chart Statistics
+  // , Unit12 // AddSearchpath
   ;
 
 Const
@@ -218,7 +220,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.13 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.14 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
@@ -621,18 +623,14 @@ Var
   i: integer;
   aList: TProjectFilesInfo;
   fn: String;
-  sp: TStringArray;
+  sp: TPathList;
   AtLeastOneSelected: Boolean;
 Begin
   // Open Selected Node Folder
   aList := GetSelectedFileList();
   If aList = fFiles Then Begin
     // Entweder es wurde nichts gewählt, oder es wurde eine Datei gewählt die nicht teil des Projektes ist.
-    sp := GetSearchPathsFromLPIFile(IncludeTrailingPathDelimiter(fProject.RootFolder) + fProject.LPISource);
-    // Umrechnen in Absolut
-    For i := 0 To high(sp) Do Begin
-      sp[i] := ConcatRelativePath(fProject.RootFolder, IncludeTrailingPathDelimiter(sp[i]));
-    End;
+    sp := RelativePathListToAbsolutePathList(fProject.RootFolder, fProject.SearchPaths);
     AtLeastOneSelected := false;
     For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
       If GraphBox1.Graph.Node[i].Selected Then Begin
@@ -662,7 +660,7 @@ End;
 Procedure TForm1.MenuItem32Click(Sender: TObject);
 Var
   aList: TProjectFilesInfo;
-  sp: TStringArray;
+  sp: TPathList;
   AtLeastOneSelected: Boolean;
   i: Integer;
   fn: String;
@@ -681,11 +679,7 @@ Begin
   aList := GetSelectedFileList();
   If aList = fFiles Then Begin
     // Entweder es wurde nichts gewählt, oder es wurde eine Datei gewählt die nicht teil des Projektes ist.
-    sp := GetSearchPathsFromLPIFile(IncludeTrailingPathDelimiter(fProject.RootFolder) + fProject.LPISource);
-    // Umrechnen in Absolut
-    For i := 0 To high(sp) Do Begin
-      sp[i] := ConcatRelativePath(fProject.RootFolder, IncludeTrailingPathDelimiter(sp[i]));
-    End;
+    sp := RelativePathListToAbsolutePathList(fProject.RootFolder, fProject.SearchPaths);
     AtLeastOneSelected := false;
     NeedStore := true;
     For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
@@ -871,6 +865,7 @@ Var
   i, j, si, ei: Integer;
   n: TNode;
   BringToScreen: Boolean;
+  //s: String;
 Begin
   // 1. Alle bisherigen als "ungültig" markieren
   BringToScreen := GraphBox1.Graph.NodeCount = 0;
@@ -879,7 +874,8 @@ Begin
   // 2. Alle Beziehungen eintragen
   For i := 0 To high(fFiles) Do Begin
     // TODO: Start here with Fixing, the known Bug!
-    si := GraphBox1.Graph.AddNode(ExtractFileNameOnly(fFiles[i].Filename), ExtractFileNameOnly(fFiles[i].filename)); // Die Datei ist teil des Projektes, also muss sie auch eine Node bekommen !
+    //si := GraphBox1.Graph.AddNode(ExtractRelativePath(fProject.RootFolder, fFiles[i].Filename), ExtractFileNameOnly(fFiles[i].filename)); // Die Datei ist teil des Projektes, also muss sie auch eine Node bekommen !
+    si := GraphBox1.Graph.AddNode(ExtractFileNameOnly(fFiles[i].filename), ExtractFileNameOnly(fFiles[i].filename)); // Die Datei ist teil des Projektes, also muss sie auch eine Node bekommen !
     For j := 0 To high(fFiles[i].FileInfo.aUses) Do Begin
       ei := GraphBox1.Graph.AddNode(fFiles[i].FileInfo.aUses[j], fFiles[i].FileInfo.aUses[j]);
       GraphBox1.Graph.AddEdge(si, ei, clblack, Nil, true);
@@ -1040,6 +1036,7 @@ End;
 Procedure TForm1.CalculateProject;
 Var
   FileList: TFileList;
+  PathList: TPathList;
   i: Integer;
   FPCParser: TFPCParser;
   f: TProjectFileInfo;
@@ -1048,6 +1045,12 @@ Begin
   t := GetTickCount64;
   fFiles := Nil;
   FileList := GetFileList(fProject.RootFolder, fProject.LPISource, RelativeFileListToAbsoluteFileList(fProject.RootFolder, fProject.Files));
+  PathList := GetSearchPathList(fProject.RootFolder, fProject.LPISource, RelativePathListToAbsolutePathList(fProject.RootFolder, fProject.SearchPaths));
+  // Store Searchpathlist relative
+  For i := 0 To high(PathList) Do Begin
+    PathList[i].Path := ExcludeTrailingPathDelimiter(ExtractRelativePath(fProject.RootFolder, PathList[i].Path));
+  End;
+  fProject.SearchPaths := PathList;
   FPCParser := TFPCParser.Create;
   For i := 0 To high(FileList) Do Begin
     If FileList[i].Enabled Then Begin
@@ -1094,6 +1097,7 @@ Begin
     x := ini.ReadInteger('Nodes', 'Node' + inttostr(i) + 'X', 0);
     y := ini.ReadInteger('Nodes', 'Node' + inttostr(i) + 'Y', 0);
     n := ini.ReadString('Nodes', 'Node' + inttostr(i) + 'Name', '');
+    // TODO: Add code here, that handles the new naming of nodes
     index := GraphBox1.Graph.AddNode(n, n);
     node := GraphBox1.Graph.Node[index];
     node.Position.X := x;

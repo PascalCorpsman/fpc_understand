@@ -136,6 +136,7 @@
         <Filename Value="unit9.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form9"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit9"/>
       </Unit>
@@ -143,6 +144,7 @@
         <Filename Value="unit10.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="Form10"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit10"/>
       </Unit>
@@ -165,6 +167,14 @@
       <Unit>
         <Filename Value="..\Sample\Graphik\ucirclepackchart.pas"/>
         <IsPartOfProject Value="True"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unit12.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form12"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit12"/>
       </Unit>
     </Units>
   </ProjectOptions>

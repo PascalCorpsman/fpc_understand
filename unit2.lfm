@@ -1,7 +1,7 @@
 object Form2: TForm2
   Left = 779
   Height = 711
-  Top = 299
+  Top = 94
   Width = 815
   Caption = 'Form2'
   ClientHeight = 711
@@ -14,9 +14,9 @@ object Form2: TForm2
     Height = 656
     Top = 0
     Width = 815
-    ActivePage = TabSheet3
+    ActivePage = TabSheet2
     Align = alClient
-    TabIndex = 2
+    TabIndex = 1
     TabOrder = 0
     TabPosition = tpLeft
     object TabSheet1: TTabSheet
@@ -156,9 +156,9 @@ object Form2: TForm2
         TabOrder = 1
       end
       object Button4: TButton
-        Left = 699
+        Left = 698
         Height = 25
-        Top = 620
+        Top = 503
         Width = 75
         Anchors = [akRight, akBottom]
         Caption = 'remove file'
@@ -198,7 +198,7 @@ object Form2: TForm2
       end
       object CheckListBox1: TCheckListBox
         Left = 8
-        Height = 557
+        Height = 440
         Top = 88
         Width = 682
         Anchors = [akTop, akLeft, akRight, akBottom]
@@ -224,6 +224,43 @@ object Form2: TForm2
         Caption = 'edit .lpi'
         OnClick = Button7Click
         TabOrder = 6
+      end
+      object Label15: TLabel
+        Left = 8
+        Height = 15
+        Top = 536
+        Width = 64
+        Anchors = [akLeft, akBottom]
+        Caption = 'Searchpaths'
+      end
+      object ListBox1: TListBox
+        Left = 8
+        Height = 88
+        Top = 552
+        Width = 682
+        Anchors = [akLeft, akRight, akBottom]
+        ItemHeight = 0
+        TabOrder = 7
+      end
+      object Button8: TButton
+        Left = 698
+        Height = 25
+        Top = 552
+        Width = 75
+        Anchors = [akRight, akBottom]
+        Caption = 'add path'
+        OnClick = Button8Click
+        TabOrder = 8
+      end
+      object Button9: TButton
+        Left = 698
+        Height = 25
+        Top = 615
+        Width = 75
+        Anchors = [akRight, akBottom]
+        Caption = 'remove path'
+        OnClick = Button9Click
+        TabOrder = 9
       end
     end
     object TabSheet3: TTabSheet
