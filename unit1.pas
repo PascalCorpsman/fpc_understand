@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.14                                                         *)
+(* Version     : 0.15                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -48,6 +48,8 @@
 (*               0.12 - Support project as start param                        *)
 (*               0.13 - Merge pull request by User4martin                     *)
 (*               0.14 - give access to searchpaths                            *)
+(*               0.15 - Align nodes on grid if option is selected during      *)
+(*                        "Arrange all visible nodes by dependency"           *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -220,7 +222,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.14 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.15 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);
@@ -568,6 +570,10 @@ Begin
     w := GraphBox1.Width Div (LvlCnt);
     node.Position.x := (w Div 2) + LvlIdx * w;
     node.Position.y := (h Div 2) + LvlNode.Level.Index * h;
+    If MenuItem15.Checked Then Begin // Align on grid if needed
+      node.Position.x := node.Position.x - node.Position.x Mod Grid_step;
+      node.Position.Y := node.Position.Y - node.Position.Y Mod Grid_step;
+    End;
     GraphBox1.Graph.Node[i] := node;
   End;
   LvlGrph.Free;
