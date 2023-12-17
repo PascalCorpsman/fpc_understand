@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.15                                                         *)
+(* Version     : 0.16                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -50,6 +50,7 @@
 (*               0.14 - give access to searchpaths                            *)
 (*               0.15 - Align nodes on grid if option is selected during      *)
 (*                        "Arrange all visible nodes by dependency"           *)
+(*               0.16 - ufpcParser could not handle class of declarations     *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -222,7 +223,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.15 by Corpsman';
+  fdefcaption := 'FPC Understand ver. 0.16 by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);

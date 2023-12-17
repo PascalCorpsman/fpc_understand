@@ -263,7 +263,8 @@ Begin
           State := sInClassParents;
         End;
         If (token.Value = ';') Then State := sIdle; // War nur ne Classen Forwärts Deklaration
-        If (token.Kind = tkKeyWord) Or (token.Kind = tkIdentifier) Then Begin
+        If (lowercase(token.Value) = 'of') Then State := sIdle; // War nur ne Classen Forwärts Deklaration
+        If ((token.Kind = tkKeyWord) Or (token.Kind = tkIdentifier)) And (Not (lowercase(Token.Value) = 'of')) Then Begin
           State := sInClassInterface;
           Counter := 1;
         End;
