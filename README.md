@@ -3,14 +3,14 @@
 FPC-Understand is a freepascal code analysing tool written in FreePascal.
 It's main purpose is to statically analyse FreePascal code and give easy access to it's architecture informations.
 
-![Unit dependencies of fpc_understand](fpc_understand_unit_dependencies.png)
+![Unit dependencies of fpc_understand](images/fpc_understand_unit_dependencies.png)
 
 These informations are:
 - Unit dependencies
 - Class hierarchy
 - Statisics like: lines of code, cyclomatic complexity ...
 
-![Code_Line_Analysis](Preview_Line_Analysis.png)
+![Code_Line_Analysis](images/Preview_Line_Analysis.png)
 
 The program is mainly designed to work with Lazarus .lpi files, but it is not forced to use .lpi files.
 
