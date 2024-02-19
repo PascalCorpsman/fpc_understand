@@ -1,7 +1,7 @@
 # FPC Understand
 
-FPC-Understand is a freepascal code analysing tool written in FreePascal.
-It's main purpose is to statically analyse FreePascal code and give easy access to it's architecture informations.
+FPC-Understand is a Free Pascal code analysing tool written in Free Pascal.
+It's main purpose is to statically analyse Free Pascal code and give easy access to it's architecture informations.
 
 ![Unit dependencies of fpc_understand](images/fpc_understand_unit_dependencies.png)
 
