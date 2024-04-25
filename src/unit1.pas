@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.16                                                         *)
+(* Version     : 0.17                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -51,6 +51,7 @@
 (*               0.15 - Align nodes on grid if option is selected during      *)
 (*                        "Arrange all visible nodes by dependency"           *)
 (*               0.16 - ufpcParser could not handle class of declarations     *)
+(*               0.17 - ufpcParser was case sensitiv in parsing uses clauses  *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -67,6 +68,9 @@ Interface
 Uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, IniPropStorage,
   ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl;
+
+Const
+  Version = '0.17';
 
 Type
 
@@ -223,7 +227,7 @@ Var
   lp: String;
 Begin
   IniPropStorage1.IniFileName := GetAppConfigFile(false);
-  fdefcaption := 'FPC Understand ver. 0.16 by Corpsman';
+  fdefcaption := 'FPC Understand ver. ' + Version + ' by Corpsman';
   caption := fdefcaption;
   fShowRectangle := false;
   GraphBox1 := TGraphBox.Create(self);

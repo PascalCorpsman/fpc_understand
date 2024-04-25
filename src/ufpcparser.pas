@@ -208,7 +208,7 @@ Begin
         End;
       End;
     sScanUses: Begin
-        Case token.value Of
+        Case lowercase(token.value) Of
           ';': State := sIdle;
           ',', 'in': Begin
               // Ignorieren wir, wir sind ja kein Syntaxchecker ;)
@@ -310,7 +310,7 @@ Begin
            Procedure Blub();
            function Blub:<identifier>;
          *)
-        Case Token.Value Of
+        Case Token.Value Of // Achtung, bei Prüfungen auf Zeichenketten müsste da ein Lowercase mit hinzu
           '.': aProcInfo.ClassName := aProcInfo.Name;
           '(': Begin
               PrevState := sParseFunProcName;
