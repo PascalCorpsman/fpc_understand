@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* uSunburstChart                                                  28.07.2023 *)
 (*                                                                            *)
-(* Version     : 0.04                                                         *)
+(* Version     : 0.05                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -30,6 +30,8 @@
 (*                      OnDeleteElementsUserData                              *)
 (*               0.04 - OnAfterSegmentPaint                                   *)
 (*                      Fix Crash when selecting multiple elements            *)
+(*               0.05 - change datatype of TSunBurstChartElement.value to     *)
+(*                        uint64                                              *)
 (*                                                                            *)
 (******************************************************************************)
 Unit usunburstchart;
@@ -42,7 +44,11 @@ Uses
   Classes, SysUtils, Controls, Graphics, ufifo;
 
 Const
-  SunBurstChartFileVersion: integer = 1;
+  (*
+   * History: 1 = Initialversion
+   *          2 = TSunBurstChartElement.value (integer -> uint64)
+   *)
+  SunBurstChartFileVersion: integer = 2;
 
 Type
 
@@ -65,7 +71,7 @@ Type
     Caption: String;
     Color: TColorSet;
     SelectedColor: TColorSet;
-    Value: Integer;
+    Value: UInt64;
     UserData: Pointer;
     Selected: Boolean; // If True, then Selected Brush / Selected will be used (will not be stored!)
 
@@ -359,12 +365,20 @@ Var
   Function ElementFromStream(): TSunBurstChartElement;
   Var
     b: uint8;
+    i: integer;
   Begin
     result := DefaultSunBurstChartElement();
     result.caption := Stream.ReadAnsiString;
     stream.Read(result.Color, SizeOf(result.Color));
     stream.Read(result.SelectedColor, SizeOf(result.SelectedColor));
-    stream.Read(result.Value, SizeOf(result.Value));
+    If LoadedFileVersion = 1 Then Begin
+      i := 1;
+      stream.Read(i, SizeOf(i));
+      result.Value := i;
+    End
+    Else Begin
+      stream.Read(result.Value, SizeOf(result.Value));
+    End;
     b := 2;
     stream.Read(b, SizeOf(b));
     If b = 1 Then Begin
@@ -930,7 +944,7 @@ Procedure TSunburstChart.CalcAllMetaData;
 Var
   LevelRadius: Single;
 
-  Function GetSiblingValueSum(Const aElement: PSunBurstChartElement): integer;
+  Function GetSiblingValueSum(Const aElement: PSunBurstChartElement): UInt64;
   Var
     p: PSunBurstChartElement;
   Begin
@@ -944,7 +958,7 @@ Var
 
   Procedure CalcAllMetaDataSub(Const aElement: PSunBurstChartElement; Level: integer; absStartAngle, absEndAngle: Single);
   Var
-    ElementSum: integer;
+    ElementSum: UInt64;
     p: PSunBurstChartElement;
     ChildAngleDist, ChildStartAngle, AngleDist: Single;
   Begin
@@ -955,7 +969,7 @@ Var
     AngleDist := absEndAngle - absStartAngle;
     ChildStartAngle := absStartAngle;
     While assigned(p) Do Begin
-      ChildAngleDist := AngleDist * p^.Value / ElementSum;
+      ChildAngleDist := AngleDist * p^.Value / max(1, ElementSum);
       p^.AbsStartAngle := ChildStartAngle;
       p^.AbsEndAngle := ChildStartAngle + ChildAngleDist;
       p^.Level := Level;

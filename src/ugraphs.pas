@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* ugraphs.pas                                                     23.11.2022 *)
 (*                                                                            *)
-(* Version     : 0.03                                                         *)
+(* Version     : 0.04                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -25,6 +25,7 @@
 (* History     : 0.01 - Initial version merge from old ugraphs versions       *)
 (*               0.02 - Node Color                                            *)
 (*               0.03 - use Caption instead of Name for Dimension calculation *)
+(*               0.04 - Support für Offset                                    *)
 (*                                                                            *)
 (******************************************************************************)
 Unit ugraphs;
@@ -242,10 +243,13 @@ Type
     Procedure Resize; override;
   private
     fAutoselect: Boolean;
+    FOffset: Tpoint;
     fSelected: integer;
     fGraph: TGraph;
     Procedure SetAutoselect(AValue: Boolean);
+    Procedure SetOffset(AValue: Tpoint);
   public
+    Property Offset: Tpoint read FOffset write SetOffset; // Offset zum scrollen Default (0,0), Achtung in den Mouse Events ist das nicht drin !
     Property Autoselect: Boolean read fAutoselect write SetAutoselect; // Wenn True, dann wird im OnMouseDown / Up Ereigniss Mit Selected gearbeitet.
     //ScaleOnResize: Boolean; // Wenn True, dann werden beim Resize alle relative nodes mit verschoben
 
@@ -318,6 +322,7 @@ Begin
   setlength(Fnodes, 0);
   SetLength(FLevelLefts, 0);
   FChanged := false;
+  FOffset := point(0, 0);
 End;
 
 Function TGraph.AddNode2(Name, Caption: String; Depth: Integer): Integer;
@@ -1458,6 +1463,7 @@ Begin
   fGraph := TGraph.create;
   fSelected := -1;
   Autoselect := true;
+  FOffset := point(0, 0);
 End;
 
 Destructor TGraphBox.Destroy;
@@ -1479,7 +1485,7 @@ Begin
     exit;
   End;
   // TODO: Hier ist sicher noch luft nach oben ..
-  fGraph.PaintTo(canvas, 0, 0, ClientRect);
+  fGraph.PaintTo(canvas, -Offset.x, -Offset.y, ClientRect);
   Inherited paint;
 End;
 
@@ -1491,7 +1497,7 @@ Begin
   If Autoselect Then Begin
     fGraph.DeSelectAll();
     OldSelected := fSelected;
-    fSelected := fGraph.GetNodeIndex(x, y, canvas);
+    fSelected := fGraph.GetNodeIndex(x + FOffset.X, y + FOffset.Y, canvas);
     fGraph.Select(fSelected);
   End;
   Inherited MouseDown(Button, Shift, X, Y);
@@ -1505,7 +1511,7 @@ Procedure TGraphBox.MouseUp(Button: TMouseButton; Shift: TShiftState; X,
 Begin
   If Autoselect Then Begin
     fGraph.DeSelectAll();
-    fSelected := fGraph.GetNodeIndex(x, y, canvas);
+    fSelected := fGraph.GetNodeIndex(x + FOffset.X, y + FOffset.Y, canvas);
     fGraph.Select(fSelected);
   End;
   Inherited MouseUp(Button, Shift, X, Y);
@@ -1554,6 +1560,13 @@ Begin
   If fAutoselect = AValue Then Exit;
   fAutoselect := AValue;
   If Not fAutoselect Then fSelected := -1;
+End;
+
+Procedure TGraphBox.SetOffset(AValue: Tpoint);
+Begin
+  If FOffset = AValue Then Exit;
+  FOffset := AValue;
+  Invalidate;
 End;
 
 End.

@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.17                                                         *)
+(* Version     : 0.18                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -52,6 +52,7 @@
 (*                        "Arrange all visible nodes by dependency"           *)
 (*               0.16 - ufpcParser could not handle class of declarations     *)
 (*               0.17 - ufpcParser was case sensitiv in parsing uses clauses  *)
+(*               0.18 - Add Scrollbars                                        *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -67,10 +68,11 @@ Interface
 
 Uses
   Classes, SysUtils, Forms, Controls, Graphics, Dialogs, Menus, IniPropStorage,
-  ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl;
+  StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.17';
+  Version = '0.18';
+  ScrollDelta = 25;
 
 Type
 
@@ -134,6 +136,8 @@ Type
     PopupMenu2: TPopupMenu;
     SaveDialog1: TSaveDialog;
     SaveDialog2: TSaveDialog;
+    ScrollBar1: TScrollBar;
+    ScrollBar2: TScrollBar;
     Separator1: TMenuItem;
     Separator2: TMenuItem;
     Separator3: TMenuItem;
@@ -145,6 +149,10 @@ Type
     Separator9: TMenuItem;
     Procedure FormCloseQuery(Sender: TObject; Var CanClose: Boolean);
     Procedure FormCreate(Sender: TObject);
+    Procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; Var Handled: Boolean);
+    Procedure FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
+      MousePos: TPoint; Var Handled: Boolean);
     Procedure MenuItem10Click(Sender: TObject);
     Procedure MenuItem11Click(Sender: TObject);
     Procedure MenuItem12Click(Sender: TObject);
@@ -177,6 +185,8 @@ Type
     Procedure MenuItem6Click(Sender: TObject);
     Procedure MenuItem8Click(Sender: TObject);
     Procedure MenuItem9Click(Sender: TObject);
+    Procedure ScrollBar1Change(Sender: TObject);
+    Procedure ScrollBar2Change(Sender: TObject);
   private
     fProject: TProject;
     fFiles: TProjectFilesInfo;
@@ -191,6 +201,7 @@ Type
     Procedure GraphboxMouseDown(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
     Procedure GraphboxPaint(Sender: TObject);
     Procedure GraphboxDblClick(Sender: TObject);
+    Procedure GraphboxResize(Sender: TObject);
     Function GetSelectedFileList(): TProjectFilesInfo;
 
     Procedure CalculateProject();
@@ -233,13 +244,18 @@ Begin
   GraphBox1 := TGraphBox.Create(self);
   GraphBox1.Name := 'GraphBox1';
   GraphBox1.Parent := Self;
-  GraphBox1.Align := alClient;
+  GraphBox1.Top := Scale96ToForm(8);
+  GraphBox1.Left := Scale96ToForm(8);
+  GraphBox1.Width := Width - Scale96ToForm(16) - ScrollBar2.Width;
+  GraphBox1.Height := Height - Scale96ToForm(16) - ScrollBar1.Height;
+  GraphBox1.Anchors := [akBottom, akLeft, akRight, akTop];
   GraphBox1.Autoselect := false;
   GraphBox1.OnMouseUp := @GraphboxMouseUp;
   GraphBox1.OnMouseDown := @GraphboxMouseDown;
   GraphBox1.OnMouseMove := @GraphboxMouseMove;
   GraphBox1.OnPaint := @GraphboxPaint;
   GraphBox1.OnDblClick := @GraphboxDblClick;
+  GraphBox1.OnResize := @GraphboxResize;
   GraphBox1.PopupMenu := PopupMenu1;
   fProject := TProject.Create();
   lp := IniPropStorage1.ReadString('LastProject', '');
@@ -252,6 +268,28 @@ Begin
   End;
   If FileExists(lp) And (lp <> '') Then Begin
     LoadProject(lp);
+  End;
+End;
+
+Procedure TForm1.FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; Var Handled: Boolean);
+Begin
+  If ssCtrl In shift Then Begin
+    ScrollBar1.Position := ScrollBar1.Position + ScrollDelta;
+  End
+  Else Begin
+    ScrollBar2.Position := ScrollBar2.Position + ScrollDelta;
+  End;
+End;
+
+Procedure TForm1.FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
+  MousePos: TPoint; Var Handled: Boolean);
+Begin
+  If ssCtrl In shift Then Begin
+    ScrollBar1.Position := ScrollBar1.Position - ScrollDelta;
+  End
+  Else Begin
+    ScrollBar2.Position := ScrollBar2.Position - ScrollDelta;
   End;
 End;
 
@@ -279,6 +317,8 @@ Var
   node: TNode;
 Begin
   // Order All Nodes as Circle
+  ScrollBar1.Position := 0;
+  ScrollBar2.Position := 0;
   n := GraphBox1.Graph.NodeCount;
   w := GraphBox1.Width Div 2;
   h := GraphBox1.Height Div 2;
@@ -293,6 +333,7 @@ Begin
     End;
     GraphBox1.Graph.Node[i] := node;
   End;
+  GraphboxResize(Nil);
   GraphBox1.Invalidate;
 End;
 
@@ -346,6 +387,7 @@ Var
   i: integer;
   n: TNode;
 Begin
+  // Enable Disable "Grid"
   If MenuItem15.Checked Then Begin
     For i := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
       n := GraphBox1.Graph.Node[i];
@@ -529,6 +571,9 @@ Var
   node: TNode;
 Begin
   // Order All Nodes with LvlGraph
+  GraphBox1.Offset := Point(0, 0);
+  ScrollBar1.Position := 0;
+  ScrollBar2.Position := 0;
   cnt := GraphBox1.Graph.NodeCount;
   xCnt := GraphBox1.Width Div (DefaultDistanceX);
   yCnt := GraphBox1.Height Div (DefaultDistanceY);
@@ -624,6 +669,9 @@ Begin
   fProject.Free;
   fProject := TProject.Create();
   GraphBox1.Graph.Clear;
+  GraphBox1.Offset := Point(0, 0);
+  ScrollBar1.Position := 0;
+  ScrollBar2.Position := 0;
   GraphBox1.Invalidate;
   caption := fdefcaption;
   IniPropStorage1.WriteString('LastProject', '');
@@ -795,6 +843,7 @@ Var
   b: TBitmap;
   png: TPortableNetworkGraphic;
 Begin
+  // Export as image
   If SaveDialog2.Execute Then Begin
     p := GraphBox1.Graph.GetMaxDimension;
     b := TBitmap.Create;
@@ -871,6 +920,16 @@ Begin
   GraphBox1.Invalidate;
 End;
 
+Procedure TForm1.ScrollBar1Change(Sender: TObject);
+Begin
+  GraphBox1.Offset := point(ScrollBar1.Position, GraphBox1.Offset.Y);
+End;
+
+Procedure TForm1.ScrollBar2Change(Sender: TObject);
+Begin
+  GraphBox1.Offset := point(GraphBox1.Offset.x, ScrollBar2.Position);
+End;
+
 Procedure TForm1.UpdateFileDependencies;
 Var
   i, j, si, ei: Integer;
@@ -913,6 +972,7 @@ Begin
   If BringToScreen Then Begin // Beim 1. Mal machen wir das gleich für den User ;)
     MenuItem9Click(Nil);
   End;
+  GraphboxResize(Nil);
   GraphBox1.Invalidate;
 End;
 
@@ -921,6 +981,8 @@ Procedure TForm1.GraphboxMouseDown(Sender: TObject; Button: TMouseButton;
 Var
   index: Integer;
 Begin
+  x := x + GraphBox1.Offset.X;
+  y := y + GraphBox1.Offset.Y;
   mDownPos := point(x, y);
   mMovePos := point(x, y);
   (*
@@ -971,6 +1033,8 @@ Var
   bool: Boolean;
   mxx, myy, dx, dy: Integer;
 Begin
+  x := x + GraphBox1.Offset.X;
+  y := y + GraphBox1.Offset.Y;
   If ssleft In shift Then Begin
     bool := false;
     dx := mMovePos.x - x;
@@ -1010,7 +1074,7 @@ Begin
   If fShowRectangle Then Begin
     GraphBox1.Canvas.Brush.Style := bsClear;
     GraphBox1.Canvas.Pen.Color := clRed;
-    GraphBox1.Canvas.Rectangle(mDownPos.x, mDownPos.y, mMovePos.X, mMovePos.y);
+    GraphBox1.Canvas.Rectangle(mDownPos.x - GraphBox1.Offset.X, mDownPos.y - GraphBox1.Offset.y, mMovePos.X - GraphBox1.Offset.X, mMovePos.y - GraphBox1.Offset.y);
   End;
 End;
 
@@ -1018,6 +1082,15 @@ Procedure TForm1.GraphboxDblClick(Sender: TObject);
 Begin
   // Popup zur Auswahl was gemacht werden soll ;)
   PopupMenu2.PopUp;
+End;
+
+Procedure TForm1.GraphboxResize(Sender: TObject);
+Var
+  p: TPoint;
+Begin
+  p := GraphBox1.Graph.GetMaxDimension;
+  ScrollBar1.max := p.X;
+  ScrollBar2.max := p.y;
 End;
 
 Function TForm1.GetSelectedFileList: TProjectFilesInfo;
@@ -1092,7 +1165,7 @@ Procedure TForm1.LoadProject(aFilename: String);
 Var
   ini: TIniFile;
   index, i: Integer;
-  x, y: LongInt;
+  maxx, maxy, x, y: LongInt;
   n: String;
   node: TNode;
 Begin
@@ -1104,6 +1177,8 @@ Begin
   // Laden der der Knoten Informationen
   ini := TIniFile.Create(aFilename);
   GraphBox1.Graph.Clear;
+  maxx := 0;
+  maxy := 0;
   For i := 0 To ini.ReadInteger('Nodes', 'Count', 0) - 1 Do Begin
     x := ini.ReadInteger('Nodes', 'Node' + inttostr(i) + 'X', 0);
     y := ini.ReadInteger('Nodes', 'Node' + inttostr(i) + 'Y', 0);
@@ -1114,9 +1189,16 @@ Begin
     node.Position.X := x;
     node.Position.Y := y;
     GraphBox1.Graph.Node[index] := node;
+    maxx := max(maxx, x);
+    maxy := max(maxy, y);
   End;
   ini.free;
   caption := fdefcaption + ': ' + fProject.Name;
+  GraphBox1.Offset := point(0, 0);
+  ScrollBar1.Position := 0;
+  ScrollBar2.Position := 0;
+  ScrollBar1.Max := maxx;
+  ScrollBar2.Max := maxy;
   CalculateProject;
 End;
 
