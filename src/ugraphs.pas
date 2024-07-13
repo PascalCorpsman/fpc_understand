@@ -322,7 +322,6 @@ Begin
   setlength(Fnodes, 0);
   SetLength(FLevelLefts, 0);
   FChanged := false;
-  FOffset := point(0, 0);
 End;
 
 Function TGraph.AddNode2(Name, Caption: String; Depth: Integer): Integer;
