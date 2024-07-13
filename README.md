@@ -40,3 +40,13 @@ Use left mouse button to create a rectangle for selecting multiple nodes. Holdin
 
 1. Select none (= all) or as much nodes you want to get the calculations of
 2. Open the wanted calculation via "Edit" -> "Show *" or by double clicking on one of the selected nodes.
+
+
+## Known issues:
+- The graph component does not support "same" filenames in the project. 
+  
+  -> If your project contains 2 .pas files with same name but in different locations the graph will merge them into one single node, this will produce invalid dependencies
+
+- The callgraph analysis is more a heuristic than a real code "understanding" 
+
+  -> function pointers are not evaluated, function calls that have the same name are merged into the same node (see "same" filename issue)
