@@ -223,7 +223,11 @@ Uses LCLIntf, LCLType, IniFiles, Math, LazFileUtils
   , unit3 // Klassen Ansicht
   , unit4 // Code Counter
   , unit5 // CC
+  // , unit6 // CC / Line Übersicht diverser Dateien
+  // , unit7 // Project editor
   , unit8 // Callgraph
+  // , unit9 // Node detail Info
+  // , unit10 // Select Node form
   , Unit11 // Chart Statistics
   // , Unit12 // AddSearchpath
   ;
