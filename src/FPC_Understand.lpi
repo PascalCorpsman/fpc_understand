@@ -4,6 +4,9 @@
     <Version Value="12"/>
     <PathDelim Value="\"/>
     <General>
+      <Flags>
+        <SaveJumpHistory Value="False"/>
+      </Flags>
       <SessionStorage Value="InProjectDir"/>
       <Title Value="FPC_Understand"/>
       <Scaled Value="True"/>

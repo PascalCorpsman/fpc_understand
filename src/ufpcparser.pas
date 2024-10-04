@@ -99,16 +99,19 @@ Type
     ParseInternal: Integer; // Zähler der innerhalb einer Funktion / Procedure mitzählt ob wir eine genestete Funktion und oder einen Datentyp haben
     InCaseCounter: integer;
     ParseFunctionBody: Boolean; // True, wenn wir in einer Funktion "Parsen", genestete funktionen werden übersprungen
+    fSearchpaths: TStringlist; // Temporäre Liste die Während ParseFile zum auflösen von Dateipfaden genutzt wird
     Procedure OnHandleToken(Sender: TObject; Const Token: TToken);
     Procedure AddClassToClassList(Const aToken: TToken);
 
     Procedure InitLookback();
     Procedure PushLookback(Value: TToken);
     Function Last(Index: Integer): TToken; // 0 = der Letzte, 1 = der Vorletzte ...
+
+    Function OnResolveFileRequest(Sender: TObject; aFilename: String): String;
   public
     Property ProcInfos: TProcInfos read Infos;
     Property FileInfo: TFileInfo read fFileInfo;
-    Function ParseFile(aFilename: String): Boolean;
+    Function ParseFile(aFilename: String; Searchpaths: TStringlist): Boolean;
   End;
 
 Implementation
@@ -442,7 +445,23 @@ Begin
   result := LoockBack.Lookback[(LoockBack.LookbackPtr - Index - 1 + 2 * LookbackCnt) Mod LookbackCnt];
 End;
 
-Function TFPCParser.ParseFile(aFilename: String): Boolean;
+Function TFPCParser.OnResolveFileRequest(Sender: TObject; aFilename: String
+  ): String;
+Var
+  i: Integer;
+Begin
+  result := '';
+  If Not assigned(fSearchpaths) Then exit;
+  For i := 0 To fSearchpaths.Count - 1 Do Begin
+    If FileExists(fSearchpaths[i] + aFilename) Then Begin
+      result := fSearchpaths[i] + aFilename;
+      exit;
+    End;
+  End;
+End;
+
+Function TFPCParser.ParseFile(aFilename: String; Searchpaths: TStringlist
+  ): Boolean;
 Var
   Lexer: TpascalLexer;
 Begin
@@ -455,9 +474,11 @@ Begin
   fFileInfo.aClasses := Nil;
   fFileInfo.aUses := Nil;
   fFileInfo.aImplementationUses := Nil;
+  fSearchpaths := Searchpaths;
   Try
     lexer := TpascalLexer.Create();
     lexer.OnHandleToken := @OnHandleToken;
+    lexer.OnResolveFileRequest := @OnResolveFileRequest;
     BelowImplementation := false;
     InClassDefinition := false;
     State := sIdle;
@@ -475,6 +496,7 @@ Begin
       showmessage(E.Message + LineEnding + 'File:' + aFilename);
     End;
   End;
+  fSearchpaths := Nil;
 End;
 
 End.

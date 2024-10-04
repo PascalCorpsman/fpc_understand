@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* upascallexer                                                    19.04.2023 *)
 (*                                                                            *)
-(* Version     : 0.03                                                         *)
+(* Version     : 0.04                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -25,6 +25,7 @@
 (* History     : 0.01 - Initial version                                       *)
 (*               0.02 - Add Total Line Counter, Empty Line Counter            *)
 (*               0.03 - Start with unittests, fix "invalid" ( * Parsing       *)
+(*               0.04 - Berücksichtigen von {$I ...}                          *)
 (*                                                                            *)
 (******************************************************************************)
 Unit upascallexer;
@@ -56,6 +57,7 @@ Type
   End;
 
   TOnHandleToken = Procedure(Sender: TObject; Const Token: TToken) Of Object;
+  TOnResolveFileRequest = Function(Sender: TObject; aFilename: String): String Of Object;
 
   { TPascalLexer }
 
@@ -67,6 +69,7 @@ Type
     Procedure HandleToken();
     Procedure DoLex(Const Stream: TStream);
   public
+    OnResolveFileRequest: TOnResolveFileRequest;
 
     OnHandleToken: TOnHandleToken;
 
@@ -240,6 +243,7 @@ Constructor TPascalLexer.Create;
 Begin
   Inherited Create();
   OnHandleToken := Nil;
+  OnResolveFileRequest := Nil;
 End;
 
 Procedure TPascalLexer.HandleToken;
@@ -667,18 +671,47 @@ End;
 Procedure TPascalLexer.LexFile(Const Filename: String);
 Var
   m: TMemoryStream;
+  sl2, sl: TStringList;
+  i: integer;
+  s: String;
 Begin
-  m := TMemoryStream.Create;
+  sl := TStringList.Create;
   Try
-    m.LoadFromFile(Filename);
-    m.Position := 0;
-    LexStream(m);
+    sl.LoadFromFile(Filename);
+    // Auflösen der Includierten Dateien, ja das ist ein Böser Hack ..
+    If assigned(OnResolveFileRequest) And (pos('{$I ', sl.text) <> 0) Then Begin
+      For i := 0 To sl.Count - 1 Do Begin
+        If pos('{$I ', sl[i]) <> 0 Then Begin
+          s := sl[i];
+          s := copy(s, pos('{$I ', s) + 4, length(s));
+          s := copy(s, 1, pos('}', s) - 1);
+          s := trim(s);
+          s := OnResolveFileRequest(self, s);
+          If s <> '' Then Begin
+            sl2 := TStringList.Create;
+            sl2.LoadFromFile(s);
+            sl[i] := sl2.Text; // TODO: das funktioniert nur, wenn in der Zeile sonst nichts anderes Steht
+            sl2.free;
+          End;
+        End;
+      End;
+    End;
+    m := TMemoryStream.Create;
+    sl.SaveToStream(m);
+    Try
+      m.Position := 0;
+      LexStream(m);
+      m.free;
+    Except
+      m.free;
+      Raise;
+    End;
   Except
-    m.free;
+    sl.free;
     Raise;
     exit;
   End;
-  m.free;
+  sl.free;
 End;
 
 Procedure TPascalLexer.LexStream(Const Stream: TStream);

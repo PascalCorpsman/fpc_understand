@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.18                                                         *)
+(* Version     : 0.19                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -53,6 +53,8 @@
 (*               0.16 - ufpcParser could not handle class of declarations     *)
 (*               0.17 - ufpcParser was case sensitiv in parsing uses clauses  *)
 (*               0.18 - Add Scrollbars                                        *)
+(*               0.19 - fix AV on adding nonproject files to .fpu             *)
+(*                      take {$I into account                                 *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -71,7 +73,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.18';
+  Version = '0.19';
   ScrollDelta = 25;
 
 Type
@@ -1129,13 +1131,17 @@ Var
   FPCParser: TFPCParser;
   f: TProjectFileInfo;
   t: Int64;
+  SearchPaths: TStringlist;
 Begin
   t := GetTickCount64;
   fFiles := Nil;
   FileList := GetFileList(fProject.RootFolder, fProject.LPISource, RelativeFileListToAbsoluteFileList(fProject.RootFolder, fProject.Files));
   PathList := GetSearchPathList(fProject.RootFolder, fProject.LPISource, RelativePathListToAbsolutePathList(fProject.RootFolder, fProject.SearchPaths));
   // Store Searchpathlist relative
+  SearchPaths := TStringList.Create;
+  SearchPaths.Add(IncludeTrailingPathDelimiter(fProject.RootFolder));
   For i := 0 To high(PathList) Do Begin
+    SearchPaths.Add(IncludeTrailingPathDelimiter(PathList[i].Path));
     PathList[i].Path := ExcludeTrailingPathDelimiter(ExtractRelativePath(fProject.RootFolder, PathList[i].Path));
   End;
   fProject.SearchPaths := PathList;
@@ -1143,7 +1149,7 @@ Begin
   For i := 0 To high(FileList) Do Begin
     If FileList[i].Enabled Then Begin
       f.Filename := ExtractRelativePath(fProject.RootFolder, FileList[i].FileName);
-      If FPCParser.ParseFile(FileList[i].FileName) Then Begin
+      If FPCParser.ParseFile(FileList[i].FileName, SearchPaths) Then Begin
         f.FileInfo := FPCParser.FileInfo;
         f.Methods := FPCParser.ProcInfos;
         setlength(fFiles, high(fFiles) + 2);
@@ -1154,6 +1160,7 @@ Begin
       End;
     End;
   End;
+  SearchPaths.free;
   FPCParser.free;
   UpdateFileDependencies;
   MenuItem11Click(Nil); // Hide Externals via default

@@ -718,8 +718,8 @@ Begin
   For i := 0 To high(PathList) Do Begin
     If Not PathList[i].FromLPI Then Begin
       setlength(result, length(result) + 1);
-      result[i].FromLPI := false;
-      result[i].Path := PathList[i].Path;
+      result[high(result)].FromLPI := false;
+      result[high(result)].Path := PathList[i].Path;
     End;
   End;
   // 2. die aus dem Projekt übernehmen
