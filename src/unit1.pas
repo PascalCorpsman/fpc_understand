@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.19                                                         *)
+(* Version     : 0.20                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -55,6 +55,7 @@
 (*               0.18 - Add Scrollbars                                        *)
 (*               0.19 - fix AV on adding nonproject files to .fpu             *)
 (*                      take {$I into account                                 *)
+(*               0.20 - fix, {$I search was case sensitive but should not     *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -73,7 +74,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.19';
+  Version = '0.20';
   ScrollDelta = 25;
 
 Type

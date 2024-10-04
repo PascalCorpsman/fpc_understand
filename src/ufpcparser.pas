@@ -116,7 +116,7 @@ Type
 
 Implementation
 
-Uses Dialogs;
+Uses Dialogs, FileUtil;
 
 Procedure Nop();
 Begin
@@ -448,15 +448,25 @@ End;
 Function TFPCParser.OnResolveFileRequest(Sender: TObject; aFilename: String
   ): String;
 Var
-  i: Integer;
+  i, j: Integer;
+  lFilename, ext: String;
+  fl: TStringList;
 Begin
   result := '';
   If Not assigned(fSearchpaths) Then exit;
+  ext := ExtractFileExt(aFilename);
+  ext := '*' + ext;
+  lFilename := lowercase(aFilename);
   For i := 0 To fSearchpaths.Count - 1 Do Begin
-    If FileExists(fSearchpaths[i] + aFilename) Then Begin
-      result := fSearchpaths[i] + aFilename;
-      exit;
+    fl := FindAllFiles(fSearchpaths[i], ext, false);
+    For j := 0 To fl.Count - 1 Do Begin
+      If lowercase(ExtractFileName(fl[j])) = lFilename Then Begin
+        result := fl[j];
+        fl.free;
+        exit;
+      End;
     End;
+    fl.free;
   End;
 End;
 
