@@ -3,6 +3,7 @@ object Form1: TForm1
   Height = 497
   Top = 107
   Width = 760
+  AllowDropFiles = True
   Caption = 'Form1'
   ClientHeight = 497
   ClientWidth = 760
@@ -11,6 +12,7 @@ object Form1: TForm1
   LCLVersion = '3.99.0.0'
   OnCloseQuery = FormCloseQuery
   OnCreate = FormCreate
+  OnDropFiles = FormDropFiles
   OnMouseWheelDown = FormMouseWheelDown
   OnMouseWheelUp = FormMouseWheelUp
   OnResize = FormResize

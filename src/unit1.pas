@@ -59,6 +59,7 @@
 (*               0.21 - inc UX after user request                             *)
 (*               0.22 - Adjust handling when skipping .lpi file loading during*)
 (*                      startup                                               *)
+(*                      Enable Filedrop                                       *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -161,6 +162,7 @@ Type
     Procedure Button2Click(Sender: TObject);
     Procedure FormCloseQuery(Sender: TObject; Var CanClose: Boolean);
     Procedure FormCreate(Sender: TObject);
+    Procedure FormDropFiles(Sender: TObject; Const FileNames: Array Of String);
     Procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; Var Handled: Boolean);
     Procedure FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
@@ -289,6 +291,12 @@ Begin
   If FileExists(lp) And (lp <> '') Then Begin
     LoadProject(lp);
   End;
+End;
+
+Procedure TForm1.FormDropFiles(Sender: TObject; Const FileNames: Array Of String
+  );
+Begin
+  LoadProject(FileNames[0]);
 End;
 
 Procedure TForm1.FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
