@@ -36,10 +36,10 @@ Use left mouse button to create a rectangle for selecting multiple nodes. Holdin
 
 
 
-## How do i get to the calculated values
+## How do i get to the calculated values ?
 
 1. Select none (= all) or as much nodes you want to get the calculations of
-2. Open the wanted calculation via "Edit" -> "Show *" or by double clicking on one of the selected nodes.
+2. Open the wanted calculation via "Edit" -> "Show *" or by double clicking on one of the selected nodes
 
 
 ## Known issues:
