@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.21                                                         *)
+(* Version     : 0.22                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -57,6 +57,8 @@
 (*                      take {$I into account                                 *)
 (*               0.20 - fix, {$I search was case sensitive but should not     *)
 (*               0.21 - inc UX after user request                             *)
+(*               0.22 - Adjust handling when skipping .lpi file loading during*)
+(*                      startup                                               *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -75,7 +77,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.21';
+  Version = '0.22';
   ScrollDelta = 25;
 
 Type
@@ -336,13 +338,14 @@ Procedure TForm1.Button1Click(Sender: TObject);
 Begin
   // Click to Load *.lpi
   form2.LoadProjectToLCL(fProject);
-  form2.SelectLPIAndShow;
-  If form2.ModalResult = mrOK Then Begin
-    form2.GetProjectFromLCL(fProject);
-    caption := fdefcaption + ': ' + fProject.Name;
-    CalculateProject();
+  If form2.SelectLPIAndShow Then Begin
+    If form2.ModalResult = mrOK Then Begin
+      form2.GetProjectFromLCL(fProject);
+      caption := fdefcaption + ': ' + fProject.Name;
+      CalculateProject();
+    End;
+    HideStartupInfo;
   End;
-  HideStartupInfo;
 End;
 
 Procedure TForm1.Button2Click(Sender: TObject);

@@ -96,7 +96,7 @@ Type
   public
     Procedure LoadProjectToLCL(Const aProject: TProject);
     Procedure GetProjectFromLCL(Const aProject: TProject);
-    Procedure SelectLPIAndShow;
+    Function SelectLPIAndShow: Boolean;
   End;
 
 Var
@@ -512,11 +512,17 @@ Begin
   aProject.SearchPaths := fpathList;
 End;
 
-Procedure TForm2.SelectLPIAndShow;
+Function TForm2.SelectLPIAndShow: Boolean;
 Begin
   Button2.Click;
-  PageControl1.ActivePage := TabSheet2;
-  ShowModal;
+  If label2.caption <> '' Then Begin
+    PageControl1.ActivePage := TabSheet2;
+    ShowModal;
+    result := true;
+  End
+  Else Begin
+    result := false;
+  End;
 End;
 
 End.
