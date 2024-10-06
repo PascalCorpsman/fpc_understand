@@ -1,14 +1,14 @@
 object Form2: TForm2
-  Left = 779
+  Left = 323
   Height = 711
-  Top = 94
+  Top = 107
   Width = 815
   Caption = 'Form2'
   ClientHeight = 711
   ClientWidth = 815
-  OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '2.3.0.0'
+  LCLVersion = '3.99.0.0'
+  OnCreate = FormCreate
   object PageControl1: TPageControl
     Left = 0
     Height = 656
@@ -21,18 +21,18 @@ object Form2: TForm2
     TabPosition = tpLeft
     object TabSheet1: TTabSheet
       Caption = 'General'
-      ClientHeight = 648
-      ClientWidth = 784
+      ClientHeight = 650
+      ClientWidth = 709
       object Label1: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 16
-        Width = 32
+        Width = 35
         Caption = 'Name'
       end
       object Edit1: TEdit
         Left = 56
-        Height = 23
+        Height = 26
         Top = 8
         Width = 568
         TabOrder = 0
@@ -40,14 +40,14 @@ object Form2: TForm2
       end
       object Label7: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 56
-        Width = 96
+        Width = 105
         Caption = 'Level CC good <='
       end
       object Edit2: TEdit
         Left = 144
-        Height = 23
+        Height = 26
         Top = 48
         Width = 80
         TabOrder = 1
@@ -62,14 +62,14 @@ object Form2: TForm2
       end
       object Label8: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 90
-        Width = 119
+        Width = 131
         Caption = 'Level CC moderate <='
       end
       object Edit3: TEdit
         Left = 144
-        Height = 23
+        Height = 26
         Top = 79
         Width = 80
         TabOrder = 2
@@ -83,14 +83,14 @@ object Form2: TForm2
       end
       object Label9: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 122
-        Width = 114
+        Width = 124
         Caption = 'Level CC complex <='
       end
       object Edit4: TEdit
         Left = 144
-        Height = 23
+        Height = 26
         Top = 136
         Width = 80
         TabOrder = 3
@@ -104,9 +104,9 @@ object Form2: TForm2
       end
       object Label10: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 154
-        Width = 106
+        Width = 119
         Caption = 'Level CC Unstable >'
       end
       object Shape4: TShape
@@ -119,164 +119,166 @@ object Form2: TForm2
     end
     object TabSheet2: TTabSheet
       Caption = 'Files'
-      ClientHeight = 648
-      ClientWidth = 784
+      ClientHeight = 650
+      ClientWidth = 709
       object Label2: TLabel
         Left = 160
-        Height = 15
+        Height = 16
         Top = 50
-        Width = 34
+        Width = 41
         Caption = 'Label2'
       end
       object Button2: TButton
-        Left = 538
+        Left = 463
         Height = 25
         Top = 41
         Width = 75
         Anchors = [akTop, akRight]
         Caption = 'select'
-        OnClick = Button2Click
         TabOrder = 0
+        OnClick = Button2Click
       end
       object Label3: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 72
-        Width = 33
+        Width = 39
         Caption = 'Filelist'
       end
       object Button3: TButton
-        Left = 698
+        Left = 623
         Height = 25
         Top = 88
         Width = 75
         Anchors = [akTop, akRight]
         Caption = 'add files'
-        OnClick = Button3Click
         TabOrder = 1
+        OnClick = Button3Click
       end
       object Button4: TButton
-        Left = 698
+        Left = 623
         Height = 25
-        Top = 503
+        Top = 505
         Width = 75
         Anchors = [akRight, akBottom]
         Caption = 'remove file'
-        OnClick = Button4Click
         TabOrder = 2
+        OnClick = Button4Click
       end
       object Label4: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 50
-        Width = 127
+        Width = 148
         Caption = 'Take filelist from .lpi file:'
       end
       object Label5: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 16
-        Width = 99
+        Width = 114
         Caption = 'Project root folder:'
       end
       object Label6: TLabel
         Left = 160
-        Height = 15
+        Height = 16
         Top = 16
-        Width = 34
+        Width = 41
         Caption = 'Label6'
       end
       object Button5: TButton
-        Left = 698
+        Left = 623
         Height = 25
         Top = 6
         Width = 75
         Anchors = [akTop, akRight]
         Caption = 'select'
-        OnClick = Button5Click
         TabOrder = 3
+        OnClick = Button5Click
       end
       object CheckListBox1: TCheckListBox
         Left = 8
-        Height = 440
+        Height = 442
         Top = 88
-        Width = 682
+        Width = 607
         Anchors = [akTop, akLeft, akRight, akBottom]
         ItemHeight = 0
         TabOrder = 4
+        TopIndex = -1
       end
       object Button6: TButton
-        Left = 617
+        Left = 542
         Height = 25
         Top = 41
         Width = 75
         Anchors = [akTop, akRight]
         Caption = 'clear'
-        OnClick = Button6Click
         TabOrder = 5
+        OnClick = Button6Click
       end
       object Button7: TButton
-        Left = 698
+        Left = 623
         Height = 25
         Top = 41
         Width = 75
         Anchors = [akTop, akRight]
         Caption = 'edit .lpi'
-        OnClick = Button7Click
         TabOrder = 6
+        OnClick = Button7Click
       end
       object Label15: TLabel
         Left = 8
-        Height = 15
-        Top = 536
-        Width = 64
+        Height = 16
+        Top = 537
+        Width = 74
         Anchors = [akLeft, akBottom]
         Caption = 'Searchpaths'
       end
       object ListBox1: TListBox
         Left = 8
         Height = 88
-        Top = 552
-        Width = 682
+        Top = 554
+        Width = 607
         Anchors = [akLeft, akRight, akBottom]
         ItemHeight = 0
         TabOrder = 7
+        TopIndex = -1
       end
       object Button8: TButton
-        Left = 698
+        Left = 623
         Height = 25
-        Top = 552
+        Top = 554
         Width = 75
         Anchors = [akRight, akBottom]
         Caption = 'add path'
-        OnClick = Button8Click
         TabOrder = 8
+        OnClick = Button8Click
       end
       object Button9: TButton
-        Left = 698
+        Left = 623
         Height = 25
-        Top = 615
+        Top = 617
         Width = 75
         Anchors = [akRight, akBottom]
         Caption = 'remove path'
-        OnClick = Button9Click
         TabOrder = 9
+        OnClick = Button9Click
       end
     end
     object TabSheet3: TTabSheet
       Caption = 'Chart statistics'
-      ClientHeight = 648
-      ClientWidth = 784
+      ClientHeight = 650
+      ClientWidth = 709
       object Label11: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 50
-        Width = 214
+        Width = 242
         Caption = 'min line count for largest function chart:'
       end
       object Edit5: TEdit
         Left = 264
-        Height = 23
+        Height = 26
         Top = 40
         Width = 152
         TabOrder = 0
@@ -284,14 +286,14 @@ object Form2: TForm2
       end
       object Label12: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 114
-        Width = 190
+        Width = 217
         Caption = 'min line count for largest files chart:'
       end
       object Edit6: TEdit
         Left = 264
-        Height = 23
+        Height = 26
         Top = 104
         Width = 152
         TabOrder = 1
@@ -299,14 +301,14 @@ object Form2: TForm2
       end
       object Label13: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 18
-        Width = 193
+        Width = 212
         Caption = 'min CC for most complex functions:'
       end
       object Edit7: TEdit
         Left = 264
-        Height = 23
+        Height = 26
         Top = 8
         Width = 152
         TabOrder = 2
@@ -314,14 +316,14 @@ object Form2: TForm2
       end
       object Label14: TLabel
         Left = 8
-        Height = 15
+        Height = 16
         Top = 82
-        Width = 205
+        Width = 229
         Caption = 'min average CC for most complex files'
       end
       object Edit8: TEdit
         Left = 264
-        Height = 23
+        Height = 26
         Top = 72
         Width = 152
         TabOrder = 3
@@ -335,18 +337,18 @@ object Form2: TForm2
     Top = 656
     Width = 815
     Align = alBottom
-    ClientHeight = 35
-    ClientWidth = 811
+    ClientHeight = 53
+    ClientWidth = 813
     TabOrder = 1
     object Button1: TButton
       Left = 8
       Height = 25
-      Top = 0
-      Width = 795
+      Top = 16
+      Width = 797
       Anchors = [akTop, akLeft, akRight]
       Caption = 'OK'
-      OnClick = Button1Click
       TabOrder = 0
+      OnClick = Button1Click
     end
   end
   object OpenDialog1: TOpenDialog

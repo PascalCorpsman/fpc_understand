@@ -96,6 +96,7 @@ Type
   public
     Procedure LoadProjectToLCL(Const aProject: TProject);
     Procedure GetProjectFromLCL(Const aProject: TProject);
+    Procedure SelectLPIAndShow;
   End;
 
 Var
@@ -509,6 +510,13 @@ Begin
     fpathList[i].Path := ExcludeTrailingPathDelimiter(ExtractRelativePath(aProject.RootFolder, fpathList[i].Path));
   End;
   aProject.SearchPaths := fpathList;
+End;
+
+Procedure TForm2.SelectLPIAndShow;
+Begin
+  Button2.Click;
+  PageControl1.ActivePage := TabSheet2;
+  ShowModal;
 End;
 
 End.

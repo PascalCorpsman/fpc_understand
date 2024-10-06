@@ -13,6 +13,7 @@ object Form1: TForm1
   OnCreate = FormCreate
   OnMouseWheelDown = FormMouseWheelDown
   OnMouseWheelUp = FormMouseWheelUp
+  OnResize = FormResize
   object ScrollBar1: TScrollBar
     Left = 8
     Height = 14
@@ -33,6 +34,38 @@ object Form1: TForm1
     PageSize = 0
     TabOrder = 1
     OnChange = ScrollBar2Change
+  end
+  object Label1: TLabel
+    Left = 304
+    Height = 16
+    Top = 160
+    Width = 140
+    Caption = 'Nothing loaded, please'
+  end
+  object Button1: TButton
+    Left = 312
+    Height = 25
+    Top = 224
+    Width = 137
+    Caption = 'click to import *.lpi'
+    TabOrder = 2
+    OnClick = Button1Click
+  end
+  object Button2: TButton
+    Left = 312
+    Height = 25
+    Top = 184
+    Width = 137
+    Caption = 'load a FPU project'
+    TabOrder = 3
+    OnClick = Button2Click
+  end
+  object Label2: TLabel
+    Left = 368
+    Height = 16
+    Top = 208
+    Width = 13
+    Caption = 'or'
   end
   object MainMenu1: TMainMenu
     Left = 40

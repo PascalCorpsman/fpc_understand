@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.20                                                         *)
+(* Version     : 0.21                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -56,6 +56,7 @@
 (*               0.19 - fix AV on adding nonproject files to .fpu             *)
 (*                      take {$I into account                                 *)
 (*               0.20 - fix, {$I search was case sensitive but should not     *)
+(*               0.21 - inc UX after user request                             *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -74,7 +75,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.20';
+  Version = '0.21';
   ScrollDelta = 25;
 
 Type
@@ -82,7 +83,11 @@ Type
   { TForm1 }
 
   TForm1 = Class(TForm)
+    Button1: TButton;
+    Button2: TButton;
     IniPropStorage1: TIniPropStorage;
+    Label1: TLabel;
+    Label2: TLabel;
     MainMenu1: TMainMenu;
     MenuItem1: TMenuItem;
     GraphBox1: TGraphBox;
@@ -150,12 +155,15 @@ Type
     Separator7: TMenuItem;
     Separator8: TMenuItem;
     Separator9: TMenuItem;
+    Procedure Button1Click(Sender: TObject);
+    Procedure Button2Click(Sender: TObject);
     Procedure FormCloseQuery(Sender: TObject; Var CanClose: Boolean);
     Procedure FormCreate(Sender: TObject);
     Procedure FormMouseWheelDown(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; Var Handled: Boolean);
     Procedure FormMouseWheelUp(Sender: TObject; Shift: TShiftState;
       MousePos: TPoint; Var Handled: Boolean);
+    Procedure FormResize(Sender: TObject);
     Procedure MenuItem10Click(Sender: TObject);
     Procedure MenuItem11Click(Sender: TObject);
     Procedure MenuItem12Click(Sender: TObject);
@@ -197,6 +205,8 @@ Type
     mMovePos, mDownPos: TPoint;
     fShowRectangle: Boolean;
 
+    Procedure ShowStartupInfo;
+    Procedure HideStartupInfo;
     Procedure UpdateFileDependencies();
 
     Procedure GraphboxMouseUp(Sender: TObject; Button: TMouseButton; Shift: TShiftState; X, Y: Integer);
@@ -273,6 +283,7 @@ Begin
       lp := ParamStr(1);
     End;
   End;
+  ShowStartupInfo;
   If FileExists(lp) And (lp <> '') Then Begin
     LoadProject(lp);
   End;
@@ -300,6 +311,13 @@ Begin
   End;
 End;
 
+Procedure TForm1.FormResize(Sender: TObject);
+Begin
+  If label1.Visible Then Begin
+    ShowStartupInfo;
+  End;
+End;
+
 Procedure TForm1.FormCloseQuery(Sender: TObject; Var CanClose: Boolean);
 Begin
   IniPropStorage1.WriteBoolean('Grid', MenuItem15.Checked);
@@ -312,6 +330,25 @@ Begin
   If CanClose Then Begin
     fProject.Free;
   End;
+End;
+
+Procedure TForm1.Button1Click(Sender: TObject);
+Begin
+  // Click to Load *.lpi
+  form2.LoadProjectToLCL(fProject);
+  form2.SelectLPIAndShow;
+  If form2.ModalResult = mrOK Then Begin
+    form2.GetProjectFromLCL(fProject);
+    caption := fdefcaption + ': ' + fProject.Name;
+    CalculateProject();
+  End;
+  HideStartupInfo;
+End;
+
+Procedure TForm1.Button2Click(Sender: TObject);
+Begin
+  // Load a FPU-Project
+  MenuItem3Click(Nil);
 End;
 
 Procedure TForm1.MenuItem10Click(Sender: TObject);
@@ -682,6 +719,7 @@ Begin
   GraphBox1.Invalidate;
   caption := fdefcaption;
   IniPropStorage1.WriteString('LastProject', '');
+  ShowStartupInfo;
 End;
 
 Procedure TForm1.MenuItem31Click(Sender: TObject);
@@ -983,6 +1021,37 @@ Begin
   GraphBox1.Invalidate;
 End;
 
+Procedure TForm1.ShowStartupInfo;
+Begin
+  label1.BringToFront;
+  label2.BringToFront;
+
+  Label1.top := height Div 2 - Scale96ToFont(88);
+  Label1.left := (width - label1.Width) Div 2;
+
+  Button2.left := (width - button2.Width) Div 2;
+  Button2.top := Label1.Top + Label1.Height + Scale96ToForm(8);
+
+  Label2.left := (width - label2.Width) Div 2;
+  Label2.top := button2.Top + button2.Height + Scale96ToForm(8);
+
+  Button1.left := (width - button1.Width) Div 2;
+  Button1.top := label2.Top + label2.Height + Scale96ToForm(8);
+
+  label1.visible := true;
+  label2.visible := true;
+  button1.Visible := true;
+  button2.Visible := true;
+End;
+
+Procedure TForm1.HideStartupInfo;
+Begin
+  label1.visible := false;
+  label2.visible := false;
+  button1.Visible := false;
+  button2.Visible := false;
+End;
+
 Procedure TForm1.GraphboxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 Var
@@ -1184,6 +1253,7 @@ Begin
   If Not FileExists(aFilename) Then Begin
     showmessage('Error, could not find: ' + aFilename);
   End;
+  HideStartupInfo;
   IniPropStorage1.WriteString('LastProject', aFilename);
   fProject.LoadFromFile(aFilename);
   // Laden der der Knoten Informationen
