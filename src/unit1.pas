@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.22                                                         *)
+(* Version     : 0.23                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -60,6 +60,7 @@
 (*               0.22 - Adjust handling when skipping .lpi file loading during*)
 (*                      startup                                               *)
 (*                      Enable Filedrop                                       *)
+(*               0.23 - Reorder MainMenu                                      *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -78,7 +79,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.22';
+  Version = '0.23';
   ScrollDelta = 25;
 
 Type
@@ -136,7 +137,10 @@ Type
     MenuItem46: TMenuItem;
     MenuItem47: TMenuItem;
     MenuItem48: TMenuItem;
+    MenuItem49: TMenuItem;
     MenuItem5: TMenuItem;
+    MenuItem50: TMenuItem;
+    MenuItem51: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -150,7 +154,6 @@ Type
     ScrollBar1: TScrollBar;
     ScrollBar2: TScrollBar;
     Separator1: TMenuItem;
-    Separator2: TMenuItem;
     Separator3: TMenuItem;
     Separator4: TMenuItem;
     Separator5: TMenuItem;
@@ -196,6 +199,7 @@ Type
     Procedure MenuItem46Click(Sender: TObject);
     Procedure MenuItem48Click(Sender: TObject);
     Procedure MenuItem4Click(Sender: TObject);
+    Procedure MenuItem51Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
     Procedure MenuItem8Click(Sender: TObject);
@@ -923,6 +927,13 @@ Begin
   Else Begin
     MenuItem5Click(Nil);
   End;
+End;
+
+Procedure TForm1.MenuItem51Click(Sender: TObject);
+Begin
+  // New Project with .lpi File
+  MenuItem2Click(Nil);
+  Button1Click(Nil);
 End;
 
 Procedure TForm1.MenuItem5Click(Sender: TObject);

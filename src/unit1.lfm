@@ -39,9 +39,9 @@ object Form1: TForm1
   end
   object Label1: TLabel
     Left = 304
-    Height = 16
+    Height = 15
     Top = 160
-    Width = 140
+    Width = 122
     Caption = 'Nothing loaded, please'
   end
   object Button1: TButton
@@ -64,9 +64,9 @@ object Form1: TForm1
   end
   object Label2: TLabel
     Left = 368
-    Height = 16
+    Height = 15
     Top = 208
-    Width = 13
+    Width = 11
     Caption = 'or'
   end
   object MainMenu1: TMainMenu
@@ -75,11 +75,15 @@ object Form1: TForm1
     object MenuItem1: TMenuItem
       Caption = 'File'
       object MenuItem2: TMenuItem
-        Caption = 'New Project'
+        Caption = 'New project'
         OnClick = MenuItem2Click
       end
+      object MenuItem51: TMenuItem
+        Caption = 'New project with .lpi file'
+        OnClick = MenuItem51Click
+      end
       object MenuItem3: TMenuItem
-        Caption = 'Load Project'
+        Caption = 'Load project'
         OnClick = MenuItem3Click
       end
       object MenuItem4: TMenuItem
@@ -99,8 +103,8 @@ object Form1: TForm1
         OnClick = MenuItem6Click
       end
     end
-    object MenuItem7: TMenuItem
-      Caption = 'Edit'
+    object MenuItem49: TMenuItem
+      Caption = 'Project'
       object MenuItem8: TMenuItem
         Caption = 'Projekt settings'
         OnClick = MenuItem8Click
@@ -109,14 +113,9 @@ object Form1: TForm1
         Caption = 'Reload dependencies'
         OnClick = MenuItem16Click
       end
-      object MenuItem15: TMenuItem
-        AutoCheck = True
-        Caption = 'Grid'
-        OnClick = MenuItem15Click
-      end
-      object Separator2: TMenuItem
-        Caption = '-'
-      end
+    end
+    object MenuItem50: TMenuItem
+      Caption = 'Analyze'
       object MenuItem13: TMenuItem
         Caption = 'Show statistics'
         OnClick = MenuItem13Click
@@ -139,6 +138,14 @@ object Form1: TForm1
       object MenuItem47: TMenuItem
         Caption = 'Show chart statistics'
         OnClick = MenuItem46Click
+      end
+    end
+    object MenuItem7: TMenuItem
+      Caption = 'Edit'
+      object MenuItem15: TMenuItem
+        AutoCheck = True
+        Caption = 'Grid'
+        OnClick = MenuItem15Click
       end
       object Separator3: TMenuItem
         Caption = '-'
