@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.23                                                         *)
+(* Version     : 0.24                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -61,6 +61,8 @@
 (*                      startup                                               *)
 (*                      Enable Filedrop                                       *)
 (*               0.23 - Reorder MainMenu                                      *)
+(*               0.24 - FIX: graphical glitches in chart statistics           *)
+(*                      ADD: more infos to chart statistics                   *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -79,7 +81,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.23';
+  Version = '0.24';
   ScrollDelta = 25;
 
 Type

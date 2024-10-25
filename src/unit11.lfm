@@ -10,22 +10,22 @@ object Form11: TForm11
   ChildSizing.ControlsPerLine = 3
   ClientHeight = 782
   ClientWidth = 1129
-  OnCreate = FormCreate
   Position = poScreenCenter
-  LCLVersion = '2.3.0.0'
+  LCLVersion = '3.99.0.0'
+  OnCreate = FormCreate
   object GroupBox1: TGroupBox
     Left = 0
     Height = 415
     Top = 0
-    Width = 329
+    Width = 328
     ClientHeight = 395
-    ClientWidth = 325
+    ClientWidth = 324
     TabOrder = 0
     object Label1: TLabel
       Left = 0
       Height = 30
       Top = 0
-      Width = 325
+      Width = 324
       Align = alTop
       Alignment = taCenter
       Caption = 'Line breakdown'
@@ -101,12 +101,12 @@ object Form11: TForm11
       Top = -8
       Width = 35
       Caption = '<->'
-      OnClick = ToggleBox1Click
       TabOrder = 0
+      OnClick = ToggleBox1Click
     end
   end
   object GroupBox2: TGroupBox
-    Left = 329
+    Left = 328
     Height = 415
     Top = 0
     Width = 401
@@ -137,23 +137,32 @@ object Form11: TForm11
       Top = -8
       Width = 35
       Caption = '<->'
-      OnClick = ToggleBox2Click
       TabOrder = 0
+      OnClick = ToggleBox2Click
+    end
+    object Label19: TLabel
+      Left = 342
+      Height = 15
+      Top = 45
+      Width = 40
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      Caption = 'Label19'
     end
   end
   object GroupBox3: TGroupBox
-    Left = 730
+    Left = 729
     Height = 415
     Top = 0
-    Width = 399
+    Width = 400
     ClientHeight = 395
-    ClientWidth = 395
+    ClientWidth = 396
     TabOrder = 2
     object Label10: TLabel
       Left = 0
       Height = 30
       Top = 0
-      Width = 395
+      Width = 396
       Align = alTop
       Alignment = taCenter
       Caption = ' Most complex functions'
@@ -166,8 +175,8 @@ object Form11: TForm11
       Top = -8
       Width = 35
       Caption = '<->'
-      OnClick = ToggleBox3Click
       TabOrder = 0
+      OnClick = ToggleBox3Click
     end
     object Label11: TLabel
       Left = 16
@@ -176,20 +185,29 @@ object Form11: TForm11
       Width = 242
       Caption = 'Complexity by the McCabe cyclomatic Metric'
     end
+    object Label20: TLabel
+      Left = 344
+      Height = 15
+      Top = 45
+      Width = 40
+      Alignment = taRightJustify
+      Anchors = [akTop, akRight]
+      Caption = 'Label20'
+    end
   end
   object GroupBox4: TGroupBox
     Left = 0
     Height = 367
     Top = 415
-    Width = 329
+    Width = 328
     ClientHeight = 347
-    ClientWidth = 325
+    ClientWidth = 324
     TabOrder = 3
     object Label12: TLabel
       Left = 0
       Height = 30
       Top = 0
-      Width = 325
+      Width = 324
       Align = alTop
       Alignment = taCenter
       Caption = 'Largest functions'
@@ -202,8 +220,8 @@ object Form11: TForm11
       Top = -8
       Width = 35
       Caption = '<->'
-      OnChange = ToggleBox4Change
       TabOrder = 0
+      OnChange = ToggleBox4Change
     end
     object Label15: TLabel
       Left = 16
@@ -216,7 +234,7 @@ object Form11: TForm11
       Left = 0
       Height = 278
       Top = 69
-      Width = 325
+      Width = 324
       AxisList = <      
         item
           Marks.LabelBrush.Style = bsClear
@@ -242,9 +260,17 @@ object Form11: TForm11
         BarBrush.Color = clRed
       end
     end
+    object Label21: TLabel
+      Left = 272
+      Height = 15
+      Top = 45
+      Width = 40
+      Anchors = [akTop, akRight]
+      Caption = 'Label21'
+    end
   end
   object GroupBox5: TGroupBox
-    Left = 329
+    Left = 328
     Height = 367
     Top = 415
     Width = 401
@@ -268,8 +294,8 @@ object Form11: TForm11
       Top = -8
       Width = 35
       Caption = '<->'
-      OnChange = ToggleBox5Change
       TabOrder = 0
+      OnChange = ToggleBox5Change
     end
     object Label16: TLabel
       Left = 16
@@ -284,20 +310,28 @@ object Form11: TForm11
       Width = 242
       Caption = 'Complexity by the McCabe cyclomatic Metric'
     end
+    object Label22: TLabel
+      Left = 342
+      Height = 15
+      Top = 45
+      Width = 40
+      Anchors = [akTop, akRight]
+      Caption = 'Label22'
+    end
   end
   object GroupBox6: TGroupBox
-    Left = 730
+    Left = 729
     Height = 367
     Top = 415
-    Width = 399
+    Width = 400
     ClientHeight = 347
-    ClientWidth = 395
+    ClientWidth = 396
     TabOrder = 5
     object Label14: TLabel
       Left = 0
       Height = 30
       Top = 0
-      Width = 395
+      Width = 396
       Align = alTop
       Alignment = taCenter
       Caption = 'Largest files'
@@ -310,8 +344,8 @@ object Form11: TForm11
       Top = -8
       Width = 35
       Caption = '<->'
-      OnChange = ToggleBox6Change
       TabOrder = 0
+      OnChange = ToggleBox6Change
     end
     object Label17: TLabel
       Left = 16
@@ -324,7 +358,7 @@ object Form11: TForm11
       Left = 0
       Height = 278
       Top = 69
-      Width = 395
+      Width = 396
       AxisList = <      
         item
           Marks.LabelBrush.Style = bsClear
@@ -347,6 +381,14 @@ object Form11: TForm11
       object Chart2BarSeries1: TBarSeries
         BarBrush.Color = clRed
       end
+    end
+    object Label23: TLabel
+      Left = 344
+      Height = 15
+      Top = 45
+      Width = 40
+      Anchors = [akTop, akRight]
+      Caption = 'Label23'
     end
   end
   object ChartToolset1: TChartToolset

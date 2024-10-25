@@ -67,7 +67,12 @@ Type
     Label16: TLabel;
     Label17: TLabel;
     Label18: TLabel;
+    Label19: TLabel;
     Label2: TLabel;
+    Label20: TLabel;
+    Label21: TLabel;
+    Label22: TLabel;
+    Label23: TLabel;
     Label3: TLabel;
     Label4: TLabel;
     Label5: TLabel;
@@ -185,7 +190,7 @@ Begin
   MostComplexFunctions1.Parent := GroupBox3;
   MostComplexFunctions1.Left := 8;
   MostComplexFunctions1.Width := GroupBox3.Width - 16;
-  MostComplexFunctions1.Top := label1.Top + Label1.Height + 8;
+  MostComplexFunctions1.Top := label11.Top + Label11.Height + 8;
   MostComplexFunctions1.Height := GroupBox3.ClientHeight - MostComplexFunctions1.Top - 8;
   MostComplexFunctions1.Anchors := [akLeft, akRight, akTop, akBottom];
   MostComplexFunctions1.OnMouseMove := @OnMostComplexFunctions1MouseMove;
@@ -283,7 +288,7 @@ Var
   v: integer;
 Begin
   v := min(DirectoryChart1.Width Div 2, DirectoryChart1.Height Div 2);
-  DirectoryChart1.PieCenter := point(v, v);
+  DirectoryChart1.PieCenter := point(DirectoryChart1.Width Div 2, DirectoryChart1.Height Div 2);
   DirectoryChart1.PieRadius := v - 10;
 End;
 
@@ -646,21 +651,26 @@ Begin
     DirectoryChart1.IterNext;
   End;
   DirectoryChart1.Invalidate;
+  label19.Caption := format('%d files', [length(aList)]);
 End;
 
 Procedure TForm11.InitMostComplexFunctions(aList: TProjectFilesInfo;
   Const aProject: TProject);
 Var
-  i, j: Integer;
+  cnt_taken, cnt, i, j: Integer;
   c: TCircle;
   s: String;
   p: PMCFunctionsInfo;
 Begin
   MostComplexFunctions1.Clear;
   fmcfuCursorElement := Nil;
+  cnt := 0;
+  cnt_taken := 0;
   For i := 0 To high(aList) Do Begin
+    cnt := cnt + length(aList[i].Methods);
     For j := 0 To high(aList[i].Methods) Do Begin
       If aList[i].Methods[j].CC > aProject.ChartStatisticSettings.BoarderForMostComplexFunction Then Begin
+        inc(cnt_taken);
         c := DefaultCircle();
         c.Value := sqrt(aList[i].Methods[j].CC / pi);
         c.Caption := inttostr(aList[i].Methods[j].CC);
@@ -692,18 +702,20 @@ Begin
     MostComplexFunctions1.AddCircle(c);
   End;
   MostComplexFunctions1.Invalidate;
+  label20.caption := format('%d out of %d', [cnt_taken, cnt]);
 End;
 
 Procedure TForm11.InitMostComplexFiles(aList: TProjectFilesInfo;
   Const aProject: TProject);
 Var
-  i, j: Integer;
+  cnt_taken, i, j: Integer;
   c: TCircle;
   p: PMCFilessInfo;
   sum, cnt: integer;
 Begin
   MostComplexFiles1.Clear;
   fmcfiCursorElement := Nil;
+  cnt_taken := 0;
   For i := 0 To high(aList) Do Begin
     sum := 0;
     cnt := max(1, length(aList[i].Methods));
@@ -711,6 +723,7 @@ Begin
       sum := sum + aList[i].Methods[j].CC;
     End;
     If sum / cnt > aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles Then Begin
+      cnt_taken := cnt_taken + 1;
       c := DefaultCircle();
       c.Value := sqrt(sum / (cnt * pi));
       c.Caption := format('%0.1f', [sum / cnt]); //inttostr(sum Div cnt);
@@ -733,20 +746,25 @@ Begin
     MostComplexFiles1.AddCircle(c);
   End;
   MostComplexFiles1.Invalidate;
+  label22.caption := format('%d out of %d', [cnt_taken, length(aList)]);
 End;
 
 Procedure TForm11.InitLargestFunctions(aList: TProjectFilesInfo;
   Const aProject: TProject);
 Var
-  len, c, i, j: Integer;
+  cnt, cnt_taken, len, c, i, j: Integer;
   s: String;
 Begin
   Chart1BarSeries1.Clear;
   c := 0;
+  cnt := 0;
+  cnt_taken := 0;
   For i := 0 To high(aList) Do Begin
+    cnt := cnt + length(aList[i].Methods);
     For j := 0 To high(aList[i].Methods) Do Begin
       len := aList[i].Methods[j].EndLineInFile - aList[i].Methods[j].BeginLineInFile;
       If len > aProject.ChartStatisticSettings.BoarderForLargestFunction Then Begin
+        cnt_taken := cnt_taken + 1;
         If aList[i].Methods[j].ClassName = '' Then Begin
           s := aList[i].Filename + '.' + aList[i].Methods[j].Name;
         End
@@ -760,25 +778,29 @@ Begin
     End;
   End;
   Chart1.Invalidate;
+  label21.caption := format('%d out of %d', [cnt_taken, cnt]);
 End;
 
 Procedure TForm11.InitLargestFiles(aList: TProjectFilesInfo;
   Const aProject: TProject);
 Var
-  len, c, i: Integer;
+  cnt_taken, len, c, i: Integer;
   s: String;
 Begin
   Chart2BarSeries1.Clear;
   c := 0;
+  cnt_taken := 0;
   For i := 0 To high(aList) Do Begin
     len := aList[i].FileInfo.NumberOfCodeLines;
     If len > aProject.ChartStatisticSettings.BoarderForLargestFiles Then Begin
+      cnt_taken := cnt_taken + 1;
       s := aList[i].Filename + ' [ ' + inttostr(len) + ']';
       Chart2BarSeries1.AddXY(c, len, s, MostComplexFunctionColors[c Mod length(MostComplexFunctionColors)]);
       inc(c);
     End;
   End;
   Chart2.Invalidate;
+  label23.caption := format('%d out of %d', [cnt_taken, length(aList)]);
 End;
 
 End.
