@@ -1,28 +1,29 @@
 object Form6: TForm6
   Left = 424
-  Height = 556
+  Height = 1112
   Top = 573
-  Width = 771
+  Width = 1542
   Caption = 'Form6'
-  ClientHeight = 556
-  ClientWidth = 771
-  OnCreate = FormCreate
+  ClientHeight = 1112
+  ClientWidth = 1542
+  DesignTimePPI = 192
   Position = poScreenCenter
-  LCLVersion = '2.3.0.0'
+  LCLVersion = '3.99.0.0'
+  OnCreate = FormCreate
   object Button1: TButton
-    Left = 96
-    Height = 25
-    Top = 512
-    Width = 75
+    Left = 192
+    Height = 50
+    Top = 1024
+    Width = 150
     Caption = 'OK'
-    OnClick = Button1Click
     TabOrder = 0
+    OnClick = Button1Click
   end
   object StringGrid1: TStringGrid
-    Left = 16
-    Height = 352
-    Top = 8
-    Width = 456
+    Left = 32
+    Height = 704
+    Top = 16
+    Width = 912
     ColCount = 7
     Columns = <    
       item
@@ -51,12 +52,17 @@ object Form6: TForm6
     PopupMenu = PopupMenu1
     TabOrder = 1
     OnCompareCells = StringGrid1CompareCells
+    OnDblClick = StringGrid1DblClick
     OnHeaderClick = StringGrid1HeaderClick
     OnPrepareCanvas = StringGrid1PrepareCanvas
   end
   object PopupMenu1: TPopupMenu
-    Left = 134
-    Top = 139
+    Left = 268
+    Top = 278
+    object MenuItem2: TMenuItem
+      Caption = 'Open code'
+      OnClick = StringGrid1DblClick
+    end
     object MenuItem1: TMenuItem
       Caption = 'Export as csv'
       OnClick = MenuItem1Click
@@ -65,7 +71,7 @@ object Form6: TForm6
   object SaveDialog1: TSaveDialog
     DefaultExt = '.csv'
     Filter = 'CSV-File|*.csv|All|*.*'
-    Left = 228
-    Top = 204
+    Left = 456
+    Top = 408
   end
 end

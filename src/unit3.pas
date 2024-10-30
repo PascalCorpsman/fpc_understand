@@ -26,6 +26,7 @@ Type
 
   TNodeData = Record
     Columns: Array Of String;
+    FileIndex: integer; // Index in fList
   End;
 
   PNodeData = ^TNodeData;
@@ -35,6 +36,7 @@ Type
     Name: String;
     FileName: String;
     Line: String;
+    FileIndex: integer; // Index in fList
   End;
 
   { TForm3 }
@@ -43,12 +45,14 @@ Type
     Button1: TButton;
     LazVirtualStringTree1: TLazVirtualStringTree;
     MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
     PopupMenu1: TPopupMenu;
     SaveDialog1: TSaveDialog;
     StatusBar1: TStatusBar;
     Procedure Button1Click(Sender: TObject);
     Procedure FormCreate(Sender: TObject);
     Procedure FormDestroy(Sender: TObject);
+    Procedure LazVirtualStringTree1DblClick(Sender: TObject);
     Procedure LazVirtualStringTree1FreeNode(Sender: TBaseVirtualTree;
       Node: PVirtualNode);
     Procedure LazVirtualStringTree1GetNodeDataSize(Sender: TBaseVirtualTree;
@@ -59,8 +63,10 @@ Type
     Procedure MenuItem1Click(Sender: TObject);
   private
     CSV_export: TStringList;
+    fList: TProjectFilesInfo; // Das wird aktuell noch nicht verwendet, könnte aber
+    fRootFolder: String;
   public
-    Function LoadClasses(aList: TProjectFilesInfo): Boolean;
+    Function LoadClasses(aList: TProjectFilesInfo; RootFolder: String): Boolean;
   End;
 
 Var
@@ -69,6 +75,8 @@ Var
 Implementation
 
 {$R *.lfm}
+
+Uses unit13; // Code Window
 
 Type
   PRoot = ^TRoot;
@@ -107,6 +115,7 @@ Begin
   it.Name := 'TObject';
   it.Line := '';
   it.FileName := '';
+  it.FileIndex := -1;
   new(r);
   r^.RootElement := it;
   r^.Childs := Nil;
@@ -229,6 +238,7 @@ Begin
       it^.RootElement.Name := ele^.RootElement.parent;
       it^.RootElement.FileName := '';
       it^.RootElement.Line := '';
+      it^.RootElement.FileIndex := -1;
       it^.Childs := Nil;
       If Not InsertRootEle(it) Then Begin
         Raise Exception.Create('Logic error in TClassSorter.Finish(1)');
@@ -257,6 +267,26 @@ End;
 Procedure TForm3.FormDestroy(Sender: TObject);
 Begin
   CSV_export.free;
+End;
+
+Procedure TForm3.LazVirtualStringTree1DblClick(Sender: TObject);
+Var
+  n: PVirtualNode;
+  aData: PNodeData;
+Begin
+  // Open Code
+  n := LazVirtualStringTree1.GetFirstSelected();
+  If assigned(n) Then Begin
+    aData := LazVirtualStringTree1.GetNodeData(n);
+    If length(adata^.Columns) >= 3 Then Begin
+      If adata^.Columns[1] <> '' Then Begin
+        //adata^.Columns[0] := Root^.RootElement.Name;
+        //adata^.Columns[1] := Root^.RootElement.FileName;
+        //adata^.Columns[2] := Root^.RootElement.Line;
+        Form13.OpenFile(fRootFolder, adata^.Columns[1], strtointdef(adata^.Columns[2], -1));
+      End;
+    End;
+  End;
 End;
 
 Procedure TForm3.LazVirtualStringTree1FreeNode(Sender: TBaseVirtualTree;
@@ -297,7 +327,7 @@ Begin
   End;
 End;
 
-Function TForm3.LoadClasses(aList: TProjectFilesInfo
+Function TForm3.LoadClasses(aList: TProjectFilesInfo; RootFolder: String
   ): Boolean;
 Var
   ClassCount: integer;
@@ -312,6 +342,7 @@ Var
     If Root^.RootElement.FileName <> '' Then Begin
       CSV_export.Add(Format('%s;%s;%s;%s', [Root^.RootElement.Name, Root^.RootElement.parent, Root^.RootElement.FileName, Root^.RootElement.Line]));
     End;
+    aData^.FileIndex := root^.RootElement.FileIndex;
     setlength(adata^.Columns, 3);
     adata^.Columns[0] := Root^.RootElement.Name;
     adata^.Columns[1] := Root^.RootElement.FileName;
@@ -329,14 +360,17 @@ Var
   aRoot: PVirtualNode;
   it: TItem;
 Begin
+  fRootFolder := RootFolder;
   result := false;
   If high(aList) = -1 Then exit;
+  fList := aList;
   cs := TClassSorter.Create();
   For i := 0 To high(aList) Do Begin
     For j := 0 To high(aList[i].FileInfo.aClasses) Do Begin
       it.FileName := aList[i].Filename;
       it.Line := inttostr(aList[i].FileInfo.aClasses[j].LineInFile);
       it.Name := aList[i].FileInfo.aClasses[j].Name;
+      it.FileIndex := i;
       If assigned(aList[i].FileInfo.aClasses[j].Parents) Then Begin
         it.parent := aList[i].FileInfo.aClasses[j].Parents[0];
         // Wie gehen wir mit Interfaces um die ja mehrere Parents sind, keine Ahnung, aber so kriegt der User es wenigstens mit.

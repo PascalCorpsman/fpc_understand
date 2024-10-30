@@ -35,8 +35,9 @@ Type
     Procedure FormCreate(Sender: TObject);
   private
     fColors: TCCColors;
+    fRootFolder: String;
   public
-    Function CountFiles(aList: TProjectFilesInfo; Colors: TCCColors): Boolean;
+    Function CountFiles(aList: TProjectFilesInfo; Colors: TCCColors; RootFolder: String): Boolean;
   End;
 
 Var
@@ -71,8 +72,8 @@ Begin
   Memo1.Align := alClient;
 End;
 
-Function TForm4.CountFiles(aList: TProjectFilesInfo; Colors: TCCColors
-  ): Boolean;
+Function TForm4.CountFiles(aList: TProjectFilesInfo; Colors: TCCColors;
+  RootFolder: String): Boolean;
 Var
   j, minCC, i, MethodeCount, CCSum, maxCC: Integer;
   minCCName, maxCCName, minCCFileName, maxCCFileName: String;
@@ -81,6 +82,8 @@ Var
   NumberOfCodeLines, NumberofCommentLines, TotalLines, EmptyLines: integer;
   lmaxCC, lCCSum: Integer;
 Begin
+  fRootFolder := RootFolder;
+  form6.RootFolder := RootFolder;
   result := false;
   If high(aList) = -1 Then exit;
   fColors := Colors;

@@ -31,6 +31,7 @@ Type
     ListBox1: TListBox;
     MenuItem1: TMenuItem;
     MenuItem2: TMenuItem;
+    MenuItem3: TMenuItem;
     Panel1: TPanel;
     Panel2: TPanel;
     PopupMenu1: TPopupMenu;
@@ -44,6 +45,7 @@ Type
     Procedure MenuItem2Click(Sender: TObject);
     Procedure StringGrid1CompareCells(Sender: TObject; ACol, ARow, BCol,
       BRow: Integer; Var Result: integer);
+    Procedure StringGrid1DblClick(Sender: TObject);
     Procedure StringGrid1HeaderClick(Sender: TObject; IsColumn: Boolean;
       Index: Integer);
     Procedure StringGrid1PrepareCanvas(Sender: TObject; aCol, aRow: Integer;
@@ -52,8 +54,9 @@ Type
     fCCColors: TCCColors;
     fFileInfos: Array Of TProcInfos;
     fStringGridSortDirection: Boolean;
+    fRootfolder: String;
   public
-    Function LoadFunctions(aList: TProjectFilesInfo; Colors: TCCColors): Boolean;
+    Function LoadFunctions(aList: TProjectFilesInfo; Colors: TCCColors; Rootfolder: String): Boolean;
   End;
 
 Var
@@ -62,6 +65,8 @@ Var
 Implementation
 
 {$R *.lfm}
+
+Uses Unit13; // Code Window
 
 Const
   IndexFilename = 0;
@@ -160,6 +165,21 @@ Begin
   End;
 End;
 
+Procedure TForm5.StringGrid1DblClick(Sender: TObject);
+Begin
+  // Open Code
+  If StringGrid1.Selection.Top <> -1 Then Begin
+    // Es gibt etwas zum Anspringen
+    form13.OpenFile(fRootfolder, ListBox1.Items[ListBox1.ItemIndex], strtointdef(StringGrid1.Cells[IndexLine, StringGrid1.Selection.Top], -1));
+  End
+  Else Begin
+    // Die Datei hat gar keine Erkannten Funktionen
+    If ListBox1.ItemIndex <> -1 Then Begin
+      form13.OpenFile(fRootfolder, ListBox1.Items[ListBox1.ItemIndex]);
+    End;
+  End;
+End;
+
 Procedure TForm5.StringGrid1HeaderClick(Sender: TObject; IsColumn: Boolean;
   Index: Integer);
 Var
@@ -216,10 +236,12 @@ Begin
   End;
 End;
 
-Function TForm5.LoadFunctions(aList: TProjectFilesInfo; Colors: TCCColors): Boolean;
+Function TForm5.LoadFunctions(aList: TProjectFilesInfo; Colors: TCCColors;
+  Rootfolder: String): Boolean;
 Var
   i: Integer;
 Begin
+  fRootfolder := Rootfolder;
   fCCColors := Colors;
   result := false;
   ListBox1.Clear;

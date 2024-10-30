@@ -29,6 +29,7 @@ Type
   TForm6 = Class(TForm)
     Button1: TButton;
     MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
     PopupMenu1: TPopupMenu;
     SaveDialog1: TSaveDialog;
     StringGrid1: TStringGrid;
@@ -37,6 +38,7 @@ Type
     Procedure MenuItem1Click(Sender: TObject);
     Procedure StringGrid1CompareCells(Sender: TObject; ACol, ARow, BCol,
       BRow: Integer; Var Result: integer);
+    Procedure StringGrid1DblClick(Sender: TObject);
     Procedure StringGrid1HeaderClick(Sender: TObject; IsColumn: Boolean;
       Index: Integer);
     Procedure StringGrid1PrepareCanvas(Sender: TObject; aCol, aRow: Integer;
@@ -45,6 +47,7 @@ Type
     fStringGridSortDirection: Boolean;
     fCCColors: TCCColors;
   public
+    RootFolder: String;
     Procedure ClearGrid;
     Procedure AddDataset(Filename: String; Const AData: TFileInfo;
       MethodCount: integer; AvgCC: Single; MaxCC: Integer);
@@ -56,7 +59,9 @@ Var
 
 Implementation
 
-Uses math;
+Uses math
+  , Unit13 // Code Window
+  ;
 
 {$R *.lfm}
 
@@ -110,6 +115,14 @@ Begin
   End;
   If Not fStringGridSortDirection Then Begin
     result := -Result;
+  End;
+End;
+
+Procedure TForm6.StringGrid1DblClick(Sender: TObject);
+Begin
+  // Open Code
+  If StringGrid1.Selection.Top <> -1 Then Begin
+    form13.OpenFile(RootFolder, StringGrid1.Cells[0, StringGrid1.Selection.Top]);
   End;
 End;
 
@@ -207,35 +220,6 @@ Procedure TForm6.SetColors(aColors: TCCColors);
 Begin
   fCCColors := aColors;
 End;
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 End.
 

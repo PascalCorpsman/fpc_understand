@@ -1,3 +1,17 @@
+(******************************************************************************)
+(*                                                                            *)
+(* Author      : Uwe Schächterle (Corpsman)                                   *)
+(*                                                                            *)
+(* This file is part of FPC understand                                        *)
+(*                                                                            *)
+(*  See the file license.md, located under:                                   *)
+(*  https://github.com/PascalCorpsman/Software_Licenses/blob/main/license.md  *)
+(*  for details about the license.                                            *)
+(*                                                                            *)
+(*               It is not allowed to change or remove this text from any     *)
+(*               source file of the project.                                  *)
+(*                                                                            *)
+(******************************************************************************)
 Unit Unit11;
 
 {$MODE ObjFPC}{$H+}
@@ -22,6 +36,7 @@ Type
 
   TDirInfo = Record
     isDir: Boolean;
+    Filename: String;
     Info: String;
     aColorIndex: Integer;
   End;
@@ -30,15 +45,27 @@ Type
 
   TMCFunctionsInfo = Record
     Info: String;
+    Filename: String;
+    Line: Integer;
   End;
 
   PMCFunctionsInfo = ^TMCFunctionsInfo;
 
   TMCFilessInfo = Record
     Info: String;
+    Filename: String;
   End;
 
   PMCFilessInfo = ^TMCFilessInfo;
+
+  TLargestFunctionsInfo = Record
+    Filename: String;
+    Line: integer;
+  End;
+
+  TLargestFilesInfo = Record
+    Filename: String;
+  End;
 
   { TForm11 }
 
@@ -93,6 +120,8 @@ Type
     ToggleBox4: TToggleBox;
     ToggleBox5: TToggleBox;
     ToggleBox6: TToggleBox;
+    Procedure Chart1DblClick(Sender: TObject);
+    Procedure Chart2DblClick(Sender: TObject);
     Procedure ChartToolset1DataPointHintTool1Hint(ATool: TDataPointHintTool;
       Const APoint: TPoint; Var AHint: String);
     Procedure ChartToolset1DataPointHintTool2Hint(ATool: TDataPointHintTool;
@@ -119,6 +148,9 @@ Type
     Procedure ToggleBox4Change(Sender: TObject);
     Procedure ToggleBox5Change(Sender: TObject);
     Procedure ToggleBox6Change(Sender: TObject);
+    Procedure OnDirectoryChart1DblClick(Sender: TObject);
+    Procedure OnMostComplexFunctions1DblClick(Sender: TObject);
+    Procedure OnMostComplexFiles1DblClick(Sender: TObject);
   private
     fLBMousePos: TPoint;
     fDSMousePos: TPoint;
@@ -127,6 +159,11 @@ Type
     fmcfuCursorElement: PCircle;
     fmcfiMousePos: TPoint;
     fmcfiCursorElement: PCircle;
+    fRootFolder: String;
+    fLargestFunctionsInfo: Array Of TLargestFunctionsInfo;
+    fLargestFunctionsInfoIndex: Integer;
+    fLargestFilesInfo: Array Of TLargestFilesInfo;
+    fLargestFilesIndex: Integer;
 
     Procedure InsertFileInfo(RootNode: PSunBurstChartElement; PathToFile: String; Const aInfo: TProjectFileInfo);
 
@@ -148,13 +185,22 @@ Implementation
 
 {$R *.lfm}
 
-Uses math;
+Uses math
+  , Unit13 // Code Window
+  ;
 
 { TForm11 }
 
 Procedure TForm11.FormCreate(Sender: TObject);
 Begin
   caption := 'Chart statistics';
+
+  fLargestFunctionsInfo := Nil;
+  fLargestFunctionsInfoIndex := -1;
+
+  fLargestFilesInfo := Nil;
+  fLargestFilesIndex := -1;
+
   LinebreakChart1 := TSunburstChart.Create(GroupBox1);
   LinebreakChart1.Name := 'LinebreakChart1';
   LinebreakChart1.Parent := GroupBox1;
@@ -183,6 +229,7 @@ Begin
   DirectoryChart1.OnResize(Nil);
   DirectoryChart1.OnDeleteElementsUserData := @OnDirectoryChart1DeleteElementsUserData;
   DirectoryChart1.OnAfterPaint := @OnDirectoryChart1AfterPaint;
+  DirectoryChart1.OnDblClick := @OnDirectoryChart1DblClick;
   fdsCursorElement := Nil;
 
   MostComplexFunctions1 := TPackedCircleChart.Create(GroupBox3);
@@ -196,6 +243,7 @@ Begin
   MostComplexFunctions1.OnMouseMove := @OnMostComplexFunctions1MouseMove;
   MostComplexFunctions1.OnDeleteCirclesUserData := @OnMostComplexFunctions1DeleteElementsUserData;
   MostComplexFunctions1.OnAfterPaint := @OnMostComplexFunctions1AfterPaint;
+  MostComplexFunctions1.OnDblClick := @OnMostComplexFunctions1DblClick;
   fmcfuCursorElement := Nil;
 
   MostComplexFiles1 := TPackedCircleChart.Create(GroupBox5);
@@ -209,6 +257,7 @@ Begin
   MostComplexFiles1.OnMouseMove := @OnMostComplexFiles1MouseMove;
   MostComplexFiles1.OnDeleteCirclesUserData := @OnMostComplexFiles1DeleteElementsUserData;
   MostComplexFiles1.OnAfterPaint := @OnMostComplexFiles1AfterPaint;
+  MostComplexFiles1.OnDblClick := @OnMostComplexFiles1DblClick;
   fmcfiCursorElement := Nil;
 End;
 
@@ -216,17 +265,43 @@ Procedure TForm11.ChartToolset1DataPointHintTool1Hint(
   ATool: TDataPointHintTool; Const APoint: TPoint; Var AHint: String);
 Begin
   AHint := Chart1BarSeries1.Source.Item[ATool.PointIndex]^.Text;
+  fLargestFunctionsInfoIndex := ATool.PointIndex;
+End;
+
+Procedure TForm11.Chart1DblClick(Sender: TObject);
+Begin
+  // TODO: Das ist noch nicht ideal, weil es bedingt, das vorher ein passender Hint angezeigt wird ..
+  If (fLargestFunctionsInfoIndex >= 0) And
+    (fLargestFunctionsInfoIndex < length(fLargestFunctionsInfo)) Then Begin
+    form13.OpenFile(
+      fRootFolder, fLargestFunctionsInfo[fLargestFunctionsInfoIndex].Filename,
+      fLargestFunctionsInfo[fLargestFunctionsInfoIndex].Line
+      );
+  End;
+End;
+
+Procedure TForm11.Chart2DblClick(Sender: TObject);
+Begin
+  // TODO: Das ist noch nicht ideal, weil es bedingt, das vorher ein passender Hint angezeigt wird ..
+  If (fLargestFilesIndex >= 0) And
+    (fLargestFilesIndex < length(fLargestFilesInfo)) Then Begin
+    form13.OpenFile(
+      fRootFolder, fLargestFilesInfo[fLargestFilesIndex].Filename
+      );
+  End;
 End;
 
 Procedure TForm11.ChartToolset1DataPointHintTool2Hint(
   ATool: TDataPointHintTool; Const APoint: TPoint; Var AHint: String);
 Begin
   AHint := Chart2BarSeries1.Source.Item[ATool.PointIndex]^.Text;
+  fLargestFilesIndex := ATool.PointIndex;
 End;
 
 Procedure TForm11.InitCharts(aList: TProjectFilesInfo; Const aProject: TProject
   );
 Begin
+  fRootFolder := aProject.RootFolder;
   InitLineBreakdown(alist, aProject);
   InitDirectoryStructure(alist, aProject);
   InitMostComplexFunctions(alist, aProject);
@@ -483,6 +558,43 @@ Begin
   GroupBox5.Visible := Not ToggleBox6.Checked
 End;
 
+Procedure TForm11.OnDirectoryChart1DblClick(Sender: TObject);
+
+Begin
+  // Open Code für das Directory Chart
+  If assigned(fdsCursorElement) Then Begin
+    If assigned(fdsCursorElement^.UserData) Then Begin
+      If Not PDirInfo(fdsCursorElement^.UserData)^.isDir Then Begin
+        form13.OpenFile(fRootFolder, PDirInfo(fdsCursorElement^.UserData)^.Filename);
+      End;
+    End;
+  End;
+End;
+
+Procedure TForm11.OnMostComplexFunctions1DblClick(Sender: TObject);
+Var
+  p: PMCFunctionsInfo;
+Begin
+  If assigned(fmcfuCursorElement) Then Begin
+    If assigned(fmcfuCursorElement^.UserData) Then Begin
+      p := PMCFunctionsInfo(fmcfuCursorElement^.UserData);
+      Form13.OpenFile(fRootFolder, p^.Filename, p^.Line);
+    End;
+  End;
+End;
+
+Procedure TForm11.OnMostComplexFiles1DblClick(Sender: TObject);
+Var
+  p: PMCFilessInfo;
+Begin
+  If assigned(fmcfiCursorElement) Then Begin
+    If assigned(fmcfiCursorElement^.UserData) Then Begin
+      p := PMCFilessInfo(fmcfiCursorElement^.UserData);
+      Form13.OpenFile(fRootFolder, p^.Filename);
+    End;
+  End;
+End;
+
 Procedure TForm11.InsertFileInfo(RootNode: PSunBurstChartElement;
   PathToFile: String; Const aInfo: TProjectFileInfo);
 
@@ -646,6 +758,7 @@ Begin
     t := DirectoryChart1.Iterator;
     If assigned(t^.UserData) Then Begin
       p := PDirInfo(t^.UserData);
+      p^.Filename := p^.Info;
       p^.Info := p^.Info + Format(' %d (%d%%)', [t^.Value, round(100 * t^.Value / root^.Value)]);
     End;
     DirectoryChart1.IterNext;
@@ -686,6 +799,8 @@ Begin
         s := s + ': ' + c.Caption;
         new(p);
         p^.Info := s;
+        p^.Filename := aList[i].Filename;
+        p^.Line := aList[i].Methods[j].BeginLineInFile;
         c.UserData := P;
         MostComplexFunctions1.AddCircle(c);
       End;
@@ -732,6 +847,7 @@ Begin
       c.Color.FontColor := clWhite;
       new(p);
       p^.Info := aList[i].Filename + ': ' + c.Caption;
+      p^.Filename := aList[i].Filename;
       c.UserData := P;
       MostComplexFiles1.AddCircle(c);
     End;
@@ -759,6 +875,7 @@ Begin
   c := 0;
   cnt := 0;
   cnt_taken := 0;
+  setlength(fLargestFunctionsInfo, 0);
   For i := 0 To high(aList) Do Begin
     cnt := cnt + length(aList[i].Methods);
     For j := 0 To high(aList[i].Methods) Do Begin
@@ -774,6 +891,10 @@ Begin
         s := s + ' [ ' + inttostr(len) + ']';
         Chart1BarSeries1.AddXY(c, len, s, MostComplexFunctionColors[c Mod length(MostComplexFunctionColors)]);
         inc(c);
+        // TODO: Das ist natürlich ineffizient, aber dafür leichter zu implementieren ;)
+        setlength(fLargestFunctionsInfo, c);
+        fLargestFunctionsInfo[c - 1].Line := aList[i].Methods[j].BeginLineInFile;
+        fLargestFunctionsInfo[c - 1].Filename := aList[i].Filename;
       End;
     End;
   End;
@@ -790,6 +911,7 @@ Begin
   Chart2BarSeries1.Clear;
   c := 0;
   cnt_taken := 0;
+  setlength(fLargestFilesInfo, 0);
   For i := 0 To high(aList) Do Begin
     len := aList[i].FileInfo.NumberOfCodeLines;
     If len > aProject.ChartStatisticSettings.BoarderForLargestFiles Then Begin
@@ -797,6 +919,9 @@ Begin
       s := aList[i].Filename + ' [ ' + inttostr(len) + ']';
       Chart2BarSeries1.AddXY(c, len, s, MostComplexFunctionColors[c Mod length(MostComplexFunctionColors)]);
       inc(c);
+      // TODO: Das ist natürlich ineffizient, aber dafür leichter zu implementieren ;)
+      setlength(fLargestFilesInfo, c);
+      fLargestFilesInfo[c - 1].Filename := aList[i].Filename;
     End;
   End;
   Chart2.Invalidate;

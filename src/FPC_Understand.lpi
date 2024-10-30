@@ -28,6 +28,12 @@
     </RunParams>
     <RequiredPackages>
       <Item>
+        <PackageName Value="SynEditDsgn"/>
+      </Item>
+      <Item>
+        <PackageName Value="SynEdit"/>
+      </Item>
+      <Item>
         <PackageName Value="TAChartLazarusPkg"/>
       </Item>
       <Item>
@@ -178,6 +184,14 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit12"/>
+      </Unit>
+      <Unit>
+        <Filename Value="unit13.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="Form13"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="Unit13"/>
       </Unit>
     </Units>
   </ProjectOptions>

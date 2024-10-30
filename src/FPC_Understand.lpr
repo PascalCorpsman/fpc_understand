@@ -25,7 +25,7 @@ Uses
 {$ENDIF}
   Interfaces, // this includes the LCL widgetset
   Forms, tachartlazaruspkg, Unit1, Unit2, Unit3, Unit4, Unit5, Unit6, Unit7,
-  Unit8, Unit9, Unit10, Unit11, Unit12;
+  Unit8, Unit9, Unit10, Unit11, Unit12, unit13;
 
 {$R *.res}
 
@@ -45,6 +45,7 @@ Begin
   Application.CreateForm(TForm10, Form10);
   Application.CreateForm(TForm11, Form11);
   Application.CreateForm(TForm12, Form12);
+  Application.CreateForm(TForm13, Form13);
   Application.Run;
 End.
 

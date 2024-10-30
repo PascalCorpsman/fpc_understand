@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.24                                                         *)
+(* Version     : 0.25                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -63,9 +63,13 @@
 (*               0.23 - Reorder MainMenu                                      *)
 (*               0.24 - FIX: graphical glitches in chart statistics           *)
 (*                      ADD: more infos to chart statistics                   *)
+(*               0.25 - ADD: Code preview                                     *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
+(*               - if a file contains a .inc file that is included, all "Line"*)
+(*                 informations, after that .inc file are offsetted by the    *)
+(*                 length of the .inc files content                           *)
 (*                                                                            *)
 (* Missing     : - Callgraphen (über Klassen, über Echte Methoden,            *)
 (*                   über Units ..)                                           *)
@@ -81,7 +85,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.24';
+  Version = '0.25';
   ScrollDelta = 25;
 
 Type
@@ -143,6 +147,7 @@ Type
     MenuItem5: TMenuItem;
     MenuItem50: TMenuItem;
     MenuItem51: TMenuItem;
+    MenuItem52: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -156,6 +161,7 @@ Type
     ScrollBar1: TScrollBar;
     ScrollBar2: TScrollBar;
     Separator1: TMenuItem;
+    Separator2: TMenuItem;
     Separator3: TMenuItem;
     Separator4: TMenuItem;
     Separator5: TMenuItem;
@@ -202,6 +208,7 @@ Type
     Procedure MenuItem48Click(Sender: TObject);
     Procedure MenuItem4Click(Sender: TObject);
     Procedure MenuItem51Click(Sender: TObject);
+    Procedure MenuItem52Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
     Procedure MenuItem8Click(Sender: TObject);
@@ -253,6 +260,7 @@ Uses LCLIntf, LCLType, IniFiles, Math, LazFileUtils
   // , unit10 // Select Node form
   , Unit11 // Chart Statistics
   // , Unit12 // AddSearchpath
+  , unit13 // Code Window
   ;
 
 Const
@@ -424,7 +432,7 @@ End;
 Procedure TForm1.MenuItem13Click(Sender: TObject);
 Begin
   // Show Statistiks
-  If form4.CountFiles(GetSelectedFileList(), fProject.CCColors) Then Begin
+  If form4.CountFiles(GetSelectedFileList(), fProject.CCColors, fProject.RootFolder) Then Begin
     form4.ShowModal;
   End
   Else Begin
@@ -435,7 +443,7 @@ End;
 Procedure TForm1.MenuItem14Click(Sender: TObject);
 Begin
   // Show Classes
-  If form3.LoadClasses(GetSelectedFileList()) Then Begin
+  If form3.LoadClasses(GetSelectedFileList(), fProject.RootFolder) Then Begin
     form3.ShowModal;
   End
   Else Begin
@@ -585,7 +593,7 @@ End;
 Procedure TForm1.MenuItem25Click(Sender: TObject);
 Begin
   // Show CC
-  If form5.LoadFunctions(GetSelectedFileList(), fProject.CCColors) Then Begin
+  If form5.LoadFunctions(GetSelectedFileList(), fProject.CCColors, fProject.RootFolder) Then Begin
     form5.ShowModal;
   End
   Else Begin
@@ -936,6 +944,17 @@ Begin
   // New Project with .lpi File
   MenuItem2Click(Nil);
   Button1Click(Nil);
+End;
+
+Procedure TForm1.MenuItem52Click(Sender: TObject);
+Var
+  list: TProjectFilesInfo;
+Begin
+  // Open Code
+  list := GetSelectedFileList();
+  If length(list) > 0 Then Begin
+    form13.OpenFile(fProject.RootFolder, list[0].Filename);
+  End;
 End;
 
 Procedure TForm1.MenuItem5Click(Sender: TObject);
