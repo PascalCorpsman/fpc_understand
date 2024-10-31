@@ -185,6 +185,10 @@ object Form1: TForm1
         Caption = 'Mark nodes with no childs'
         OnClick = MenuItem24Click
       end
+      object MenuItem55: TMenuItem
+        Caption = 'Mark files with comments'
+        OnClick = MenuItem54Click
+      end
       object Separator4: TMenuItem
         Caption = '-'
       end
@@ -257,6 +261,10 @@ object Form1: TForm1
       object MenuItem40: TMenuItem
         Caption = 'Mark nodes with no childs'
         OnClick = MenuItem24Click
+      end
+      object MenuItem54: TMenuItem
+        Caption = 'Mark files with comments'
+        OnClick = MenuItem54Click
       end
       object Separator6: TMenuItem
         Caption = '-'

@@ -64,6 +64,7 @@
 (*               0.24 - FIX: graphical glitches in chart statistics           *)
 (*                      ADD: more infos to chart statistics                   *)
 (*               0.25 - ADD: Code preview / review feature                    *)
+(*                      ADD: Mark nodes with comments                         *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -159,6 +160,8 @@ Type
     MenuItem51: TMenuItem;
     MenuItem52: TMenuItem;
     MenuItem53: TMenuItem;
+    MenuItem54: TMenuItem;
+    MenuItem55: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -223,6 +226,7 @@ Type
     Procedure MenuItem51Click(Sender: TObject);
     Procedure MenuItem52Click(Sender: TObject);
     Procedure MenuItem53Click(Sender: TObject);
+    Procedure MenuItem54Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
     Procedure MenuItem8Click(Sender: TObject);
@@ -982,6 +986,30 @@ Begin
   End;
   If SaveDialog3.Execute Then Begin
     ExportCommentsAsCSV(c, SaveDialog3.FileName);
+  End;
+End;
+
+Procedure TForm1.MenuItem54Click(Sender: TObject);
+Var
+  c: TLineComments;
+  i, j: Integer;
+  n: TNode;
+  nam: String;
+Begin
+  // Mark Files with comments
+  c := fProject.GetLineComments();
+  For i := 0 To high(c) Do Begin
+    nam := ExtractFileNameOnly(c[i].Filename);
+    nam := ExtractFileNameWithoutExt(nam);
+    For j := 0 To GraphBox1.Graph.NodeCount - 1 Do Begin
+      n := GraphBox1.Graph.Node[j];
+      If GraphBox1.Graph.Node[j].Name = nam Then Begin
+        n := GraphBox1.Graph.Node[j];
+        n.Marked := true;
+        GraphBox1.Graph.Node[j] := n;
+        GraphBox1.Invalidate;
+      End;
+    End;
   End;
 End;
 
