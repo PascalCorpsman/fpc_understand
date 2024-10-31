@@ -9,8 +9,13 @@ These informations are:
 - Unit dependencies
 - Class hierarchy
 - Statisics like: lines of code, cyclomatic complexity ...
+- Reviewsupport by code editing and commentingmask
 
 ![Code_Line_Analysis](images/Preview_Line_Analysis.png)
+
+The included source editor has a comment function. The created comments can be exported as .csv.
+
+![Codereviews](images/fpc_understand_review_view.png)
 
 The program is mainly designed to work with Lazarus .lpi files, but it is not forced to use .lpi files.
 
