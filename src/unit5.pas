@@ -54,9 +54,9 @@ Type
     fCCColors: TCCColors;
     fFileInfos: Array Of TProcInfos;
     fStringGridSortDirection: Boolean;
-    fRootfolder: String;
+    fProject: TProject;
   public
-    Function LoadFunctions(aList: TProjectFilesInfo; Colors: TCCColors; Rootfolder: String): Boolean;
+    Function LoadFunctions(aList: TProjectFilesInfo; Project: TProject): Boolean;
   End;
 
 Var
@@ -170,12 +170,12 @@ Begin
   // Open Code
   If StringGrid1.Selection.Top <> -1 Then Begin
     // Es gibt etwas zum Anspringen
-    form13.OpenFile(fRootfolder, ListBox1.Items[ListBox1.ItemIndex], strtointdef(StringGrid1.Cells[IndexLine, StringGrid1.Selection.Top], -1));
+    form13.OpenFile(fProject, ListBox1.Items[ListBox1.ItemIndex], strtointdef(StringGrid1.Cells[IndexLine, StringGrid1.Selection.Top], -1));
   End
   Else Begin
     // Die Datei hat gar keine Erkannten Funktionen
     If ListBox1.ItemIndex <> -1 Then Begin
-      form13.OpenFile(fRootfolder, ListBox1.Items[ListBox1.ItemIndex]);
+      form13.OpenFile(fProject, ListBox1.Items[ListBox1.ItemIndex]);
     End;
   End;
 End;
@@ -236,13 +236,12 @@ Begin
   End;
 End;
 
-Function TForm5.LoadFunctions(aList: TProjectFilesInfo; Colors: TCCColors;
-  Rootfolder: String): Boolean;
+Function TForm5.LoadFunctions(aList: TProjectFilesInfo; Project: TProject): Boolean;
 Var
   i: Integer;
 Begin
-  fRootfolder := Rootfolder;
-  fCCColors := Colors;
+  fProject := Project;
+  fCCColors := Project.CCColors;
   result := false;
   ListBox1.Clear;
   setlength(fFileInfos, length(aList));

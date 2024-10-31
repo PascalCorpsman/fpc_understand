@@ -64,9 +64,9 @@ Type
   private
     CSV_export: TStringList;
     fList: TProjectFilesInfo; // Das wird aktuell noch nicht verwendet, könnte aber
-    fRootFolder: String;
+    fProject: TProject;
   public
-    Function LoadClasses(aList: TProjectFilesInfo; RootFolder: String): Boolean;
+    Function LoadClasses(aList: TProjectFilesInfo; Project: TProject): Boolean;
   End;
 
 Var
@@ -283,7 +283,7 @@ Begin
         //adata^.Columns[0] := Root^.RootElement.Name;
         //adata^.Columns[1] := Root^.RootElement.FileName;
         //adata^.Columns[2] := Root^.RootElement.Line;
-        Form13.OpenFile(fRootFolder, adata^.Columns[1], strtointdef(adata^.Columns[2], -1));
+        Form13.OpenFile(fProject, adata^.Columns[1], strtointdef(adata^.Columns[2], -1));
       End;
     End;
   End;
@@ -327,7 +327,7 @@ Begin
   End;
 End;
 
-Function TForm3.LoadClasses(aList: TProjectFilesInfo; RootFolder: String
+Function TForm3.LoadClasses(aList: TProjectFilesInfo; Project: TProject
   ): Boolean;
 Var
   ClassCount: integer;
@@ -360,7 +360,7 @@ Var
   aRoot: PVirtualNode;
   it: TItem;
 Begin
-  fRootFolder := RootFolder;
+  fProject := Project;
   result := false;
   If high(aList) = -1 Then exit;
   fList := aList;

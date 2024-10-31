@@ -159,7 +159,7 @@ Type
     fmcfuCursorElement: PCircle;
     fmcfiMousePos: TPoint;
     fmcfiCursorElement: PCircle;
-    fRootFolder: String;
+    fProject: TProject;
     fLargestFunctionsInfo: Array Of TLargestFunctionsInfo;
     fLargestFunctionsInfoIndex: Integer;
     fLargestFilesInfo: Array Of TLargestFilesInfo;
@@ -274,7 +274,7 @@ Begin
   If (fLargestFunctionsInfoIndex >= 0) And
     (fLargestFunctionsInfoIndex < length(fLargestFunctionsInfo)) Then Begin
     form13.OpenFile(
-      fRootFolder, fLargestFunctionsInfo[fLargestFunctionsInfoIndex].Filename,
+      fProject, fLargestFunctionsInfo[fLargestFunctionsInfoIndex].Filename,
       fLargestFunctionsInfo[fLargestFunctionsInfoIndex].Line
       );
   End;
@@ -286,7 +286,7 @@ Begin
   If (fLargestFilesIndex >= 0) And
     (fLargestFilesIndex < length(fLargestFilesInfo)) Then Begin
     form13.OpenFile(
-      fRootFolder, fLargestFilesInfo[fLargestFilesIndex].Filename
+      fProject, fLargestFilesInfo[fLargestFilesIndex].Filename
       );
   End;
 End;
@@ -301,7 +301,7 @@ End;
 Procedure TForm11.InitCharts(aList: TProjectFilesInfo; Const aProject: TProject
   );
 Begin
-  fRootFolder := aProject.RootFolder;
+  fProject := aProject;
   InitLineBreakdown(alist, aProject);
   InitDirectoryStructure(alist, aProject);
   InitMostComplexFunctions(alist, aProject);
@@ -565,7 +565,7 @@ Begin
   If assigned(fdsCursorElement) Then Begin
     If assigned(fdsCursorElement^.UserData) Then Begin
       If Not PDirInfo(fdsCursorElement^.UserData)^.isDir Then Begin
-        form13.OpenFile(fRootFolder, PDirInfo(fdsCursorElement^.UserData)^.Filename);
+        form13.OpenFile(fProject, PDirInfo(fdsCursorElement^.UserData)^.Filename);
       End;
     End;
   End;
@@ -578,7 +578,7 @@ Begin
   If assigned(fmcfuCursorElement) Then Begin
     If assigned(fmcfuCursorElement^.UserData) Then Begin
       p := PMCFunctionsInfo(fmcfuCursorElement^.UserData);
-      Form13.OpenFile(fRootFolder, p^.Filename, p^.Line);
+      Form13.OpenFile(fProject, p^.Filename, p^.Line);
     End;
   End;
 End;
@@ -590,7 +590,7 @@ Begin
   If assigned(fmcfiCursorElement) Then Begin
     If assigned(fmcfiCursorElement^.UserData) Then Begin
       p := PMCFilessInfo(fmcfiCursorElement^.UserData);
-      Form13.OpenFile(fRootFolder, p^.Filename);
+      Form13.OpenFile(fProject, p^.Filename);
     End;
   End;
 End;

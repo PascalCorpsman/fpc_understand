@@ -1,0 +1,33 @@
+object CommentFrame: TCommentFrame
+  Left = 0
+  Height = 136
+  Top = 0
+  Width = 224
+  ClientHeight = 136
+  ClientWidth = 224
+  TabOrder = 0
+  DesignLeft = 338
+  DesignTop = 115
+  object Memo1: TMemo
+    Left = 8
+    Height = 98
+    Top = 8
+    Width = 208
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    Lines.Strings = (
+      'Memo1'
+    )
+    ScrollBars = ssAutoBoth
+    TabOrder = 0
+    WordWrap = False
+  end
+  object Button1: TButton
+    Left = 8
+    Height = 25
+    Top = 111
+    Width = 208
+    Anchors = [akLeft, akRight, akBottom]
+    Caption = 'Remove'
+    TabOrder = 1
+  end
+end

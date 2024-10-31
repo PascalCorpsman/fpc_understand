@@ -47,7 +47,7 @@ Type
     fStringGridSortDirection: Boolean;
     fCCColors: TCCColors;
   public
-    RootFolder: String;
+    fProject: TProject;
     Procedure ClearGrid;
     Procedure AddDataset(Filename: String; Const AData: TFileInfo;
       MethodCount: integer; AvgCC: Single; MaxCC: Integer);
@@ -122,7 +122,7 @@ Procedure TForm6.StringGrid1DblClick(Sender: TObject);
 Begin
   // Open Code
   If StringGrid1.Selection.Top <> -1 Then Begin
-    form13.OpenFile(RootFolder, StringGrid1.Cells[0, StringGrid1.Selection.Top]);
+    form13.OpenFile(fProject, StringGrid1.Cells[0, StringGrid1.Selection.Top]);
   End;
 End;
 

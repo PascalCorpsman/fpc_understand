@@ -88,10 +88,20 @@ Type
     BoarderForAverageMostComplexFiles: integer; // Der Durchschnitt aller Methoden in einer Datei muss größer diesem Wert liegen um Berücksichtigt zu werden
   End;
 
+  TLineComment = Record
+    Line: integer;
+    Filename: String;
+    Comment: String;
+  End;
+
+  TLineComments = Array Of TLineComment;
+
   { TProject }
 
   TProject = Class
   private
+    fLineComments: TLineComments;
+
     fGeneral: TGeneral;
     fFiles: TFiles;
     FSearchPaths: TPathList;
@@ -132,6 +142,10 @@ Type
     Destructor Destroy(); override;
 
     Procedure Clear;
+
+    Procedure RemoveLineComment(aFilename: String; line: Integer);
+    Procedure SetLineComment(aFilename: String; line: Integer; Comment: String);
+    Function GetLineComments(): TLineComments;
 
     Function LoadFromFile(aFilename: String): boolean;
     Procedure SaveToFile(aFilename: String);
@@ -205,13 +219,99 @@ Function RemoveFileFromLPIFile(Const LPIRoot: String; Const LPIFile: TDOMXML; Fi
  *)
 Function GetPathDelimFromLPIFile(Const LPIFile: TDOMXML): String;
 
+Function ExportCommentsAsCSV(Comments: TLineComments; Filename: String): Boolean;
+
 Implementation
 
-Uses IniFiles, Dialogs, LazFileUtils, LCLType, forms;
+Uses IniFiles, Dialogs, LazFileUtils, LCLType, forms, Math;
 
 Procedure Nop;
 Begin
 
+End;
+
+Function DeSerialize(Value: String): String;
+Var
+  i, j: integer;
+Begin
+  // Optionales Entfernen der Anführenden "
+  If length(Value) > 0 Then Begin
+    If Value[1] = '"' Then Begin
+      delete(Value, 1, 1);
+      delete(Value, length(Value), 1);
+    End;
+  End;
+  setlength(result, length(Value) * 2);
+  j := 1;
+  i := 1;
+  While i <= length(value) Do Begin
+    If value[i] = '#' Then Begin
+      inc(i);
+      If i > length(value) Then Begin
+        Raise exception.create('Error invalid deserialize String "' + value + '"');
+      End;
+      Case Value[i] Of
+        '#': Begin
+            result[j] := '#';
+            inc(j);
+          End;
+        '-': Begin
+            result[j] := '"';
+            inc(j);
+          End;
+        '+': Begin
+{$IFDEF Windows}
+            result[j] := LineEnding[1];
+            result[j + 1] := LineEnding[2];
+            inc(j, 2);
+{$ELSE}
+            result[j] := LineEnding;
+            inc(j);
+{$ENDIF}
+          End
+      Else Begin
+          Raise exception.Create('Error "' + value[i] + '" Not known as deserialize param.');
+        End;
+      End;
+      inc(i);
+    End
+    Else Begin
+      result[j] := value[i];
+      inc(i);
+      inc(j);
+    End;
+  End;
+  setlength(result, j - 1);
+End;
+
+Function Serialize(Const Value: String): String;
+Var
+  i: Integer;
+Begin
+  result := '"';
+  For i := 1 To length(value) Do Begin
+    Case value[i] Of
+{$IFDEF Windows}
+      #10: Begin // Das Muss Geschluckt werden
+        End;
+      #13: Begin
+{$ELSE}
+      LineEnding: Begin
+{$ENDIF}
+          result := result + '#+';
+        End;
+      '#': Begin
+          result := result + '##';
+        End;
+      '"': Begin
+          result := result + '#-';
+        End
+    Else Begin
+        result := result + value[i];
+      End;
+    End;
+  End;
+  result := result + '"';
 End;
 
 Function GetOSIdentiferString(): String;
@@ -504,6 +604,111 @@ Begin
   If assigned(PDelim) Then result := PDelim.AttributeValue['Value'];
 End;
 
+Function ExportCommentsAsCSV(Comments: TLineComments; Filename: String
+  ): Boolean;
+  Procedure QuickFilename(li, re: integer);
+  Var
+    l, r: Integer;
+    p: String;
+    h: TLineComment;
+  Begin
+    If Li < Re Then Begin
+      // Achtung, das Pivotelement darf nur einam vor den While schleifen ausgelesen werden, danach nicht mehr !!
+      p := Comments[Trunc((li + re) / 2)].Filename; // Auslesen des Pivo Elementes
+      l := Li;
+      r := re;
+      While l < r Do Begin
+        While CompareStr(Comments[l].Filename, p) < 0 Do
+          inc(l);
+        While CompareStr(Comments[r].Filename, p) > 0 Do
+          dec(r);
+        If L <= R Then Begin
+          h := Comments[l];
+          Comments[l] := Comments[r];
+          Comments[r] := h;
+          inc(l);
+          dec(r);
+        End;
+      End;
+      QuickFilename(li, r);
+      QuickFilename(l, re);
+    End;
+  End;
+
+  Procedure QuickLines(li, re: integer);
+  Var
+    l, r, p: Integer;
+    h: TLineComment;
+  Begin
+    If Li < Re Then Begin
+      // Achtung, das Pivotelement darf nur einam vor den While schleifen ausgelesen werden, danach nicht mehr !!
+      p := Comments[Trunc((li + re) / 2)].Line; // Auslesen des Pivo Elementes
+      l := Li;
+      r := re;
+      While l < r Do Begin
+        While Comments[l].Line < p Do
+          inc(l);
+        While Comments[r].Line > p Do
+          dec(r);
+        If L <= R Then Begin
+          h := Comments[l];
+          Comments[l] := Comments[r];
+          Comments[r] := h;
+          inc(l);
+          dec(r);
+        End;
+      End;
+      QuickLines(li, r);
+      QuickLines(l, re);
+    End;
+  End;
+
+Var
+  sl: TStringList;
+
+  Procedure Export(aFrom, aTo: integer);
+  Var
+    i: Integer;
+    s: String;
+  Begin
+    QuickLines(aFrom, aTo);
+    (*
+    A1;B1;"C1
+    2. Zeile";"D1;Bl""ub"
+    A2;B2;C2;D1
+
+    *)
+    For i := aFrom To aTo Do Begin
+      s := Comments[i].Filename + ';' + inttostr(Comments[i].Line) + ';"' + StringReplace(Comments[i].Comment, '"', '""', [rfReplaceAll]) + '"';
+      sl.add(s);
+    End;
+  End;
+
+Var
+  startindex, Endindex: Integer;
+Begin
+  result := false;
+  sl := TStringList.Create;
+  sl.add('Filename;Line;Comment');
+  // 1. Sortieren nach Dateinamen
+  QuickFilename(0, high(Comments));
+  startindex := 0;
+  Endindex := 1;
+  While Endindex <= high(Comments) Do Begin
+    If Comments[startindex].Filename <> Comments[Endindex].Filename Then Begin
+      Export(startindex, Endindex);
+      startindex := Endindex + 1;
+    End;
+    Endindex := Endindex + 1;
+  End;
+  Endindex := min(Endindex, high(Comments));
+  Export(startindex, Endindex);
+  // 2. Exportieren Nach Dateinamen
+  sl.SaveToFile(Filename);
+  sl.free;
+  result := true;
+End;
+
 Function FilenameIsPascalUnit(Filename: String): Boolean;
 (*
  * gibt den Index von Value in Values wieder, -1 wenn nicht enthalten
@@ -739,6 +944,7 @@ End;
 Constructor TProject.Create;
 Begin
   Inherited Create;
+  fLineComments := Nil;
   Clear;
 End;
 
@@ -769,6 +975,44 @@ Begin
   ChartStatisticSettings.BoarderForMostComplexFunction := fCCColors.LevelGood;
   ChartStatisticSettings.BoarderForAverageMostComplexFiles := Default_BoarderForAverageMostComplexFiles;
   FSearchPaths := Nil;
+  setlength(fLineComments, 0);
+End;
+
+Procedure TProject.RemoveLineComment(aFilename: String; line: Integer);
+Var
+  i, j: Integer;
+Begin
+  For i := 0 To high(fLineComments) Do Begin
+    If (fLineComments[i].Line = line) And (fLineComments[i].Filename = aFilename) Then Begin
+      For j := i To high(fLineComments) - 1 Do Begin
+        fLineComments[j] := fLineComments[j + 1];
+      End;
+      setlength(fLineComments, high(fLineComments));
+      fChanged := true;
+      exit;
+    End;
+  End;
+End;
+
+Procedure TProject.SetLineComment(aFilename: String; line: Integer;
+  Comment: String);
+Begin
+  RemoveLineComment(aFilename, line);
+  setlength(fLineComments, high(fLineComments) + 2);
+  fLineComments[high(fLineComments)].Line := line;
+  fLineComments[high(fLineComments)].Filename := aFilename;
+  fLineComments[high(fLineComments)].Comment := Comment;
+  fChanged := true;
+End;
+
+Function TProject.GetLineComments(): TLineComments;
+Var
+  i: Integer;
+Begin
+  setlength(result, length(fLineComments));
+  For i := 0 To high(Result) Do Begin
+    result[i] := fLineComments[i];
+  End;
 End;
 
 Procedure TProject.SetName(AValue: String);
@@ -891,6 +1135,15 @@ Begin
     FSearchPaths[i].FromLPI := false;
   End;
 
+  // LineComments
+  cnt := ini.readInteger('LineComments', 'Count', 0);
+  setlength(fLineComments, cnt);
+  For i := 0 To high(fLineComments) Do Begin
+    fLineComments[i].Line := ini.ReadInteger('LineComments', 'Comment' + inttostr(i) + 'Line', -1);
+    fLineComments[i].Filename := ini.ReadString('LineComments', 'Comment' + inttostr(i) + 'File', '');
+    fLineComments[i].Comment := DeSerialize(ini.ReadString('LineComments', 'Comment' + inttostr(i) + 'Comment', ''));
+  End;
+
   // Weiter
 
   fFilename := aFilename;
@@ -952,6 +1205,14 @@ Begin
     End;
   End;
   ini.WriteInteger('Files', 'SearchpathCount', cnt);
+
+  // LineComments
+  ini.WriteInteger('LineComments', 'Count', length(fLineComments));
+  For i := 0 To high(fLineComments) Do Begin
+    ini.WriteInteger('LineComments', 'Comment' + inttostr(i) + 'Line', fLineComments[i].Line);
+    ini.WriteString('LineComments', 'Comment' + inttostr(i) + 'File', fLineComments[i].Filename);
+    ini.WriteString('LineComments', 'Comment' + inttostr(i) + 'Comment', Serialize(fLineComments[i].Comment));
+  End;
 
   // weiter
 

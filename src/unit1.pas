@@ -63,7 +63,7 @@
 (*               0.23 - Reorder MainMenu                                      *)
 (*               0.24 - FIX: graphical glitches in chart statistics           *)
 (*                      ADD: more infos to chart statistics                   *)
-(*               0.25 - ADD: Code preview                                     *)
+(*               0.25 - ADD: Code preview / review feature                    *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -75,7 +75,17 @@
 (*                   über Units ..)                                           *)
 (*                                                                            *)
 (******************************************************************************)
+(*  Silk icon set 1.3 used                                                    *)
+(*  ----------------------                                                    *)
+(*  Mark James                                                                *)
+(*   https://peacocksoftware.com/silk                                         *)
+(******************************************************************************)
+(*  This work is licensed under a                                             *)
+(*  Creative Commons Attribution 2.5 License.                                 *)
+(*  [ http://creativecommons.org/licenses/by/2.5/ ]                           *)
+(******************************************************************************)
 Unit Unit1;
+
 {$MODE objfpc}{$H+}
 
 Interface
@@ -148,6 +158,7 @@ Type
     MenuItem50: TMenuItem;
     MenuItem51: TMenuItem;
     MenuItem52: TMenuItem;
+    MenuItem53: TMenuItem;
     MenuItem6: TMenuItem;
     MenuItem7: TMenuItem;
     MenuItem8: TMenuItem;
@@ -158,9 +169,11 @@ Type
     PopupMenu2: TPopupMenu;
     SaveDialog1: TSaveDialog;
     SaveDialog2: TSaveDialog;
+    SaveDialog3: TSaveDialog;
     ScrollBar1: TScrollBar;
     ScrollBar2: TScrollBar;
     Separator1: TMenuItem;
+    Separator10: TMenuItem;
     Separator2: TMenuItem;
     Separator3: TMenuItem;
     Separator4: TMenuItem;
@@ -209,6 +222,7 @@ Type
     Procedure MenuItem4Click(Sender: TObject);
     Procedure MenuItem51Click(Sender: TObject);
     Procedure MenuItem52Click(Sender: TObject);
+    Procedure MenuItem53Click(Sender: TObject);
     Procedure MenuItem5Click(Sender: TObject);
     Procedure MenuItem6Click(Sender: TObject);
     Procedure MenuItem8Click(Sender: TObject);
@@ -432,7 +446,7 @@ End;
 Procedure TForm1.MenuItem13Click(Sender: TObject);
 Begin
   // Show Statistiks
-  If form4.CountFiles(GetSelectedFileList(), fProject.CCColors, fProject.RootFolder) Then Begin
+  If form4.CountFiles(GetSelectedFileList(), fProject) Then Begin
     form4.ShowModal;
   End
   Else Begin
@@ -443,7 +457,7 @@ End;
 Procedure TForm1.MenuItem14Click(Sender: TObject);
 Begin
   // Show Classes
-  If form3.LoadClasses(GetSelectedFileList(), fProject.RootFolder) Then Begin
+  If form3.LoadClasses(GetSelectedFileList(), fProject) Then Begin
     form3.ShowModal;
   End
   Else Begin
@@ -593,7 +607,7 @@ End;
 Procedure TForm1.MenuItem25Click(Sender: TObject);
 Begin
   // Show CC
-  If form5.LoadFunctions(GetSelectedFileList(), fProject.CCColors, fProject.RootFolder) Then Begin
+  If form5.LoadFunctions(GetSelectedFileList(), fProject) Then Begin
     form5.ShowModal;
   End
   Else Begin
@@ -953,7 +967,21 @@ Begin
   // Open Code
   list := GetSelectedFileList();
   If length(list) > 0 Then Begin
-    form13.OpenFile(fProject.RootFolder, list[0].Filename);
+    form13.OpenFile(fProject, list[0].Filename);
+  End;
+End;
+
+Procedure TForm1.MenuItem53Click(Sender: TObject);
+Var
+  c: TLineComments;
+Begin
+  c := fProject.GetLineComments();
+  If high(c) = -1 Then Begin
+    showmessage('Nothing to export.');
+    exit;
+  End;
+  If SaveDialog3.Execute Then Begin
+    ExportCommentsAsCSV(c, SaveDialog3.FileName);
   End;
 End;
 

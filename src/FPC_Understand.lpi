@@ -266,6 +266,14 @@
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="Unit13"/>
       </Unit>
+      <Unit>
+        <Filename Value="ucommentframe.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="CommentFrame"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Frame"/>
+        <UnitName Value="uCommentFrame"/>
+      </Unit>
     </Units>
   </ProjectOptions>
   <CompilerOptions>

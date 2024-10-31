@@ -35,9 +35,9 @@ Type
     Procedure FormCreate(Sender: TObject);
   private
     fColors: TCCColors;
-    fRootFolder: String;
+    fProject: TProject;
   public
-    Function CountFiles(aList: TProjectFilesInfo; Colors: TCCColors; RootFolder: String): Boolean;
+    Function CountFiles(aList: TProjectFilesInfo; Project: TProject): Boolean;
   End;
 
 Var
@@ -51,12 +51,12 @@ Uses unit6, ufpcparser, Math;
 
 { TForm4 }
 
-Procedure TForm4.Button1Click(Sender: TObject);
+procedure TForm4.Button1Click(Sender: TObject);
 Begin
   close;
 End;
 
-Procedure TForm4.Button2Click(Sender: TObject);
+procedure TForm4.Button2Click(Sender: TObject);
 Begin
   // Details
   form6.SetColors(fColors);
@@ -64,7 +64,7 @@ Begin
   form6.ShowModal;
 End;
 
-Procedure TForm4.FormCreate(Sender: TObject);
+procedure TForm4.FormCreate(Sender: TObject);
 Begin
   caption := 'Code Statistics';
   button1.Align := alBottom;
@@ -72,8 +72,8 @@ Begin
   Memo1.Align := alClient;
 End;
 
-Function TForm4.CountFiles(aList: TProjectFilesInfo; Colors: TCCColors;
-  RootFolder: String): Boolean;
+function TForm4.CountFiles(aList: TProjectFilesInfo; Project: TProject
+  ): Boolean;
 Var
   j, minCC, i, MethodeCount, CCSum, maxCC: Integer;
   minCCName, maxCCName, minCCFileName, maxCCFileName: String;
@@ -82,11 +82,11 @@ Var
   NumberOfCodeLines, NumberofCommentLines, TotalLines, EmptyLines: integer;
   lmaxCC, lCCSum: Integer;
 Begin
-  fRootFolder := RootFolder;
-  form6.RootFolder := RootFolder;
+  fProject := Project;
+  form6.fProject := Project;
   result := false;
   If high(aList) = -1 Then exit;
-  fColors := Colors;
+  fColors := Project.CCColors;
   MethodeCount := 0;
   CCSum := 0;
   minCC := high(Integer);
