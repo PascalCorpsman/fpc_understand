@@ -22,7 +22,7 @@ Uses
   classes, SysUtils, upascallexer;
 
 Const
-  LookbackCnt = 10; // wie viele sollten das denn sein ??
+  LookbackCnt = 10; // Speichert die Historie der letzten "X" geparsten Tokens, 10 ist dabei ein empirisch ermittelter Wert.
 
 Type
 
@@ -118,7 +118,7 @@ Implementation
 
 Uses Dialogs, FileUtil;
 
-Procedure Nop();
+Procedure Nop(); // Nur zum Debuggen
 Begin
 
 End;
@@ -497,7 +497,7 @@ Begin
     lastCodeLine := 0;
     lastCommentLine := 0;
     lexer.LexFile(aFilename);
-    fFileInfo.NumberOfTotalLines := lexer.TotalLineCount - 1;
+    fFileInfo.NumberOfTotalLines := lexer.TotalParsedLineCount - 1;
     fFileInfo.NumberOfEmptyLines := lexer.EmptyLineCount - 1;
     lexer.free;
     result := true;

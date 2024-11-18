@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* upascallexer                                                    19.04.2023 *)
 (*                                                                            *)
-(* Version     : 0.04                                                         *)
+(* Version     : 0.05                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -26,6 +26,7 @@
 (*               0.02 - Add Total Line Counter, Empty Line Counter            *)
 (*               0.03 - Start with unittests, fix "invalid" ( * Parsing       *)
 (*               0.04 - Berücksichtigen von {$I ...}                          *)
+(*               0.05 - Fix Linecounting von {$I ...}                         *)
 (*                                                                            *)
 (******************************************************************************)
 Unit upascallexer;
@@ -52,7 +53,7 @@ Type
 
   TToken = Record
     Value: String;
-    Line: integer;
+    Line: integer; // Die Zeile in der Datei (Alles was via {$I ...} inkludiert wird, landet in der selben Zeile in der das {$I ...} steht
     Kind: TTokenKind;
   End;
 
@@ -65,6 +66,7 @@ Type
   private
     aToken: String;
     aLine: Integer;
+    aParsedLine: Integer;
     aEmptyLine: integer;
     Procedure HandleToken();
     Procedure DoLex(Const Stream: TStream);
@@ -73,7 +75,8 @@ Type
 
     OnHandleToken: TOnHandleToken;
 
-    Property TotalLineCount: integer read aLine;
+    Property TotalFileLineCount: integer read aLine; // Anzahl an Zeilen innerhalb der Datei
+    Property TotalParsedLineCount: integer read aParsedLine; // Tatsächliche Anzahl an geparsten Zeilen (wenn die Datei ein {$I ...} token hat, dann unterscheiden sich die beiden Line counts)
     Property EmptyLineCount: integer read aEmptyLine;
 
     Constructor Create(); virtual;
@@ -353,8 +356,21 @@ sGT -> sCollectToken: '=',*
 
 Procedure TPascalLexer.DoLex(Const Stream: TStream);
 
-  Procedure HToken()Inline;
+Var
+  BlockLineCounting: Boolean; // Wenn True, dann werden die ZeilenNummern nicht "Erhöht" wenn CRT gelesen wird.
+
+  Procedure HToken(); //Inline;
   Begin
+    If atoken = '~DisableLineCounter~' Then Begin
+      BlockLineCounting := true;
+      atoken := '';
+      exit;
+    End;
+    If atoken = '~EnableLineCounter~' Then Begin
+      BlockLineCounting := false;
+      atoken := '';
+      exit;
+    End;
     If atoken <> '' Then Begin // Der Token vor dem ersten erkannten Token ist in der Regel leer -> Raus werfen.
       HandleToken();
       aToken := '';
@@ -388,11 +404,13 @@ Var
   i, mSize: Int64;
 Begin
   aToken := '';
+  BlockLineCounting := false;
   State := sCollectToken;
   CommentDetphCounter := 0;
   pc := #0;
   c := #0;
   aLine := 1; // Textdateien sind 1 Basiert
+  aParsedLine := 1;
   aEmptyLine := 0;
   i := 0;
   mSize := Stream.Size;
@@ -653,8 +671,11 @@ Begin
     If (c = lb) And ((pc = lb) Or ((ppc = lb) And (pc In [#10, #13]))) Then Begin
       inc(aEmptyLine);
     End;
-    If c = LB Then Begin
-      inc(aLine);
+    If (c = LB) Then Begin
+      If (Not BlockLineCounting) Then Begin
+        inc(aLine);
+      End;
+      inc(aParsedLine);
     End;
     inc(i);
   End;
@@ -673,7 +694,7 @@ Var
   m: TMemoryStream;
   sl2, sl: TStringList;
   i: integer;
-  s: String;
+  s, t: String;
 Begin
   sl := TStringList.Create;
   Try
@@ -684,13 +705,14 @@ Begin
         If pos('{$I ', sl[i]) <> 0 Then Begin
           s := sl[i];
           s := copy(s, pos('{$I ', s) + 4, length(s));
+          t := copy(s, pos('}', s) + 1, length(s)); // Retten dessen was nach dem Include kommt.
           s := copy(s, 1, pos('}', s) - 1);
           s := trim(s);
           s := OnResolveFileRequest(self, s);
           If s <> '' Then Begin
             sl2 := TStringList.Create;
             sl2.LoadFromFile(s);
-            sl[i] := sl2.Text; // TODO: das funktioniert nur, wenn in der Zeile sonst nichts anderes Steht
+            sl[i] := ' ~DisableLineCounter~ ' + sl2.Text + ' ~EnableLineCounter~ ' + t;
             sl2.free;
           End;
         End;
