@@ -39,9 +39,9 @@ object Form1: TForm1
   end
   object Label1: TLabel
     Left = 304
-    Height = 16
+    Height = 15
     Top = 160
-    Width = 140
+    Width = 122
     Caption = 'Nothing loaded, please'
   end
   object Button1: TButton
@@ -64,9 +64,9 @@ object Form1: TForm1
   end
   object Label2: TLabel
     Left = 368
-    Height = 16
+    Height = 15
     Top = 208
-    Width = 13
+    Width = 11
     Caption = 'or'
   end
   object MainMenu1: TMainMenu

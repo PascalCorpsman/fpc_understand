@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* upascallexer                                                    19.04.2023 *)
 (*                                                                            *)
-(* Version     : 0.05                                                         *)
+(* Version     : 0.06                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -27,6 +27,7 @@
 (*               0.03 - Start with unittests, fix "invalid" ( * Parsing       *)
 (*               0.04 - Berücksichtigen von {$I ...}                          *)
 (*               0.05 - Fix Linecounting von {$I ...}                         *)
+(*               0.06 - Support recursive includes                            *)
 (*                                                                            *)
 (******************************************************************************)
 Unit upascallexer;
@@ -357,17 +358,18 @@ sGT -> sCollectToken: '=',*
 Procedure TPascalLexer.DoLex(Const Stream: TStream);
 
 Var
-  BlockLineCounting: Boolean; // Wenn True, dann werden die ZeilenNummern nicht "Erhöht" wenn CRT gelesen wird.
+  BlockLineCounting: integer; // Wenn True, dann werden die ZeilenNummern nicht "Erhöht" wenn CRT gelesen wird.
 
   Procedure HToken(); //Inline;
   Begin
     If atoken = '~DisableLineCounter~' Then Begin
-      BlockLineCounting := true;
+      inc(BlockLineCounting);
       atoken := '';
       exit;
     End;
     If atoken = '~EnableLineCounter~' Then Begin
-      BlockLineCounting := false;
+      dec(BlockLineCounting);
+      If BlockLineCounting < 0 Then BlockLineCounting := 0;
       atoken := '';
       exit;
     End;
@@ -404,7 +406,7 @@ Var
   i, mSize: Int64;
 Begin
   aToken := '';
-  BlockLineCounting := false;
+  BlockLineCounting := 0;
   State := sCollectToken;
   CommentDetphCounter := 0;
   pc := #0;
@@ -672,7 +674,7 @@ Begin
       inc(aEmptyLine);
     End;
     If (c = LB) Then Begin
-      If (Not BlockLineCounting) Then Begin
+      If (BlockLineCounting = 0) Then Begin
         inc(aLine);
       End;
       inc(aParsedLine);
@@ -690,20 +692,16 @@ Begin
 End;
 
 Procedure TPascalLexer.LexFile(Const Filename: String);
-Var
-  m: TMemoryStream;
-  sl2, sl: TStringList;
-  i: integer;
-  s, t: String;
-Begin
-  sl := TStringList.Create;
-  Try
-    sl.LoadFromFile(Filename);
-    // Auflösen der Includierten Dateien, ja das ist ein Böser Hack ..
-    If assigned(OnResolveFileRequest) And (pos('{$I ', sl.text) <> 0) Then Begin
-      For i := 0 To sl.Count - 1 Do Begin
-        If pos('{$I ', sl[i]) <> 0 Then Begin
-          s := sl[i];
+  Procedure IncludeIncludes(Const Content: TStringList);
+  Var
+    sl2: TStringList;
+    i: integer;
+    s, t: String;
+  Begin
+    If (pos('{$I ', content.text) <> 0) Then Begin
+      For i := content.Count - 1 Downto 0 Do Begin
+        If pos('{$I ', content[i]) <> 0 Then Begin
+          s := content[i];
           s := copy(s, pos('{$I ', s) + 4, length(s));
           t := copy(s, pos('}', s) + 1, length(s)); // Retten dessen was nach dem Include kommt.
           s := copy(s, 1, pos('}', s) - 1);
@@ -712,11 +710,26 @@ Begin
           If s <> '' Then Begin
             sl2 := TStringList.Create;
             sl2.LoadFromFile(s);
-            sl[i] := ' ~DisableLineCounter~ ' + sl2.Text + ' ~EnableLineCounter~ ' + t;
+            IncludeIncludes(sl2); // Falls includes, includes machen ..
+            content[i] := ' ~DisableLineCounter~ ' + sl2.Text + ' ~EnableLineCounter~ ' + t;
             sl2.free;
           End;
         End;
       End;
+    End;
+  End;
+
+Var
+  m: TMemoryStream;
+  sl: TStringList;
+
+Begin
+  sl := TStringList.Create;
+  Try
+    sl.LoadFromFile(Filename);
+    // Rekursives Auflösen der Includierten Dateien
+    If assigned(OnResolveFileRequest) Then Begin
+      IncludeIncludes(sl);
     End;
     m := TMemoryStream.Create;
     sl.SaveToStream(m);

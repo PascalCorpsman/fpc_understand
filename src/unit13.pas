@@ -44,6 +44,7 @@ Type
     Procedure Button2Click(Sender: TObject);
     Procedure FormCloseQuery(Sender: TObject; Var CanClose: Boolean);
     Procedure FormCreate(Sender: TObject);
+    Procedure FormShow(Sender: TObject);
     Procedure MenuItem1Click(Sender: TObject);
     Procedure MenuItem2Click(Sender: TObject);
     Procedure ScrollBox1Resize(Sender: TObject);
@@ -55,6 +56,7 @@ Type
     frelativeFilename: String;
     fAbsoluteFilename: String;
     fFrameNameCounter: integer;
+    fformShowOnce: Boolean;
     Procedure RepositionAllComments;
     Function AddLineMark(Line: Integer): TCommentFrame;
     Procedure RemoveLineMark(Line: integer);
@@ -96,6 +98,15 @@ Begin
   Splitter1.Align := alRight;
   SynEdit1.Align := alClient;
   fFrameNameCounter := 0;
+  fformShowOnce := true;
+End;
+
+Procedure TForm13.FormShow(Sender: TObject);
+Begin
+  If fformShowOnce Then Begin
+    fformShowOnce := false;
+    SynEdit1.SetFocus;
+  End;
 End;
 
 Procedure TForm13.MenuItem1Click(Sender: TObject);
@@ -114,6 +125,7 @@ Begin
     showmessage('Error, nothing to export.');
     exit;
   End;
+  c := Nil;
   setlength(c, ScrollBox1.ComponentCount);
   For i := 0 To high(c) Do Begin
     c[i].Line := (ScrollBox1.Components[i] As TCommentFrame).Line;
@@ -320,6 +332,8 @@ Begin
       SynEdit1.TopLine := SynEdit1.Lines.Count - 1;
       SynEdit1.Invalidate;
       SynEdit1.TopLine := aLine;
+      SynEdit1.CaretY := aLine;
+      fformShowOnce := true; // Synedit1.setfocus triggern
     End;
     caption := 'File preview: ' + ExtractFileName(frelativeFilename);
     ShowModal;
