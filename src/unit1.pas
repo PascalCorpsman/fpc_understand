@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.27                                                         *)
+(* Version     : 0.28                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -66,6 +66,7 @@
 (*               0.26 - FIX: Line index after {$I ...}                        *)
 (*               0.27 - ADD: Support recursive {$I ...}                       *)
 (*                      FIX: Set carety when showing code editor              *)
+(*               0.28 - FIX: invalid Rootfolder                               *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -94,7 +95,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.25';
+  Version = '0.28';
   ScrollDelta = 25;
 
 Type
@@ -1315,7 +1316,7 @@ Begin
   FPCParser := TFPCParser.Create;
   For i := 0 To high(FileList) Do Begin
     If FileList[i].Enabled Then Begin
-      f.Filename := ExtractRelativePath(fProject.RootFolder, FileList[i].FileName);
+      f.Filename := ExtractRelativePath(IncludeTrailingPathDelimiter(fProject.RootFolder), FileList[i].FileName);
       If FPCParser.ParseFile(FileList[i].FileName, SearchPaths) Then Begin
         f.FileInfo := FPCParser.FileInfo;
         f.Methods := FPCParser.ProcInfos;

@@ -496,7 +496,7 @@ Begin
   aProject.ChartStatisticSettings.BoarderForAverageMostComplexFiles := strtointdef(edit8.Text, Default_BoarderForAverageMostComplexFiles);
 
   // Files
-  aProject.RootFolder := IncludeTrailingPathDelimiter(label6.Caption);
+  aProject.RootFolder := label6.Caption;
   aProject.LPISource := label2.Caption;
   For i := 0 To high(fList) Do Begin
     fList[i].Enabled := CheckListBox1.Checked[i];

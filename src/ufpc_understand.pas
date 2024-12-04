@@ -66,7 +66,7 @@ Type
 
   TFiles = Record
     LPISource: String;
-    RootFolder: String;
+    RootFolder: String; // Endet immer auf Pathdelim
     Files: TFileList;
   End;
 
@@ -1065,6 +1065,7 @@ End;
 
 Procedure TProject.SetRootFolder(AValue: String);
 Begin
+  AValue := IncludeTrailingPathDelimiter(AValue);
   If AValue <> fFiles.RootFolder Then Begin
     fChanged := true;
     fFiles.RootFolder := AValue;
@@ -1105,6 +1106,9 @@ Begin
     // Retry with "old" Style..
     fFiles.RootFolder := ini.ReadString('Files', 'RootFolder', '');
   End;
+  If fFiles.RootFolder <> '' Then Begin
+    fFiles.RootFolder := IncludeTrailingPathDelimiter(fFiles.RootFolder);
+  End;
   fFiles.LPISource := ini.ReadString('Files', 'LPISource', '');
   cnt := ini.readInteger('Files', 'Count', 0);
 
@@ -1116,8 +1120,10 @@ Begin
     If (fFiles.RootFolder = '') Or ((fFiles.RootFolder <> '') And Not DirectoryExistsUTF8(fFiles.RootFolder)) Then Begin
       ShowMessage('Your project root folder seems to be invalid (old value was: "' + fFiles.RootFolder + '"), please select a correct one for: ' + fGeneral.ProjectName);
       fFiles.RootFolder := '';
-      If SelectDirectory('Root folder for: ' + fGeneral.ProjectName, '', fFiles.RootFolder) Then
+      If SelectDirectory('Root folder for: ' + fGeneral.ProjectName, '', fFiles.RootFolder) Then Begin
+        fFiles.RootFolder := IncludeTrailingPathDelimiter(fFiles.RootFolder);
         fChanged := true;
+      End;
     End;
   End;
 
