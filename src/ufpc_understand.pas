@@ -111,6 +111,7 @@ Type
     fFilename: String; // Der Dateiname in dem die Projekteinstellungen gespeichert wurden
     fChanged: Boolean;
     fCCColors: TCCColors;
+    Function GetSearchPaths: TPathList;
     Procedure SetCCColors(AValue: TCCColors);
     Procedure SetFiles(AValue: TFileList);
     Procedure SetLPISource(AValue: String);
@@ -130,7 +131,7 @@ Type
     Property RootFolder: String read fFiles.RootFolder write SetRootFolder;
     Property LPISource: String read fFiles.LPISource write SetLPISource;
     Property Files: TFileList read fFiles.Files write SetFiles;
-    Property SearchPaths: TPathList read FSearchPaths write FSearchPaths; // relativ zu Rootfolder
+    Property SearchPaths: TPathList read GetSearchPaths write FSearchPaths; // relativ zu Rootfolder
 
     (*
      * For Internal Use
@@ -809,7 +810,12 @@ Begin
   setlength(result, length(PathList));
   For i := 0 To high(PathList) Do Begin
     result[i] := PathList[i];
-    result[i].Path := ConcatRelativePath(RootFolder, IncludeTrailingPathDelimiter(result[i].Path));
+    If result[i].Path = '' Then Begin
+      result[i].Path := RootFolder;
+    End
+    Else Begin
+      result[i].Path := ConcatRelativePath(RootFolder, IncludeTrailingPathDelimiter(result[i].Path));
+    End;
   End;
 End;
 
@@ -1061,6 +1067,30 @@ Procedure TProject.SetCCColors(AValue: TCCColors);
 Begin
   fCCColors := AValue;
   fChanged := true;
+End;
+
+Function TProject.GetSearchPaths: TPathList;
+Var
+  i: Integer;
+  found: Boolean;
+Begin
+  result := FSearchPaths;
+  // At least make the .lpi file path the searchpath
+  If fFiles.LPISource <> '' Then Begin
+    // As all paths are relative to the .lpi file path, this is a empty string path
+    found := false;
+    For i := 0 To high(Result) Do Begin
+      If result[i].Path = '' Then Begin
+        found := true;
+        break;
+      End;
+    End;
+    If Not found Then Begin
+      SetLength(result, high(Result) + 2);
+      result[High(Result)].Path := '';
+      result[High(Result)].FromLPI := true;
+    End;
+  End;
 End;
 
 Procedure TProject.SetRootFolder(AValue: String);
