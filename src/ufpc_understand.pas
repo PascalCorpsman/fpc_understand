@@ -1148,9 +1148,9 @@ Begin
   fChanged := false;
   If (cnt <> 0) Or (fFiles.LPISource <> '') Then Begin
     If (fFiles.RootFolder = '') Or ((fFiles.RootFolder <> '') And Not DirectoryExistsUTF8(fFiles.RootFolder)) Then Begin
-      ShowMessage('Your project root folder seems to be invalid (old value was: "' + fFiles.RootFolder + '"), please select a correct one for: ' + fGeneral.ProjectName);
+      ShowMessage('Your project root folder seems to be invalid, please select a correct one for: ' + fFiles.LPISource);
       fFiles.RootFolder := '';
-      If SelectDirectory('Root folder for: ' + fGeneral.ProjectName, '', fFiles.RootFolder) Then Begin
+      If SelectDirectory('Root folder for: ' + fFiles.LPISource, '', fFiles.RootFolder) Then Begin
         fFiles.RootFolder := IncludeTrailingPathDelimiter(fFiles.RootFolder);
         fChanged := true;
       End;

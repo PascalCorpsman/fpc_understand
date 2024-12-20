@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.29                                                         *)
+(* Version     : 0.30                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -68,6 +68,7 @@
 (*                      FIX: Set carety when showing code editor              *)
 (*               0.28 - FIX: invalid Rootfolder                               *)
 (*               0.29 - FIX: automatically add .lpi path to searchpaths       *)
+(*               0.30 - FIX: select root folder dialog was not clear enough   *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -96,7 +97,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.29';
+  Version = '0.30';
   ScrollDelta = 25;
 
 Type
