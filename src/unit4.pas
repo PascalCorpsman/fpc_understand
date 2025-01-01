@@ -51,12 +51,12 @@ Uses unit6, ufpcparser, Math;
 
 { TForm4 }
 
-procedure TForm4.Button1Click(Sender: TObject);
+Procedure TForm4.Button1Click(Sender: TObject);
 Begin
   close;
 End;
 
-procedure TForm4.Button2Click(Sender: TObject);
+Procedure TForm4.Button2Click(Sender: TObject);
 Begin
   // Details
   form6.SetColors(fColors);
@@ -64,7 +64,7 @@ Begin
   form6.ShowModal;
 End;
 
-procedure TForm4.FormCreate(Sender: TObject);
+Procedure TForm4.FormCreate(Sender: TObject);
 Begin
   caption := 'Code Statistics';
   button1.Align := alBottom;
@@ -72,7 +72,7 @@ Begin
   Memo1.Align := alClient;
 End;
 
-function TForm4.CountFiles(aList: TProjectFilesInfo; Project: TProject
+Function TForm4.CountFiles(aList: TProjectFilesInfo; Project: TProject
   ): Boolean;
 Var
   j, minCC, i, MethodeCount, CCSum, maxCC: Integer;
@@ -162,6 +162,7 @@ Begin
   End;
   memo1.lines.add('');
   memo1.lines.add(format('Total files      : %8d', [FileCount]));
+  memo1.lines.add(format('Total CC         : %8d', [CCSum]));
   result := true;
 End;
 
