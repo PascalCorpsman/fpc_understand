@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.31                                                         *)
+(* Version     : 0.32                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -70,6 +70,7 @@
 (*               0.29 - FIX: automatically add .lpi path to searchpaths       *)
 (*               0.30 - FIX: select root folder dialog was not clear enough   *)
 (*               0.31 - ADD: Total CC to statistics                           *)
+(*               0.32 - FIX: number representation in chart statistics        *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -98,7 +99,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.31';
+  Version = '0.32';
   ScrollDelta = 25;
 
 Type
