@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.32                                                         *)
+(* Version     : 0.33                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -71,6 +71,7 @@
 (*               0.30 - FIX: select root folder dialog was not clear enough   *)
 (*               0.31 - ADD: Total CC to statistics                           *)
 (*               0.32 - FIX: number representation in chart statistics        *)
+(*               0.33 -                                                       *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -99,7 +100,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.32';
+  Version = '0.33';
   ScrollDelta = 25;
 
 Type
