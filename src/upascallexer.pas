@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* upascallexer                                                    19.04.2023 *)
 (*                                                                            *)
-(* Version     : 0.06                                                         *)
+(* Version     : 0.07                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -28,6 +28,7 @@
 (*               0.04 - Berücksichtigen von {$I ...}                          *)
 (*               0.05 - Fix Linecounting von {$I ...}                         *)
 (*               0.06 - Support recursive includes                            *)
+(*               0.07 - OS independant CRLF detection                         *)
 (*                                                                            *)
 (******************************************************************************)
 Unit upascallexer;
@@ -94,11 +95,7 @@ Implementation
 Const
   Separators = [#0..' '];
   Operators = [';', ',', '[', ']', ')', '=', '+', '-', '*', '^', '@']; // tkOperator (missing the ones that are handled directly in the satemachine
-{$IFDEF Darvin}
-  LB = #13;
-{$ELSE}
-  LB = #10;
-{$ENDIF}
+  LB = [#13, #10];
 
   (*
    * Perfectly sorted list of FPC-Keywords, otherwise IsKeyWord will fail !
@@ -513,7 +510,7 @@ Begin
           End;
         End;
       sDashComment: Begin
-          If c = LB Then Begin
+          If c In LB Then Begin
             HToken;
             State := sCollectToken;
           End
@@ -642,7 +639,7 @@ Begin
             State := sStringTerm;
           End
           Else Begin
-            If c = LB Then Begin
+            If c In LB Then Begin
               Raise exception.Create('Error, not terminated string in line: ' + inttostr(aLine));
             End;
             aToken := aToken + c;
@@ -670,10 +667,10 @@ Begin
     (*
      * This accepts lb, lb and lb,[#10,#13],lb as "empty" line
      *)
-    If (c = lb) And ((pc = lb) Or ((ppc = lb) And (pc In [#10, #13]))) Then Begin
+    If (c In lb) And ((pc In lb) Or ((ppc In lb) And (pc In [#10, #13]))) Then Begin
       inc(aEmptyLine);
     End;
-    If (c = LB) Then Begin
+    If (c in LB) Then Begin
       If (BlockLineCounting = 0) Then Begin
         inc(aLine);
       End;
