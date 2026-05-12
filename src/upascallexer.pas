@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* upascallexer                                                    19.04.2023 *)
 (*                                                                            *)
-(* Version     : 0.07                                                         *)
+(* Version     : 0.08                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -29,6 +29,7 @@
 (*               0.05 - Fix Linecounting von {$I ...}                         *)
 (*               0.06 - Support recursive includes                            *)
 (*               0.07 - OS independant CRLF detection                         *)
+(*               0.08 - ADD Parsedline to TToken                              *)
 (*                                                                            *)
 (******************************************************************************)
 Unit upascallexer;
@@ -55,7 +56,8 @@ Type
 
   TToken = Record
     Value: String;
-    Line: integer; // Die Zeile in der Datei (Alles was via {$I ...} inkludiert wird, landet in der selben Zeile in der das {$I ...} steht
+    Line: integer; // Die Zeile in der Datei (Alles was via {$I ...} includiert wird, landet in der selben Zeile in der das {$I ...} steht
+    ParsedLine: integer; // Eigentlich immer Gleich zu Line, aber bei {$I.. } Blöcken laufen die beiden counter auseinander
     Kind: TTokenKind;
   End;
 
@@ -255,6 +257,7 @@ Var
 Begin
   Token.Value := aToken;
   Token.Line := aLine;
+  Token.ParsedLine := aParsedLine;
   Token.Kind := tkIdentifier;
   If pos('{$', aToken) = 1 Then Begin
     Token.Kind := tkCompilerDirective;

@@ -346,7 +346,11 @@ Begin
     HintInfo^.HintStr := pchar(p^.UserData);
   End
   Else Begin
-    HintInfo^.HintStr := '';
+    HintInfo^.HintStr := pchar(
+      'As a line can contain a comment and code, the sum of:' + LineEnding +
+      '"Code", "Comment" and "Blank" can be grater then the' + LineEnding +
+      'Total value as it actually counts the lines in the files.'
+      );
   End;
 End;
 

@@ -72,6 +72,7 @@
 (*               0.31 - ADD: Total CC to statistics                           *)
 (*               0.32 - FIX: number representation in chart statistics        *)
 (*               0.33 - ADD: start with support for Interfaces                *)
+(*               0.34 - FIX: Linecounting of includes ignored to much lines   *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -100,7 +101,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.33';
+  Version = '0.34';
   ScrollDelta = 25;
 
 Type

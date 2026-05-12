@@ -134,12 +134,12 @@ Var
   i: Integer;
   found: Boolean;
 Begin
-  If (lastCodeLine <> Token.Line) And (Token.Kind <> tkComment) Then Begin
-    lastCodeLine := Token.Line;
+  If (lastCodeLine <> Token.ParsedLine) And (Token.Kind <> tkComment) Then Begin
+    lastCodeLine := Token.ParsedLine;
     inc(fFileInfo.NumberOfCodeLines);
   End;
-  If (lastCommentLine <> token.Line) And (token.Kind = tkComment) Then Begin
-    lastCommentLine := token.Line;
+  If (lastCommentLine <> token.ParsedLine) And (token.Kind = tkComment) Then Begin
+    lastCommentLine := token.ParsedLine;
     For i := 1 To length(token.Value) Do Begin
       If token.value[i] = #10 Then inc(fFileInfo.NumberofCommentLines);
     End;
@@ -540,8 +540,8 @@ Begin
     State := sIdle;
     Filename := aFilename;
     InitLookback();
-    lastCodeLine := 0;
-    lastCommentLine := 0;
+    lastCodeLine := -1;
+    lastCommentLine := -1;
     lexer.LexFile(aFilename);
     fFileInfo.NumberOfTotalLines := lexer.TotalParsedLineCount - 1;
     fFileInfo.NumberOfEmptyLines := lexer.EmptyLineCount - 1;
