@@ -41,7 +41,7 @@ object Form1: TForm1
     Left = 304
     Height = 16
     Top = 160
-    Width = 140
+    Width = 138
     Caption = 'Nothing loaded, please'
   end
   object Button1: TButton
