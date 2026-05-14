@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.34                                                         *)
+(* Version     : 0.35                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -73,6 +73,7 @@
 (*               0.32 - FIX: number representation in chart statistics        *)
 (*               0.33 - ADD: start with support for Interfaces                *)
 (*               0.34 - FIX: Linecounting of includes ignored to much lines   *)
+(*               0.35 -                                                       *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -101,7 +102,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.34';
+  Version = '0.35';
   ScrollDelta = 25;
 
 Type
