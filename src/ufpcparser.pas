@@ -122,7 +122,7 @@ Type
 
 Implementation
 
-Uses Dialogs, FileUtil;
+Uses Dialogs, FileUtil, math;
 
 Procedure Nop(); // Nur zum Debuggen
 Begin
@@ -543,8 +543,8 @@ Begin
     lastCodeLine := -1;
     lastCommentLine := -1;
     lexer.LexFile(aFilename);
-    fFileInfo.NumberOfTotalLines := lexer.TotalParsedLineCount - 1;
-    fFileInfo.NumberOfEmptyLines := lexer.EmptyLineCount - 1;
+    fFileInfo.NumberOfTotalLines := max(0, lexer.TotalParsedLineCount - 1);
+    fFileInfo.NumberOfEmptyLines := max(0, lexer.EmptyLineCount - 1);
     lexer.free;
     result := true;
   Except

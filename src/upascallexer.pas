@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* upascallexer                                                    19.04.2023 *)
 (*                                                                            *)
-(* Version     : 0.08                                                         *)
+(* Version     : 0.09                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -30,6 +30,7 @@
 (*               0.06 - Support recursive includes                            *)
 (*               0.07 - OS independant CRLF detection                         *)
 (*               0.08 - ADD Parsedline to TToken                              *)
+(*               0.09 - FIX: Linecounting                                     *)
 (*                                                                            *)
 (******************************************************************************)
 Unit upascallexer;
@@ -97,7 +98,9 @@ Implementation
 Const
   Separators = [#0..' '];
   Operators = [';', ',', '[', ']', ')', '=', '+', '-', '*', '^', '@']; // tkOperator (missing the ones that are handled directly in the satemachine
-  LB = [#13, #10];
+  CR = #13;
+  LF = #10;
+  LB = [CR, LF];
 
   (*
    * Perfectly sorted list of FPC-Keywords, otherwise IsKeyWord will fail !
@@ -398,28 +401,45 @@ Type
     , slt // Zum Erkennen < oder <>, <=,
     , sgt // zum Erkennen > oder >=
     );
+  tLineEnding = (leWindows, leLinux, leMac, leUnknown);
 
+  {.$DEFINE DEBUG_LINE}
 Var
   State: tstate;
-  ppc, pc, c: Char;
+  pc, // Das Zuvor gelesene Zeichen
+  c // Das Aktuelle Zeichen
+  : Char;
   CommentDetphCounter: Integer;
   i, mSize: Int64;
+  le: tLineEnding;
+  LineContainPrintableChar, nlfound: Boolean;
+{$IFDEF DEBUG_LINE}
+  lastLastLine, LastLine: String; // Debug
+{$ENDIF}
 Begin
+  le := leUnknown;
   aToken := '';
   BlockLineCounting := 0;
   State := sCollectToken;
   CommentDetphCounter := 0;
   pc := #0;
   c := #0;
+  LineContainPrintableChar := false;
   aLine := 1; // Textdateien sind 1 Basiert
   aParsedLine := 1;
   aEmptyLine := 0;
   i := 0;
   mSize := Stream.Size;
+{$IFDEF DEBUG_LINE}
+  LastLine := '';
+  LastLastLine := '';
+{$ENDIF}
   While i < mSize Do Begin
-    ppc := pc;
     pc := c;
     Stream.Read(c, sizeof(c));
+{$IFDEF DEBUG_LINE}
+    LastLine := LastLine + c;
+{$ENDIF}
     Case State Of
       sCollectToken: Begin
           Case c Of
@@ -668,12 +688,63 @@ Begin
       End;
     End;
     (*
-     * This accepts lb, lb and lb,[#10,#13],lb as "empty" line
+     * 1. erkennen des LB Styles
      *)
-    If (c In lb) And ((pc In lb) Or ((ppc In lb) And (pc In [#10, #13]))) Then Begin
-      inc(aEmptyLine);
+    If (le = leUnknown) And (pc In lb) Then Begin
+      // Heuristic to detect OS-LineEnding
+      If (pc = CR) And (c = LF) Then Begin
+        le := leWindows;
+        //inc(aEmptyLine);
+      End
+      Else Begin
+        If le = leUnknown Then Begin
+          If pc = LF Then Begin
+            le := leLinux;
+          End
+          Else Begin
+            le := leMac;
+          End;
+          //inc(aEmptyLine);
+        End;
+      End;
     End;
-    If (c in LB) Then Begin
+    (*
+     * 2. erkennen anhand des LB-Styles von 2 Aufeinander Folgenden Linebreaks
+     *)
+    (*
+     * This code does not detect a line of spaces as empty line!
+     *)
+    nlfound := false;
+    LineContainPrintableChar := LineContainPrintableChar Or (ord(c) > 32);
+    Case le Of
+      leWindows: Begin
+          If (pc = cr) And (c = lf) Then Begin
+            If Not LineContainPrintableChar Then
+              inc(aEmptyLine);
+            nlfound := true;
+          End;
+        End;
+      leLinux: Begin
+          If (c = lf) Then Begin
+            If Not LineContainPrintableChar Then
+              inc(aEmptyLine);
+            nlfound := true;
+          End;
+        End;
+      leMac: Begin
+          If (c = CR) Then Begin
+            If Not LineContainPrintableChar Then
+              inc(aEmptyLine);
+            nlfound := true;
+          End;
+        End;
+    End;
+    If nlfound Then Begin
+      LineContainPrintableChar := false;
+{$IFDEF DEBUG_LINE}
+      LastLastLine := LastLine;
+      LastLine := '';
+{$ENDIF}
       If (BlockLineCounting = 0) Then Begin
         inc(aLine);
       End;
