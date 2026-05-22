@@ -77,7 +77,7 @@ Implementation
 
 {$R *.lfm}
 
-Uses 
+Uses
   math
   , unit13; // Code Window
 
@@ -399,7 +399,7 @@ Var
 
 Var
   CS: TClassSorter;
-  i, j, k, l: Integer;
+  i, j, k, l, m: Integer;
   aRoot, aroot2: PVirtualNode;
   it: TItem;
   interfaces: String;
@@ -438,15 +438,17 @@ Begin
         interfaces := '';
         // Wir suchen aus der Parent Liste die Echte Klasse heraus und machen die Interfaces zu einer Kommaliste
         // Hat die Klasse nur Interfaces als Parent, dann bleibt TObject das Parent ;)
-        For k := 0 To high(aList[i].FileInfo.aClasses[j].Parents) Do Begin
-          For l := 0 To high(aList[i].FileInfo.aClasses) Do Begin
-            If (aList[i].FileInfo.aClasses[l].Name = aList[i].FileInfo.aClasses[j].Parents[k]) Then Begin
-              If aList[i].FileInfo.aClasses[l].isInterface Then Begin
-                If interfaces <> '' Then interfaces := interfaces + ', ';
-                interfaces := interfaces + aList[i].FileInfo.aClasses[l].Name;
-              End
-              Else Begin
-                it.parent := aList[i].FileInfo.aClasses[j].Parents[k];
+        For k := 0 To high(aList[I].FileInfo.aClasses[j].Parents) Do Begin
+          For m := 0 To high(aList) Do Begin
+            For l := 0 To high(aList[m].FileInfo.aClasses) Do Begin
+              If (aList[m].FileInfo.aClasses[l].Name = aList[i].FileInfo.aClasses[j].Parents[k]) Then Begin
+                If aList[m].FileInfo.aClasses[l].isInterface Then Begin
+                  If interfaces <> '' Then interfaces := interfaces + ', ';
+                  interfaces := interfaces + aList[m].FileInfo.aClasses[l].Name;
+                End
+                Else Begin
+                  it.parent := aList[i].FileInfo.aClasses[j].Parents[k];
+                End;
               End;
             End;
           End;

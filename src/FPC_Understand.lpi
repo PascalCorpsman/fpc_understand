@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <CONFIG>
   <ProjectOptions>
-    <Version Value="12"/>
+    <Version Value="13"/>
     <PathDelim Value="\"/>
     <General>
       <Flags>
@@ -119,11 +119,9 @@
     <Units>
       <Unit>
         <Filename Value="FPC_Understand.lpr"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unit1.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form1"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -131,15 +129,12 @@
       </Unit>
       <Unit>
         <Filename Value="..\Sample\Graphik\ugraphs.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\Sample\DatenSteuerung\uvectormath.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unit2.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form2"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -147,16 +142,13 @@
       </Unit>
       <Unit>
         <Filename Value="ufpc_understand.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\Sample\DatenSteuerung\udomxml.pas"/>
-        <IsPartOfProject Value="True"/>
         <UnitName Value="uDOMXML"/>
       </Unit>
       <Unit>
         <Filename Value="unit3.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form3"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -164,7 +156,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit4.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form4"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -172,7 +163,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit5.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form5"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -180,15 +170,12 @@
       </Unit>
       <Unit>
         <Filename Value="..\Sample\DatenSteuerung\upascallexer.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="ufpcparser.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unit6.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form6"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -196,7 +183,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit7.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form7"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -204,7 +190,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit8.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form8"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -212,7 +197,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit9.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form9"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -220,7 +204,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit10.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form10"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -228,7 +211,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit11.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form11"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -236,19 +218,15 @@
       </Unit>
       <Unit>
         <Filename Value="..\Sample\Graphik\usunburstchart.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\Sample\DatenSteuerung\ufifo.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="..\Sample\Graphik\ucirclepackchart.pas"/>
-        <IsPartOfProject Value="True"/>
       </Unit>
       <Unit>
         <Filename Value="unit12.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form12"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -256,7 +234,6 @@
       </Unit>
       <Unit>
         <Filename Value="unit13.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="Form13"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
@@ -264,7 +241,6 @@
       </Unit>
       <Unit>
         <Filename Value="ucommentframe.pas"/>
-        <IsPartOfProject Value="True"/>
         <ComponentName Value="CommentFrame"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Frame"/>

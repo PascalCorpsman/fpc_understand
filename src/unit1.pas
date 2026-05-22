@@ -75,6 +75,9 @@
 (*               0.34 - FIX: Linecounting of includes ignored to much lines   *)
 (*               0.35 - FIX: Linecounting for windows formated files was      *)
 (*                           broken                                           *)
+(*                      FIX: allow interfaces / classes parents to be defined *)
+(*                           in different files                               *)
+(*                      FIX: hide startup info, after setting editings        *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -1040,6 +1043,7 @@ Begin
     form2.GetProjectFromLCL(fProject);
     caption := fdefcaption + ': ' + fProject.Name;
     CalculateProject();
+    HideStartupInfo;
   End;
 End;
 
