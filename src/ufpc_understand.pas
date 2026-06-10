@@ -851,10 +851,10 @@ Function GetFileList(RootFolder, LPIFile: String; FileList: TFileList
   End;
 
 Var
-  i, j: Integer;
+  lpiVersion, i, j: Integer;
   lpi: TDOMXML;
   uf, lpiRootFolder, f, nf: String;
-  ip, fn, units, unitfile: TDomNode;
+  ip, fn, units, unitfile, VersionNode: TDomNode;
 Begin
   result := Nil;
   // 1. Alle Dateien die nicht aus dem LPIFile kommen direkt übernehmen
@@ -871,6 +871,17 @@ Begin
     If Not FileExists(nf) Then exit;
     lpi := TDOMXML.Create;
     lpi.LoadFromFile(nf);
+    // Auslesen der .lpi Version
+    VersionNode := lpi.DocumentElement.FindNode('Version', false);
+    If (Not assigned(VersionNode)) Or (VersionNode.AttributeCount = 0) Then Begin
+      lpi.free;
+      exit;
+    End;
+    lpiVersion := strtointdef(VersionNode.AttributeValue['Value'], -1);
+    If lpiVersion = -1 Then Begin
+      lpi.free;
+      exit;
+    End;
     lpiRootFolder := IncludeTrailingPathDelimiter(ExtractFilePath(nf));
     // 2. Die Units extrahieren
     units := lpi.DocumentElement.FindPath('CONFIG.ProjectOptions.units');
@@ -885,7 +896,8 @@ Begin
         If lowercase(ip.AttributeValue['Value']) <> 'true' Then f := '';
       End
       Else Begin
-        f := '';
+        // Ab lpiVersion 13 ist ein Nicht vorhanden sein = true
+        If lpiVersion < 13 Then f := '';
       End;
       (*
        * Nur offensichtliche Code Files zu lassen

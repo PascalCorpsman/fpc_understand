@@ -78,6 +78,7 @@
 (*                      FIX: allow interfaces / classes parents to be defined *)
 (*                           in different files                               *)
 (*                      FIX: hide startup info, after setting editings        *)
+(*                      ADD: Adjust to new .lpi file format (IsPartOfProject) *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
