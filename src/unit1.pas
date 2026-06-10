@@ -1,7 +1,7 @@
 (******************************************************************************)
 (* FPC Understand                                                  30.03.2023 *)
 (*                                                                            *)
-(* Version     : 0.35                                                         *)
+(* Version     : 0.36                                                         *)
 (*                                                                            *)
 (* Author      : Uwe Schächterle (Corpsman)                                   *)
 (*                                                                            *)
@@ -79,6 +79,7 @@
 (*                           in different files                               *)
 (*                      FIX: hide startup info, after setting editings        *)
 (*                      ADD: Adjust to new .lpi file format (IsPartOfProject) *)
+(*               0.36 -                                                       *)
 (*                                                                            *)
 (* Known Bugs  : - if a project holds 2 units with the same name              *)
 (*                 the dependency graph will merge them to one                *)
@@ -107,7 +108,7 @@ Uses
   StdCtrls, ugraphs, ufpc_understand, ufpcparser, LvlGraphCtrl, Types;
 
 Const
-  Version = '0.35';
+  Version = '0.36';
   ScrollDelta = 25;
 
 Type
