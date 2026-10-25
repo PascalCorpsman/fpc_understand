@@ -335,6 +335,10 @@ Var
   i, j: Integer;
   fn: String;
   exts: TStringArray;
+{$IFDEF LINUX}
+  searchRec: TSearchRec;
+  candidate: String;
+{$ENDIF}
 Begin
   result := '';
   fn := ExtractFileExt(Filename);
@@ -357,6 +361,20 @@ Begin
         result := fn;
         exit;
       End;
+{$IFDEF LINUX}
+      If FindFirst(IncludeTrailingPathDelimiter(SearchPaths[i].Path) + '*', faAnyFile, searchRec) = 0 Then Begin
+        Repeat
+          candidate := IncludeTrailingPathDelimiter(SearchPaths[i].Path) + searchRec.Name;
+          If ((searchRec.Attr And faDirectory) = 0) And
+            (CompareText(ExtractFileName(candidate), ExtractFileName(fn)) = 0) Then Begin
+            result := candidate;
+            FindClose(searchRec);
+            exit;
+          End;
+        Until FindNext(searchRec) <> 0;
+        FindClose(searchRec);
+      End;
+{$ENDIF}
     End;
   End;
 End;
